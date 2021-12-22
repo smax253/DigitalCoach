@@ -1,7 +1,7 @@
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import useAuthContext from "./AuthContextProvider";
+import useAuthContext from "./AuthContext";
 import AuthService from "./AuthService";
 
 function AuthGuard({ children, router }: PropsWithChildren<WithRouterProps>) {
