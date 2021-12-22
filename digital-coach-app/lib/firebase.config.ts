@@ -27,10 +27,10 @@ if (!getApps.length) {
 const app = initializeApp(firebaseConfig);
 initializeAuth(app);
 
-if (typeof window !== "undefined") getAnalytics();
+if (typeof window !== "undefined") getAnalytics(app);
 
 const auth = getAuth(app);
-connectAuthEmulator(auth, `http://${localIp}:9099`);
+connectAuthEmulator(auth, `http://${localIp}:9099`, { disableWarnings: true });
 
 const db = getFirestore(app);
 connectFirestoreEmulator(db, localIp, 8080);

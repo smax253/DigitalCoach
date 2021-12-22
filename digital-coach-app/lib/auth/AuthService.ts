@@ -7,6 +7,8 @@ import {
   signOut,
   signInWithPopup,
   GoogleAuthProvider,
+  User,
+  onAuthStateChanged as firebaseOnAuthStateChanged,
 } from "firebase/auth";
 
 class AuthService {
@@ -27,6 +29,10 @@ class AuthService {
 
   async logout(): Promise<void> {
     await signOut(this.auth);
+  }
+
+  onAuthStateChanged(callback: (user: User | null) => void) {
+    firebaseOnAuthStateChanged(this.auth, callback);
   }
 }
 
