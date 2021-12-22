@@ -1,23 +1,27 @@
-import { getApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import useAuthContext from "./AuthContextProvider";
+import AuthService from "./AuthService";
 
-export default function AuthGuard({ children }: PropsWithChildren<{}>) {
-  const { setUser } = useAuthContext();
+function AuthGuard({ children, router }: PropsWithChildren<WithRouterProps>) {
+  const { setUser, user } = useAuthContext();
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const app = getApp();
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
+    AuthService.onAuthStateChanged((user) => {
       setUser(user || null);
       setIsLoading(false);
     });
   }, [setUser]);
 
+  console.log(user);
+
   if (isLoading) return <h1>Loading...</h1>;
+  if (!user) router.push("/auth/login");
 
   return <>{children}</>;
 }
+
+export default withRouter(AuthGuard);
