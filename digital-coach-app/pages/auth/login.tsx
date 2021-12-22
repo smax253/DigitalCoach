@@ -1,6 +1,6 @@
 import useAuthContext from "../../lib/auth/AuthContext";
 
-export default function Login() {
+export default function LoginPage() {
   const { error, user, loginWithGoogle } = useAuthContext();
 
   return (

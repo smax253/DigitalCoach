@@ -1,0 +1,4 @@
+/data/Audio/*
+/data/Videos/*
+
+.DS_Store
