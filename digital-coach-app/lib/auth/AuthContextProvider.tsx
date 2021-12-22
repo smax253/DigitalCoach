@@ -19,7 +19,6 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     };
 
     const loginWithGoogle = async () => {
-      console.log("loginWithGoogle");
       try {
         const { user } = await AuthService.loginWithGoogle();
         setUser(user);
