@@ -9,6 +9,7 @@ import {
   GoogleAuthProvider,
   User,
   onAuthStateChanged as firebaseOnAuthStateChanged,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 class AuthService {
@@ -20,6 +21,10 @@ class AuthService {
 
   async login(email: string, password: string): Promise<UserCredential> {
     return await signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  async signup(email: string, password: string): Promise<UserCredential> {
+    return await createUserWithEmailAndPassword(this.auth, email, password);
   }
 
   async loginWithGoogle(): Promise<UserCredential> {
