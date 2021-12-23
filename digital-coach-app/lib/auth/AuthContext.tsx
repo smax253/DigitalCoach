@@ -6,6 +6,7 @@ interface AuthContextState {
   user: User | null;
   error: string;
   login: (email: string, password: string) => {};
+  signup: (email: string, password: string) => {};
   loginWithGoogle: () => {};
   logout: () => {};
 }

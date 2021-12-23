@@ -27,6 +27,15 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
       }
     };
 
+    const signup = async (email: string, password: string) => {
+      try {
+        const { user } = await AuthService.signup(email, password);
+        setUser(user);
+      } catch (error: any) {
+        setError(error.message);
+      }
+    };
+
     const logout = async () => {
       await AuthService.logout();
       setUser(null);
@@ -37,6 +46,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
       setUser,
       error,
       login,
+      signup,
       loginWithGoogle,
       logout,
     };

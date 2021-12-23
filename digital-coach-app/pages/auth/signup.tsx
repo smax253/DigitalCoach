@@ -10,6 +10,7 @@ import Link from "next/link";
 interface LoginFormInputs {
   email: string;
   password: string;
+  passwordConfirm: string;
 }
 
 const inputValidationSchema = yup
@@ -20,34 +21,39 @@ const inputValidationSchema = yup
       .max(255)
       .required("Email is required"),
     password: yup.string().min(7).max(255).required("Password is required"),
+    passwordConfirm: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match"),
   })
   .required();
 
-export default function LoginPage() {
-  const { error, user, loginWithGoogle, login } = useAuthContext();
+export default function SignUpPage() {
+  const { error: authError, user, signup } = useAuthContext();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors: formError },
   } = useForm<LoginFormInputs>({
     mode: "onSubmit",
     resolver: yupResolver(inputValidationSchema),
   });
 
   const onSubmit: SubmitHandler<LoginFormInputs> = (data: LoginFormInputs) => {
-    console.log(data);
     const { email, password } = data;
-    login(email, password);
+    signup(email, password);
   };
+
+  console.log(formError);
 
   return (
     <div>
-      <h1>Login</h1>
-      {error && <p>{error}</p>}
+      <h1>Sign up</h1>
+      <h1>{user?.uid}</h1>
 
+      {authError && <p>{authError}</p>}
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <TextField type="email" placeholder="Email" {...register("email")} />
-        {errors.email && <span>This field is required</span>}
+        {formError.email && <span>{formError.email.message}</span>}
 
         <TextField
           type="password"
@@ -55,15 +61,23 @@ export default function LoginPage() {
           placeholder="Password"
           {...register("password")}
         />
-        {errors.password && <span>This field is required</span>}
+        {formError.password && <span>{formError.password.message}</span>}
 
-        <Button type="submit">Login</Button>
+        <TextField
+          type="password"
+          autoComplete="on"
+          placeholder="Confirm Password"
+          {...register("passwordConfirm")}
+        />
+        {formError.passwordConfirm && (
+          <span>{formError.passwordConfirm.message}</span>
+        )}
+
+        <Button type="submit">sign up</Button>
       </form>
 
-      <Button onClick={loginWithGoogle}>Login with Google</Button>
-      <h1>{user?.uid}</h1>
-      <Link href="/auth/signup">
-        <a>New user? sign up</a>
+      <Link href="/auth/login">
+        <a>Have an account? log in</a>
       </Link>
     </div>
   );

@@ -1,0 +1,5 @@
+.main {
+  display: flex;
+  padding: 24px 32px;
+  justify-content: space-between;
+}
