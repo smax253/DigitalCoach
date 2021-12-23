@@ -1,4 +1,2 @@
-/mit-dataset/Audio/*
-/mit-dataset/Videos/*
-
 .DS_Store
+/mit-dataset/*
