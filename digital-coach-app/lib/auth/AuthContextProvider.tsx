@@ -11,7 +11,6 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     const login = async (email: string, password: string) => {
       try {
         const { user } = await AuthService.login(email, password);
-
         setUser(user);
       } catch (error: any) {
         setError(error.message);
@@ -31,6 +30,7 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
       try {
         const { user } = await AuthService.signup(email, password);
         setUser(user);
+
       } catch (error: any) {
         setError(error.message);
       }

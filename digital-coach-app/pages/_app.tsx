@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 
-import "../lib/firebase.config";
+import "../lib/firebase/firebase.config";
 import { AuthProvider } from "../lib/auth/AuthContextProvider";
 import Layout from "../components/Layout";
 
