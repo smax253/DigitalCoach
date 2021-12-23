@@ -43,8 +43,6 @@ export default function SignUpPage() {
     signup(email, password);
   };
 
-  console.log(formError);
-
   return (
     <div>
       <h1>Sign up</h1>

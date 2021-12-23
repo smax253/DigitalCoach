@@ -11,12 +11,15 @@ import {
   onAuthStateChanged as firebaseOnAuthStateChanged,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import FireBaseService from "../firebase/FirebaseService";
 
-class AuthService {
+class AuthService extends FireBaseService {
   auth: Auth;
 
-  constructor(firebaseApp: FirebaseApp) {
-    this.auth = getAuth(firebaseApp);
+  constructor() {
+    super();
+
+    this.auth = getAuth(this.app);
   }
 
   async login(email: string, password: string): Promise<UserCredential> {
@@ -41,4 +44,4 @@ class AuthService {
   }
 }
 
-export default new AuthService(getApp());
+export default new AuthService();
