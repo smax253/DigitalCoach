@@ -5,10 +5,11 @@ interface AuthContextState {
   setUser: Dispatch<SetStateAction<User | null>>;
   user: User | null;
   error: string;
-  login: (email: string, password: string) => {};
-  signup: (email: string, password: string) => {};
-  loginWithGoogle: () => {};
-  logout: () => {};
+  fetchUser: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextState | null>(null);

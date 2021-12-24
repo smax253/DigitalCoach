@@ -1,28 +1,25 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import { useState } from "react";
+import Image from "next/image";
+import useAuthContext from "../lib/auth/AuthContext";
 import AuthGuard from "../lib/auth/AuthGuard";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
-  const [data, setData] = useState(false);
-
-  const onClickButton = () => setData(!data);
+  const { user } = useAuthContext();
 
   return (
     <AuthGuard>
-      <div className={styles.container}>
-        <Head>
-          <title>Digital Doach</title>
-          <meta name="description" content="Senior Design" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-
-        <main className={styles.main}>
-          <button onClick={onClickButton}>Click Me</button>
-        </main>
-
-        <footer className={styles.footer}></footer>
+      <div className={styles.Home}>
+        {user?.avatarUrl && (
+          <Image src={user.avatarUrl} height={144} width={144} alt="avatar" />
+        )}
+        <span>id: {user?.id}</span>
+        <span>email: {user?.email}</span>
+        <span>name: {user?.name}</span>
+        <span>concentration: {user?.concentration}</span>
+        <span>proficiency: {user?.proficiency}</span>
+        <span>createdAt: {user?.createdAt}</span>
+        <span>registrationCompletedAt: {user?.registrationCompletedAt}</span>
       </div>
     </AuthGuard>
   );
