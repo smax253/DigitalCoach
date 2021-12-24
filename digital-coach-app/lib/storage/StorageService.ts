@@ -13,19 +13,19 @@ export enum StorageFolders {
 }
 
 class StorageService extends FireBaseService {
-  storage: FirebaseStorage;
+  private storage: FirebaseStorage;
 
   constructor() {
     super();
     this.storage = getStorage(this.app);
   }
 
-  async add(file: File, folder: StorageFolders, filename: string = uuid()) {
+  async upload(file: File, folder: StorageFolders, filename: string = uuid()) {
     const fileRef = ref(this.storage, `${folder}/${filename}`);
 
     await uploadBytes(fileRef, file, { contentType: file.type });
 
-    return await getDownloadURL(fileRef);
+    return getDownloadURL(fileRef);
   }
 }
 

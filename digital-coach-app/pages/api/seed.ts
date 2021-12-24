@@ -1,13 +1,41 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-
-type Data = {
-  name: string;
-};
-
-export default function handler(
+import AuthService from "../../lib/auth/AuthService";
+import StorageService, {
+  StorageFolders,
+} from "../../lib/storage/StorageService";
+import UserBuilder from "../../lib/user/UserBuilder";
+import UserService from "../../lib/user/UserService";
+import fs from "fs";
+import getFileObject from "../../util/getFileObject";
+export default async function seedHandler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<{}>
 ) {
-  res.status(200).json({ name: "John Doe" });
+  const userCredentials = await Promise.all([
+    AuthService.signup("ming@test.com", "password"),
+    AuthService.signup("appu@test.com", "password"),
+    AuthService.signup("suzy@test.com", "password"),
+    AuthService.signup("mike@test.com", "password"),
+    AuthService.signup("max@test.com", "password"),
+    AuthService.signup("hamzah@test.com", "password"),
+  ]);
+
+
+
+  await Promise.all(
+    userCredentials.map(({ user }, idx) =>
+      UserService.add(
+        new UserBuilder()
+          .withId(user.uid)
+          .with({
+            email: user.email!,
+            name: user.email?.split("@")[0],
+          })
+          .build()
+      )
+    )
+  );
+
+  res.status(200).json({ message: "Finished seeding users" });
 }
