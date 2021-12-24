@@ -1,7 +1,8 @@
 import { PropsWithChildren, useMemo, useState } from "react";
 import AuthService from "./AuthService";
 import { AuthContext } from "./AuthContext";
-import UserService, { User } from "../user/UserService";
+import UserService from "../user/UserService";
+import { User } from "../user/types";
 
 export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<User | null>(null);

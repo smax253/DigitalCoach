@@ -6,31 +6,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import RegistrationGuard from "../../lib/user/RegistrationGuard";
 import Button from "../../components/Button";
 import { Select } from "../../components/Select";
-import UserService, { UserDetails } from "../../lib/user/UserService";
+import UserService from "../../lib/user/UserService";
 import StorageService, {
   StorageFolders,
 } from "../../lib/storage/StorageService";
-
-enum UserConcentrations {
-  Technology = "Technology",
-  Marketing = "Marketing",
-  Finance = "Finance",
-  Sales = "Sales",
-  HR = "HR",
-  Legal = "Legal",
-  Operations = "Operations",
-  Engineering = "Engineering",
-  Product = "Product",
-  Design = "Design",
-}
-
-enum UserProficiencies {
-  Student = "Student",
-  NewGrad = "New Grad",
-  Entry = "Entry Level",
-  Mid = "Mid Level",
-  Late = "Late Career",
-}
+import {
+  UserDetails,
+  UserConcentrations,
+  UserProficiencies,
+} from "../../lib/user/types";
 
 interface RegFormInputs extends UserDetails {
   avatar: FileList;
@@ -58,7 +42,7 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegFormInputs) => {
     const { name, concentration, proficiency } = data;
 
-    const avatarUrl = await StorageService.add(
+    const avatarUrl = await StorageService.upload(
       data.avatar[0],
       StorageFolders.profilePic,
       user!.id

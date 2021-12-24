@@ -13,7 +13,7 @@ import {
 import FireBaseService from "../firebase/FirebaseService";
 
 class AuthService extends FireBaseService {
-  auth: Auth;
+  private auth: Auth;
 
   constructor() {
     super();

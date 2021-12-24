@@ -5,27 +5,14 @@ import {
   getDoc,
   getFirestore,
   setDoc,
+  Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import moment from "moment";
 import FireBaseService from "../firebase/FirebaseService";
-
-export interface UserDetails {
-  avatarUrl: string;
-  name: string;
-  concentration: string;
-  proficiency: string;
-}
-
-export interface User extends UserDetails {
-  id: string;
-  email: string;
-  registrationCompletedAt: number;
-  createdAt: number;
-}
+import { User, UserDetails } from "./types";
 
 class UserService extends FireBaseService {
-  db: Firestore;
+  private db: Firestore;
 
   constructor() {
     super();
@@ -33,8 +20,14 @@ class UserService extends FireBaseService {
     this.db = getFirestore(this.app);
   }
 
-  getUserDocRef(userId: string) {
+  private getUserDocRef(userId: string) {
     return doc(this.db, "users", userId);
+  }
+
+  async add(user: User) {
+    const userDocRef = this.getUserDocRef(user.id);
+
+    return setDoc(userDocRef, user);
   }
 
   async createNewUser(user: FirebaseUser) {
@@ -48,7 +41,7 @@ class UserService extends FireBaseService {
       concentration: "",
       proficiency: "",
       registrationCompletedAt: null,
-      createdAt: moment().toDate().getTime(),
+      createdAt: Timestamp.now(),
     };
 
     return await setDoc(userDocRef, userDoc);
@@ -59,7 +52,7 @@ class UserService extends FireBaseService {
 
     return await updateDoc(userDocRef, {
       ...userDetails,
-      registrationCompletedAt: moment().toDate().getTime(),
+      registrationCompletedAt: Timestamp.now(),
     });
   }
 
