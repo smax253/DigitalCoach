@@ -1,4 +1,4 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
 import useAuthContext from "../../lib/auth/AuthContext";
 import styles from "../../styles/login.module.css";
@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TextField } from "../../components/TextField";
 import Link from "next/link";
+import UnAuthGuard from "../../lib/auth/UnAuthGuard";
 
 interface LoginFormInputs {
   email: string;
@@ -38,15 +39,15 @@ export default function SignUpPage() {
     resolver: yupResolver(inputValidationSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data: LoginFormInputs) => {
+  const onSubmit = (data: LoginFormInputs) => {
     const { email, password } = data;
     signup(email, password);
   };
 
   return (
-    <div>
+    <UnAuthGuard>
       <h1>Sign up</h1>
-      <h1>{user?.uid}</h1>
+      <h1>{user?.id}</h1>
 
       {authError && <p>{authError}</p>}
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -77,6 +78,6 @@ export default function SignUpPage() {
       <Link href="/auth/login">
         <a>Have an account? log in</a>
       </Link>
-    </div>
+    </UnAuthGuard>
   );
 }

@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TextField } from "../../components/TextField";
 import Link from "next/link";
+import UnAuthGuard from "../../lib/auth/UnAuthGuard";
 
 interface LoginFormInputs {
   email: string;
@@ -24,30 +25,29 @@ const inputValidationSchema = yup
   .required();
 
 export default function LoginPage() {
-  const { error, user, loginWithGoogle, login } = useAuthContext();
+  const { error: authError, user, loginWithGoogle, login } = useAuthContext();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors: formError },
   } = useForm<LoginFormInputs>({
     mode: "onSubmit",
     resolver: yupResolver(inputValidationSchema),
   });
 
   const onSubmit: SubmitHandler<LoginFormInputs> = (data: LoginFormInputs) => {
-    console.log(data);
     const { email, password } = data;
     login(email, password);
   };
 
   return (
-    <div>
+    <UnAuthGuard>
       <h1>Login</h1>
-      {error && <p>{error}</p>}
+      {authError && <p>{authError}</p>}
 
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <TextField type="email" placeholder="Email" {...register("email")} />
-        {errors.email && <span>This field is required</span>}
+        {formError.email && <span>{formError.email.message}</span>}
 
         <TextField
           type="password"
@@ -55,16 +55,16 @@ export default function LoginPage() {
           placeholder="Password"
           {...register("password")}
         />
-        {errors.password && <span>This field is required</span>}
+        {formError.password && <span>{formError.password.message}</span>}
 
         <Button type="submit">Login</Button>
       </form>
 
       <Button onClick={loginWithGoogle}>Login with Google</Button>
-      <h1>{user?.uid}</h1>
+      <h1>{user?.id}</h1>
       <Link href="/auth/signup">
         <a>New user? sign up</a>
       </Link>
-    </div>
+    </UnAuthGuard>
   );
 }

@@ -1,9 +1,9 @@
 import { PropsWithChildren, useMemo, useState } from "react";
-import { User } from "firebase/auth";
 import AuthService from "./AuthService";
 import { AuthContext } from "./AuthContext";
+import UserService, { User } from "../user/UserService";
 
-export function AuthProvider({ children }: PropsWithChildren<{}>) {
+export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string>("");
 
@@ -11,7 +11,9 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     const login = async (email: string, password: string) => {
       try {
         const { user } = await AuthService.login(email, password);
-        setUser(user);
+        const userDetails = await UserService.getUser(user.uid);
+
+        setUser(userDetails);
       } catch (error: any) {
         setError(error.message);
       }
@@ -20,7 +22,9 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     const loginWithGoogle = async () => {
       try {
         const { user } = await AuthService.loginWithGoogle();
-        setUser(user);
+        const userDetails = await UserService.getUser(user.uid);
+
+        setUser(userDetails);
       } catch (error: any) {
         setError(error.message);
       }
@@ -29,8 +33,12 @@ export function AuthProvider({ children }: PropsWithChildren<{}>) {
     const signup = async (email: string, password: string) => {
       try {
         const { user } = await AuthService.signup(email, password);
-        setUser(user);
 
+        await UserService.createNewUser(user);
+
+        const userDetails = await UserService.getUser(user.uid);
+
+        setUser(userDetails);
       } catch (error: any) {
         setError(error.message);
       }
