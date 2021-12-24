@@ -1,5 +1,5 @@
-import { User } from "firebase/auth";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { User } from "../user/UserService";
 
 interface AuthContextState {
   setUser: Dispatch<SetStateAction<User | null>>;

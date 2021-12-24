@@ -1,4 +1,3 @@
-import { FirebaseApp, getApp } from "firebase/app";
 import {
   getAuth,
   Auth,
@@ -37,6 +36,10 @@ class AuthService extends FireBaseService {
 
   async logout(): Promise<void> {
     await signOut(this.auth);
+  }
+
+  isSignedIn() {
+    return Boolean(this.auth.currentUser);
   }
 
   onAuthStateChanged(callback: (user: User | null) => void) {
