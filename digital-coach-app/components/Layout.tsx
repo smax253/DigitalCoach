@@ -8,6 +8,11 @@ export const siteTitle = "Digital Coach";
 export default function Layout({ children }: PropsWithChildren<{}>) {
   return (
     <>
+      <Head>
+        <title>Digital Doach</title>
+        <meta name="description" content="Senior Design" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <NavBar />
       <div className={styles.container}>
         <Head>

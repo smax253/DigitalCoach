@@ -7,6 +7,9 @@ import RegistrationGuard from "../../lib/user/RegistrationGuard";
 import Button from "../../components/Button";
 import { Select } from "../../components/Select";
 import UserService, { UserDetails } from "../../lib/user/UserService";
+import StorageService, {
+  StorageFolders,
+} from "../../lib/storage/StorageService";
 
 enum UserConcentrations {
   Technology = "Technology",
@@ -29,6 +32,10 @@ enum UserProficiencies {
   Late = "Late Career",
 }
 
+interface RegFormInputs extends UserDetails {
+  avatar: FileList;
+}
+
 const inputValidationSchema = yup
   .object({
     name: yup.string().max(255).required("Name is required"),
@@ -38,20 +45,32 @@ const inputValidationSchema = yup
   .required();
 
 export default function RegisterPage() {
-  const { user, setUser } = useAuthContext();
+  const { user, fetchUser } = useAuthContext();
   const {
     register,
     handleSubmit,
     formState: { errors: formError },
-  } = useForm<UserDetails>({
+  } = useForm<RegFormInputs>({
     mode: "onSubmit",
     resolver: yupResolver(inputValidationSchema),
   });
 
-  const onSubmit = async (data: UserDetails) => {
-    await UserService.registerUser(user!.id, data);
-    const regUser = await UserService.getUser(user!.id);
-    setUser(regUser);
+  const onSubmit = async (data: RegFormInputs) => {
+    const { name, concentration, proficiency } = data;
+
+    const avatarUrl = await StorageService.add(
+      data.avatar[0],
+      StorageFolders.profilePic,
+      user!.id
+    );
+
+    await UserService.registerUser(user!.id, {
+      name,
+      concentration,
+      proficiency,
+      avatarUrl,
+    });
+    await fetchUser();
   };
 
   return (
@@ -59,6 +78,8 @@ export default function RegisterPage() {
       <h1>Registration</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>
+        <input type="file" accept="image/*" {...register("avatar")} />
+
         <TextField placeholder="Full Name" {...register("name")} />
         {formError.name && <span>{formError.name.message}</span>}
 

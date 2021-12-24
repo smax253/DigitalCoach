@@ -49,6 +49,11 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
       setUser(null);
     };
 
+    const fetchUser = async () => {
+      const userDetails = await UserService.getUser(user!.id);
+      setUser(userDetails);
+    };
+
     return {
       user,
       setUser,
@@ -57,6 +62,7 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
       signup,
       loginWithGoogle,
       logout,
+      fetchUser,
     };
   }, [user, setUser, error]);
 
