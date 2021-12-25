@@ -14,7 +14,7 @@ import {
   UserDetails,
   UserConcentrations,
   UserProficiencies,
-} from "../../lib/user/types";
+} from "../../lib/user/models";
 
 interface RegFormInputs extends UserDetails {
   avatar: FileList;
@@ -29,7 +29,7 @@ const inputValidationSchema = yup
   .required();
 
 export default function RegisterPage() {
-  const { user, fetchUser } = useAuthContext();
+  const { currentUser, fetchUser } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -45,10 +45,10 @@ export default function RegisterPage() {
     const avatarUrl = await StorageService.upload(
       data.avatar[0],
       StorageFolders.profilePic,
-      user!.id
+      currentUser!.id
     );
 
-    await UserService.registerUser(user!.id, {
+    await UserService.registerUser(currentUser!.id, {
       name,
       concentration,
       proficiency,

@@ -1,9 +1,9 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { User } from "../user/types";
+import { User } from "../user/models";
 
 interface AuthContextState {
-  setUser: Dispatch<SetStateAction<User | null>>;
-  user: User | null;
+  setCurrentUser: Dispatch<SetStateAction<User | null>>;
+  currentUser: User | null;
   error: string;
   fetchUser: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;

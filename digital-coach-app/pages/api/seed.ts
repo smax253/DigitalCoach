@@ -1,14 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import AuthService from "../../lib/auth/AuthService";
-import StorageService, {
-  StorageFolders,
-} from "../../lib/storage/StorageService";
 import UserBuilder from "../../lib/user/UserBuilder";
 import UserService from "../../lib/user/UserService";
-import fs from "fs";
-import getFileObject from "../../util/getFileObject";
-export default async function seedHandler(
+
+export default async function seed(
   req: NextApiRequest,
   res: NextApiResponse<{}>
 ) {
@@ -20,8 +16,6 @@ export default async function seedHandler(
     AuthService.signup("max@test.com", "password"),
     AuthService.signup("hamzah@test.com", "password"),
   ]);
-
-
 
   await Promise.all(
     userCredentials.map(({ user }, idx) =>

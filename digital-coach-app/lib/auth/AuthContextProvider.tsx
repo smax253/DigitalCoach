@@ -1,12 +1,22 @@
-import { PropsWithChildren, useMemo, useState } from "react";
+import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import AuthService from "./AuthService";
 import { AuthContext } from "./AuthContext";
 import UserService from "../user/UserService";
-import { User } from "../user/types";
+import { User } from "../user/models";
 
 export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
-  const [user, setUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    AuthService.onAuthStateChanged(async (user) => {
+      if (user) {
+        const userDetails = await UserService.getUser(user?.uid);
+        console.log(userDetails);
+        setCurrentUser(userDetails);
+      }
+    });
+  }, []);
 
   const providerValue = useMemo(() => {
     const login = async (email: string, password: string) => {
@@ -14,7 +24,7 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
         const { user } = await AuthService.login(email, password);
         const userDetails = await UserService.getUser(user.uid);
 
-        setUser(userDetails);
+        setCurrentUser(userDetails);
       } catch (error: any) {
         setError(error.message);
       }
@@ -25,7 +35,7 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
         const { user } = await AuthService.loginWithGoogle();
         const userDetails = await UserService.getUser(user.uid);
 
-        setUser(userDetails);
+        setCurrentUser(userDetails);
       } catch (error: any) {
         setError(error.message);
       }
@@ -39,25 +49,26 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
 
         const userDetails = await UserService.getUser(user.uid);
 
-        setUser(userDetails);
+        setCurrentUser(userDetails);
       } catch (error: any) {
         setError(error.message);
       }
     };
 
     const logout = async () => {
+      setCurrentUser(null);
+
       await AuthService.logout();
-      setUser(null);
     };
 
-    const fetchUser = async () => {
-      const userDetails = await UserService.getUser(user!.id);
-      setUser(userDetails);
+    const fetchUser = async (userId: string = currentUser!.id) => {
+      const userDetails = await UserService.getUser(userId);
+      setCurrentUser(userDetails);
     };
 
     return {
-      user,
-      setUser,
+      currentUser,
+      setCurrentUser,
       error,
       login,
       signup,
@@ -65,7 +76,7 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
       logout,
       fetchUser,
     };
-  }, [user, setUser, error]);
+  }, [currentUser, setCurrentUser, error]);
 
   return (
     <AuthContext.Provider value={providerValue}>

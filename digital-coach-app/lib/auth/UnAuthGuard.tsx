@@ -1,10 +1,14 @@
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import AuthService from "./AuthService";
 
 function UnAuthGuard({ children, router }: PropsWithChildren<WithRouterProps>) {
-  if (AuthService.isSignedIn()) router.push("/");
+  useEffect(() => {
+    AuthService.onAuthStateChanged((user) => {
+      if (!!user) router.push("/");
+    });
+  }, [router]);
 
   return <>{children}</>;
 }

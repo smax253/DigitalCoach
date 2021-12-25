@@ -1,6 +1,6 @@
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import useAuthContext from "../auth/AuthContext";
 import AuthService from "../auth/AuthService";
 
@@ -8,10 +8,12 @@ function RegistrationGuard({
   children,
   router,
 }: PropsWithChildren<WithRouterProps>) {
-  const { user } = useAuthContext();
+  const { currentUser } = useAuthContext();
 
-  if (!AuthService.isSignedIn()) router.push("/auth/login");
-  if (user?.registrationCompletedAt) router.push("/");
+  useEffect(() => {
+    if (!AuthService.auth.currentUser) router.push("/auth/login");
+    if (currentUser?.registrationCompletedAt) router.push("/");
+  });
 
   return <>{children}</>;
 }

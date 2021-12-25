@@ -9,7 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import FireBaseService from "../firebase/FirebaseService";
-import { User, UserDetails } from "./types";
+import { User, UserDetails } from "./models";
 
 class UserService extends FireBaseService {
   private db: Firestore;

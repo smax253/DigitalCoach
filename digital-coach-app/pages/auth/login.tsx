@@ -25,7 +25,12 @@ const inputValidationSchema = yup
   .required();
 
 export default function LoginPage() {
-  const { error: authError, user, loginWithGoogle, login } = useAuthContext();
+  const {
+    error: authError,
+    currentUser,
+    loginWithGoogle,
+    login,
+  } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -61,7 +66,7 @@ export default function LoginPage() {
       </form>
 
       <Button onClick={loginWithGoogle}>Login with Google</Button>
-      <h1>{user?.id}</h1>
+      <h1>{currentUser?.id}</h1>
       <Link href="/auth/signup">
         <a>New user? sign up</a>
       </Link>
