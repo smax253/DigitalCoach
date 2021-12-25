@@ -13,7 +13,7 @@ import {
 import FireBaseService from "../firebase/FirebaseService";
 
 class AuthService extends FireBaseService {
-  private auth: Auth;
+  auth: Auth;
 
   constructor() {
     super();
@@ -39,7 +39,7 @@ class AuthService extends FireBaseService {
   }
 
   isSignedIn() {
-    return Boolean(this.auth.currentUser);
+    return !!this.auth.currentUser?.uid;
   }
 
   onAuthStateChanged(callback: (user: User | null) => void) {
