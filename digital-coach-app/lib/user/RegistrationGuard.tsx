@@ -1,8 +1,8 @@
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 import { PropsWithChildren, useEffect } from "react";
-import useAuthContext from "../auth/AuthContext";
-import AuthService from "../auth/AuthService";
+import useAuthContext from "@App/lib/auth/AuthContext";
+import AuthService from "@App/lib/auth/AuthService";
 
 function RegistrationGuard({
   children,

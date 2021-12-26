@@ -8,7 +8,7 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import FireBaseService from "../firebase/FirebaseService";
+import FireBaseService from "@App/lib/firebase/FirebaseService";
 import { User, UserDetails } from "./models";
 
 class UserService extends FireBaseService {

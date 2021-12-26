@@ -1,7 +1,11 @@
 import { Timestamp } from "firebase/firestore";
-import getRandomInt from "../../util/getRandomInt";
-import BaseBuilder from "../builder/BaseBuilder";
-import { User, UserConcentrations, UserProficiencies } from "./models";
+import getRandomInt from "@App/util/getRandomInt";
+import BaseBuilder from "@App/lib/builder/BaseBuilder";
+import {
+  User,
+  UserConcentrations,
+  UserProficiencies,
+} from "@App/lib/user/models";
 
 export default class UserBuilder extends BaseBuilder<User> {
   private id = "420";

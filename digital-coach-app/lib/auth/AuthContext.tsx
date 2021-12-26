@@ -1,5 +1,6 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { User } from "../user/models";
+
+import { User } from "@App/lib/user/models";
 
 interface AuthContextState {
   setCurrentUser: Dispatch<SetStateAction<User | null>>;

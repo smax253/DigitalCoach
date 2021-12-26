@@ -1,8 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import AuthService from "../../lib/auth/AuthService";
-import UserBuilder from "../../lib/user/UserBuilder";
-import UserService from "../../lib/user/UserService";
+
+import AuthService from "@App/lib/auth/AuthService";
+import UserBuilder from "@App/lib/user/UserBuilder";
+import UserService from "@App/lib/user/UserService";
 
 export default async function seed(
   req: NextApiRequest,
