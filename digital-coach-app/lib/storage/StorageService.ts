@@ -6,7 +6,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { uuid } from "uuidv4";
-import FireBaseService from "../firebase/FirebaseService";
+import FireBaseService from "@App/lib/firebase/FirebaseService";
 
 export enum StorageFolders {
   profilePic = "profilePic",

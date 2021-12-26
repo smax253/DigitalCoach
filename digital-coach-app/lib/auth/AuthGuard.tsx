@@ -1,8 +1,9 @@
+import React, { PropsWithChildren, useEffect } from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
-import React, { PropsWithChildren, useEffect } from "react";
-import useAuthContext from "./AuthContext";
-import AuthService from "./AuthService";
+
+import useAuthContext from "@App/lib/auth/AuthContext";
+import AuthService from "@App/lib/auth/AuthService";
 
 function AuthGuard({ children, router }: PropsWithChildren<WithRouterProps>) {
   const { currentUser } = useAuthContext();

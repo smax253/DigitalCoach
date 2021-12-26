@@ -6,11 +6,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "emulate": "firebase emulators:start"
+    "emulate": "firebase emulators:start",
+    "test": "jest"
   },
   "dependencies": {
     "@hookform/resolvers": "^2.8.5",
-    "add": "^2.0.6",
     "classnames": "^2.3.1",
     "firebase": "^9.6.1",
     "next": "12.0.7",
@@ -23,10 +23,19 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.16.5",
+    "@types/enzyme": "^3.10.10",
+    "@types/jest": "^27.0.3",
     "@types/node": "17.0.2",
     "@types/react": "17.0.37",
+    "babel-jest": "^27.4.5",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "8.5.0",
     "eslint-config-next": "12.0.7",
+    "jest": "^27.4.5",
+    "jest-transform-stub": "^2.0.0",
+    "ts-jest": "^27.1.2",
     "typescript": "4.5.4"
   }
 }

@@ -1,16 +1,16 @@
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
 
-import "../lib/firebase/firebase.config";
-import Layout from "../components/Layout";
-import { AuthContextProvider } from "../lib/auth/AuthContextProvider";
+import "@App/styles/globals.css";
+import "@App/lib/firebase/firebase.config";
+import Layout from "@App/components/Layout";
+import { AuthContextProvider } from "@App/lib/auth/AuthContextProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthContextProvider>
       <Layout>
         <Component {...pageProps} />
-      </Layout> 
+      </Layout>
     </AuthContextProvider>
   );
 }
