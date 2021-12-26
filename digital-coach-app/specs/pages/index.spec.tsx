@@ -1,8 +1,8 @@
-import { mount, shallow } from "enzyme";
-import { AuthContextProvider } from "../../lib/auth/AuthContextProvider";
-import "../../lib/firebase/firebase.config";
+import { mount } from "enzyme";
 
-import Home from "../../pages";
+import { AuthContextProvider } from "@App/lib/auth/AuthContextProvider";
+import "@App/lib/firebase/firebase.config";
+import Home from "@App/pages";
 
 jest.mock("firebase/app", () => {
   return {
