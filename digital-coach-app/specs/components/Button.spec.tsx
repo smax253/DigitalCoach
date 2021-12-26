@@ -1,5 +1,6 @@
 import { shallow } from "enzyme";
-import Button from "../../components/Button";
+
+import Button from "@App/components/Button";
 
 describe("Button", () => {
   const mountComponent = () => shallow(<Button />);
