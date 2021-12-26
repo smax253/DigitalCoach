@@ -1,7 +1,6 @@
 import { mount, shallow } from "enzyme";
 
 import { AuthContextProvider } from "@App/lib/auth/AuthContextProvider";
-import "@App/lib/firebase/firebase.config";
 import Home from "@App/pages";
 
 jest.mock("firebase/app", () => {

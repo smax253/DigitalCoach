@@ -9,7 +9,7 @@ export default function Page404() {
   return (
     <div>
       <h1>404</h1>
-      <span>Page not found</span>
+      <span>Page not found, you done fucked up</span>
       <Button onClick={onClickHome}>Return to home</Button>
     </div>
   );
