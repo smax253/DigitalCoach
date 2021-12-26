@@ -10,4 +10,9 @@ module.exports = {
     "^.+.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$":
       "jest-transform-stub", // anything style related is ignored and mapped to jest-transform-stub module
   },
+  globalSetup: "<rootDir>/specs/jestGlobalSetup.ts",
+
+  moduleNameMapper: {
+    "@App/(.*)": "<rootDir>/$1",
+  },
 };

@@ -4,7 +4,7 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp, getApps } from "firebase/app";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
