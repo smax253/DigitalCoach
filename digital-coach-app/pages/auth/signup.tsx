@@ -29,7 +29,7 @@ const inputValidationSchema = yup
   .required();
 
 export default function SignUpPage() {
-  const { error: authError, user, signup } = useAuthContext();
+  const { error: authError, currentUser, signup } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -47,7 +47,7 @@ export default function SignUpPage() {
   return (
     <UnAuthGuard>
       <h1>Sign up</h1>
-      <h1>{user?.id}</h1>
+      <h1>{currentUser?.id}</h1>
 
       {authError && <p>{authError}</p>}
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
