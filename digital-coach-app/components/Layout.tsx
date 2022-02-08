@@ -1,5 +1,5 @@
 import Head from "next/head";
-import styles from "./layout.module.css";
+import styles from "./layout.module.scss";
 import { PropsWithChildren } from "react";
 import NavBar from "./NavBar";
 
@@ -9,7 +9,7 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
   return (
     <>
       <Head>
-        <title>Digital Doach</title>
+        <title>Digital Coach</title>
         <meta name="description" content="Senior Design" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import useAuthContext from "@App/lib/auth/AuthContext";
 import AuthGuard from "@App/lib/auth/AuthGuard";
-import styles from "@App/styles/Home.module.css";
+import styles from "@App/styles/Home.module.scss";
 
 const Home: NextPage = () => {
   const { currentUser } = useAuthContext();
