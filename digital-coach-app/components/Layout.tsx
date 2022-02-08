@@ -13,13 +13,15 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
         <meta name="description" content="Senior Design" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <NavBar />
-      <div className={styles.container}>
-        <Head>
-          <title>{siteTitle}</title>
-        </Head>
+      <div className={styles.page_container}>
+        <NavBar />
+        <div className={styles.container}>
+          <Head>
+            <title>{siteTitle}</title>
+          </Head>
 
-        <main>{children}</main>
+          <main>{children}</main>
+        </div>
       </div>
     </>
   );
