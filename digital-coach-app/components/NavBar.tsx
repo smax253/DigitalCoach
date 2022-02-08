@@ -1,7 +1,7 @@
 import Link from "next/link";
 import useAuthContext from "../lib/auth/AuthContext";
 import Button from "./Button";
-import style from "./navbar.module.css";
+import style from "./navbar.module.scss";
 
 export default function NavBar() {
   const { logout } = useAuthContext();
