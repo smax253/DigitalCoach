@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
-import Button from "../../components/Button";
-import useAuthContext from "../../lib/auth/AuthContext";
-import styles from "../../styles/login.module.css";
+import Button from "@App/components/Button";
+import useAuthContext from "@App/lib/auth/AuthContext";
+import styles from "@App/styles/login.module.scss";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TextField } from "../../components/TextField";
+import { TextField } from "@App/components/TextField";
 import Link from "next/link";
-import UnAuthGuard from "../../lib/auth/UnAuthGuard";
+import UnAuthGuard from "@App/lib/auth/UnAuthGuard";
 
 interface LoginFormInputs {
   email: string;
