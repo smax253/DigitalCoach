@@ -1,12 +1,13 @@
 @import "@App/styles/colors.scss";
+
 .page_container{
   display:flex;
   height:100vh;
+  background-color: $background;
+  color: $secondary;
 }
 .container {
   max-width: 36rem;
   padding: 0 1rem;
   margin: 3rem auto 6rem;
 }
-
-
