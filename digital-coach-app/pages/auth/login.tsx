@@ -47,10 +47,10 @@ export default function LoginPage() {
 
   return (
     <UnAuthGuard>
-      <h1>Login</h1>
+      <h1>Digital Coach</h1>
       {authError && <p>{authError}</p>}
-
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <h2>Login</h2>
         <TextField type="email" placeholder="Email" {...register("email")} />
         {formError.email && <span>{formError.email.message}</span>}
 

@@ -1,5 +1,12 @@
+@import "@App/styles/colors.scss";
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  color: $secondary;
+  background-color: white;
+  max-width: 400px;
+  padding: 60px;
+  box-shadow: 5px 5px;
 }
