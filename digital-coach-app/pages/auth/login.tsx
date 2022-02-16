@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TextField } from "../../components/TextField";
 import Link from "next/link";
 import UnAuthGuard from "../../lib/auth/UnAuthGuard";
+import Card from 'react-bootstrap/Card';
 
 interface LoginFormInputs {
   email: string;
@@ -47,13 +48,15 @@ export default function LoginPage() {
 
   return (
     <UnAuthGuard>
-      <h1>Digital Coach</h1>
+      <Card className={styles.loginCard}>
       {authError && <p>{authError}</p>}
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <h2>Login</h2>
+      <Card.Title className={styles.title}>Digital <br />Coach</Card.Title>
+      <Card.Subtitle className={styles.login}>Login</Card.Subtitle>
+      <form onSubmit={handleSubmit(onSubmit)}>
+      <Card.Text className={styles.subhead}>Username/Email</Card.Text>
         <TextField type="email" placeholder="Email" {...register("email")} />
         {formError.email && <span>{formError.email.message}</span>}
-
+        <Card.Text className={styles.subhead}>Password</Card.Text>
         <TextField
           type="password"
           autoComplete="on"
@@ -61,15 +64,16 @@ export default function LoginPage() {
           {...register("password")}
         />
         {formError.password && <span>{formError.password.message}</span>}
-
-        <Button type="submit">Login</Button>
+        <br/>
+        <Button type="submit" className={styles.basicb}>Login</Button>
       </form>
 
-      <Button onClick={loginWithGoogle}>Login with Google</Button>
+      <Button onClick={loginWithGoogle} className={styles.basicb}>Login with Google</Button>
       <h1>{currentUser?.id}</h1>
       <Link href="/auth/signup">
         <a>New user? sign up</a>
       </Link>
+      </Card>
     </UnAuthGuard>
   );
 }
