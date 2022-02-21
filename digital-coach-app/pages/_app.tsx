@@ -1,6 +1,8 @@
 import type { AppProps } from "next/app";
 
 import "@App/styles/globals.css";
+import "@fullcalendar/common/main.css";
+import "@fullcalendar/daygrid/main.css";
 import "@App/lib/firebase/firebase.config";
 import CoreLayout from "@App/components/layouts/CoreLayout";
 import { AuthContextProvider } from "@App/lib/auth/AuthContextProvider";
