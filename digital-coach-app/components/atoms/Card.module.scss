@@ -3,8 +3,9 @@
   background: #ffffff;
   box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.12);
   border-radius: 10px;
-  padding: 2rem;
-
+  padding: 1rem 2rem;
+  width: 100%;
+  height: fit-content;
   &title {
     color: black;
     font-family: Poppins;
@@ -12,4 +13,9 @@
     font-weight: bold;
     font-size: 24px;
   }
+}
+.CardMulti{
+  @extend .Card;
+  width:fit-content;
+  max-width: 40%;
 }

@@ -7,13 +7,14 @@ interface Props
     HTMLElement
   > {
   title?: string;
+  multiline?: boolean;
 }
 
 export default function Card(props: PropsWithChildren<Props>) {
-  const { title } = props;
+  const { title, multiline } = props;
 
   return (
-    <section className={styles.Card}>
+    <section className={multiline ? styles.CardMulti : styles.Card}>
       {title && <p className={styles.Cardtitle}>{title}</p>}
       {props.children}
     </section>
