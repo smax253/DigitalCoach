@@ -1,11 +1,14 @@
 import Head from "next/head";
 import styles from "./layout.module.scss";
 import { PropsWithChildren } from "react";
-import NavBar from "./NavBar";
+import NavBar from "../organisms/NavBar";
+import useAuthContext from "@App/lib/auth/AuthContext";
 
 export const siteTitle = "Digital Coach";
 
-export default function Layout({ children }: PropsWithChildren<{}>) {
+export default function CoreLayout({ children }: PropsWithChildren<{}>) {
+  const auth = useAuthContext();
+
   return (
     <>
       <Head>
@@ -14,7 +17,7 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.page_container}>
-        <NavBar />
+        {auth.currentUser && <NavBar />}
         <div className={styles.container}>
           <Head>
             <title>{siteTitle}</title>

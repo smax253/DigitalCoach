@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import Button from "@App/components/Button";
+import Button from "@App/components/atoms/Button";
 import useAuthContext from "@App/lib/auth/AuthContext";
 import styles from "@App/styles/login.module.scss";
 import * as yup from "yup";

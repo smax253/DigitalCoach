@@ -1,9 +1,10 @@
 import Link from "next/link";
-import useAuthContext from "../lib/auth/AuthContext";
-import Button from "./Button";
+import Button from "../atoms/Button";
 import style from "./navbar.module.scss";
 import logoutIcon from "@App/res/sidebar/logout.svg";
 import Image from "next/image";
+import useAuthContext from "@App/lib/auth/AuthContext";
+
 export default function NavBar() {
   const { logout } = useAuthContext();
 
@@ -16,22 +17,22 @@ export default function NavBar() {
         <Link href="/">
           <a>Dashboard</a>
         </Link>
-        <Link href="/">
+        <Link href="/start">
           <a>Start an Interview</a>
         </Link>
-        <Link href="/">
+        <Link href="/past">
           <a>Review Past Interviews</a>
         </Link>
-        <Link href="/">
+        <Link href="/resources">
           <a>Resources</a>
         </Link>
-        <Link href="/">
+        <Link href="/settings">
           <a>Settings</a>
         </Link>
       </div>
 
       <Button onClick={logout} className={style.logout}>
-        <Image src={logoutIcon} alt="logout" height={20} width={20}/>
+        <Image src={logoutIcon} alt="logout" height={20} width={20} />
         <div>Log out</div>
       </Button>
     </div>

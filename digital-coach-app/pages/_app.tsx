@@ -2,7 +2,7 @@ import type { AppProps } from "next/app";
 
 import "@App/styles/globals.css";
 import "@App/lib/firebase/firebase.config";
-import Layout from "@App/components/Layout";
+import CoreLayout from "@App/components/layouts/CoreLayout";
 import { AuthContextProvider } from "@App/lib/auth/AuthContextProvider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -13,9 +13,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
-        <Layout>
+        <CoreLayout>
           <Component {...pageProps} />
-        </Layout>
+        </CoreLayout>
       </AuthContextProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

@@ -1,0 +1,19 @@
+.TextField {
+  display: flex;
+  flex-direction: column;
+
+  &_title {
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 0.5rem;
+  }
+
+  &_input {
+    border: 1px solid #949494;
+    border-radius: 4px;
+    min-height: 42px;
+  }
+}

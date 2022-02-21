@@ -4,7 +4,7 @@ import useAuthContext from "../../lib/auth/AuthContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import RegistrationGuard from "../../lib/user/RegistrationGuard";
-import Button from "../../components/Button";
+import Button from "../../components/atoms/Button";
 import { Select } from "../../components/Select";
 import UserService from "../../lib/user/UserService";
 import StorageService, {
