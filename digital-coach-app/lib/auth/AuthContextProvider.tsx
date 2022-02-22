@@ -2,10 +2,10 @@ import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import AuthService from "./AuthService";
 import { AuthContext } from "./AuthContext";
 import UserService from "../user/UserService";
-import { User } from "../user/models";
+import { IUser } from "../user/models";
 
 export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
