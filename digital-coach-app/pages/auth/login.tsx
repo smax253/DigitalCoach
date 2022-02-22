@@ -7,6 +7,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import UnAuthGuard from "@App/lib/auth/UnAuthGuard";
 import { TextField } from "@App/components/molecules/TextField";
+import LoginIcon from '@mui/icons-material/Login';
+import CenteredComponent from "@App/components/atoms/CenteredComponent";
 
 interface LoginFormInputs {
   email: string;
@@ -47,29 +49,38 @@ export default function LoginPage() {
 
   return (
     <UnAuthGuard>
-      <h1>Digital Coach</h1>
-      {authError && <p>{authError}</p>}
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <h2>Login</h2>
-        <TextField type="email" placeholder="Email" {...register("email")} />
-        {formError.email && <span>{formError.email.message}</span>}
+      <CenteredComponent>
+        <div className={styles.loginBox}>
+        {authError && <p>{authError}</p>}
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.logo}>
+            <h1>Digital Coach</h1>
+          </div>
+          <h2>Login</h2>
+          <h3>Email</h3>
+          <TextField type="email" placeholder="" {...register("email")} />
+          {formError.email && <span>{formError.email.message}</span>}
+          <h3>Password</h3>
+          <TextField
+            type="password"
+            autoComplete="on"
+            placeholder=""
+            {...register("password")}
+          />
+          {formError.password && <span>{formError.password.message}</span>}
 
-        <TextField
-          type="password"
-          autoComplete="on"
-          placeholder="Password"
-          {...register("password")}
-        />
-        {formError.password && <span>{formError.password.message}</span>}
+          <Button type="submit">
+            <LoginIcon />
+            Login
+          </Button>
+          <Button onClick={loginWithGoogle}>Login with Google</Button>
+          <Link href="/auth/signup">
+            <a>New user? sign up</a>
+          </Link>
+        </form>
 
-        <Button type="submit">Login</Button>
-      </form>
-
-      <Button onClick={loginWithGoogle}>Login with Google</Button>
-      <h1>{currentUser?.id}</h1>
-      <Link href="/auth/signup">
-        <a>New user? sign up</a>
-      </Link>
+        </div>
+        </CenteredComponent>
     </UnAuthGuard>
   );
 }

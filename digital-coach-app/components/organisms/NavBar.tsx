@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Button from "../atoms/Button";
 import style from "./navbar.module.scss";
-import logoutIcon from "@App/res/sidebar/logout.svg";
+import LogoutIcon from '@mui/icons-material/Logout';
 import Image from "next/image";
 import useAuthContext from "@App/lib/auth/AuthContext";
 
@@ -32,7 +32,7 @@ export default function NavBar() {
       </div>
 
       <Button onClick={logout} className={style.logout}>
-        <Image src={logoutIcon} alt="logout" height={20} width={20} />
+        <LogoutIcon />
         <div>Log out</div>
       </Button>
     </div>
