@@ -23,7 +23,7 @@ export default function CoreLayout({ children }: PropsWithChildren<{}>) {
             <title>{siteTitle}</title>
           </Head>
 
-          <main>{children}</main>
+          <main className={styles.mainContainer}>{children}</main>
         </div>
       </div>
     </>
