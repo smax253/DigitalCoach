@@ -1,0 +1,32 @@
+@import "@App/styles/colors.scss";
+
+.StartInterviewPage {
+  display: flex;
+  gap: 2rem;
+
+  &_leftWrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &_rightWrapper {
+    flex-grow: 1;
+  }
+
+  &_customIntCard {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &_link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &_icon {
+    color: $secondary;
+  }
+}

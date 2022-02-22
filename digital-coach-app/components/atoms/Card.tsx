@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { PropsWithChildren } from "react";
 import styles from "./Card.module.scss";
 
@@ -10,10 +11,10 @@ interface Props
 }
 
 export default function Card(props: PropsWithChildren<Props>) {
-  const { title } = props;
+  const { title, className, ...rest } = props;
 
   return (
-    <section className={styles.Card}>
+    <section className={classNames(styles.Card, className)} {...rest}>
       {title && <p className={styles.Cardtitle}>{title}</p>}
       {props.children}
     </section>
