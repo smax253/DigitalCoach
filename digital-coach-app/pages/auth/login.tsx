@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import UnAuthGuard from "../../lib/auth/UnAuthGuard";
-import { TextField } from "@App/components/atoms/TextField";
+import { TextField } from "@App/components/molecules/TextField";
 
 interface LoginFormInputs {
   email: string;
