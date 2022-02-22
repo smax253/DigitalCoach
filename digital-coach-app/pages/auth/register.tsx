@@ -1,22 +1,22 @@
 import { useForm } from "react-hook-form";
-import { TextField } from "../../components/molecules/TextField";
-import useAuthContext from "../../lib/auth/AuthContext";
+import useAuthContext from "@App/lib/auth/AuthContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import RegistrationGuard from "../../lib/user/RegistrationGuard";
-import Button from "../../components/atoms/Button";
-import { Select } from "../../components/Select";
-import UserService from "../../lib/user/UserService";
+import RegistrationGuard from "@App/lib/user/RegistrationGuard";
+import Button from "@App/components/atoms/Button";
+import { Select } from "@App/components/Select";
+import UserService from "@App/lib/user/UserService";
 import StorageService, {
-  StorageFolders,
-} from "../../lib/storage/StorageService";
+  EStorageFolders,
+} from "@App/lib/storage/StorageService";
 import {
-  UserDetails,
-  UserConcentrations,
-  UserProficiencies,
-} from "../../lib/user/models";
+  IUserDetails,
+  EUserConcentrations,
+  EUserProficiencies,
+} from "@App/lib/user/models";
+import { TextField } from "@App/components/molecules/TextField";
 
-interface RegFormInputs extends UserDetails {
+interface RegFormInputs extends IUserDetails {
   avatar: FileList;
 }
 
@@ -44,7 +44,7 @@ export default function RegisterPage() {
 
     const avatarUrl = await StorageService.upload(
       data.avatar[0],
-      StorageFolders.profilePic,
+      EStorageFolders.profilePic,
       currentUser!.id
     );
 
@@ -68,7 +68,7 @@ export default function RegisterPage() {
         {formError.name && <span>{formError.name.message}</span>}
 
         <Select {...register("concentration")}>
-          {Object.values(UserConcentrations).map((concentration) => (
+          {Object.values(EUserConcentrations).map((concentration) => (
             <option value={concentration} key={concentration}>
               {concentration}
             </option>
@@ -79,7 +79,7 @@ export default function RegisterPage() {
         )}
 
         <select {...register("proficiency")}>
-          {Object.values(UserProficiencies).map((proficiency) => (
+          {Object.values(EUserProficiencies).map((proficiency) => (
             <option value={proficiency} key={proficiency}>
               {proficiency}
             </option>

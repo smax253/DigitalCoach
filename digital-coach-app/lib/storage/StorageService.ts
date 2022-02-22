@@ -8,7 +8,7 @@ import {
 import { uuid } from "uuidv4";
 import FireBaseService from "@App/lib/firebase/FirebaseService";
 
-export enum StorageFolders {
+export enum EStorageFolders {
   profilePic = "profilePic",
 }
 
@@ -20,7 +20,7 @@ class StorageService extends FireBaseService {
     this.storage = getStorage(this.app);
   }
 
-  async upload(file: File, folder: StorageFolders, filename: string = uuid()) {
+  async upload(file: File, folder: EStorageFolders, filename: string = uuid()) {
     const fileRef = ref(this.storage, `${folder}/${filename}`);
 
     await uploadBytes(fileRef, file, { contentType: file.type });

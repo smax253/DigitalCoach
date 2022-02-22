@@ -2,23 +2,23 @@ import { Timestamp } from "firebase/firestore";
 import getRandomInt from "@App/util/getRandomInt";
 import BaseBuilder from "@App/lib/builder/BaseBuilder";
 import {
-  User,
-  UserConcentrations,
-  UserProficiencies,
+  IUser,
+  EUserConcentrations,
+  EUserProficiencies,
 } from "@App/lib/user/models";
 
-export default class UserBuilder extends BaseBuilder<User> {
+export default class UserBuilder extends BaseBuilder<IUser> {
   private id = "420";
   private name = "Jon Bellion";
   private email = "jonny@test.com";
   private avatarUrl = "";
   private concentration =
-    Object.values(UserConcentrations)[
-      getRandomInt(Object.values(UserConcentrations).length - 1)
+    Object.values(EUserConcentrations)[
+      getRandomInt(Object.values(EUserConcentrations).length - 1)
     ];
   private proficiency =
-    Object.values(UserProficiencies)[
-      getRandomInt(Object.values(UserProficiencies).length - 1)
+    Object.values(EUserProficiencies)[
+      getRandomInt(Object.values(EUserProficiencies).length - 1)
     ];
   private createdAt = Timestamp.now();
   private registrationCompletedAt = Timestamp.now();

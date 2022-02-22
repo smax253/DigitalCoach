@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export enum UserConcentrations {
+export enum EUserConcentrations {
   Technology = "Technology",
   Marketing = "Marketing",
   Finance = "Finance",
@@ -13,7 +13,7 @@ export enum UserConcentrations {
   Design = "Design",
 }
 
-export enum UserProficiencies {
+export enum EUserProficiencies {
   Student = "Student",
   NewGrad = "New Grad",
   Entry = "Entry Level",
@@ -21,14 +21,14 @@ export enum UserProficiencies {
   Late = "Late Career",
 }
 
-export interface UserDetails {
+export interface IUserDetails {
   avatarUrl: string;
   name: string;
-  concentration: UserConcentrations;
-  proficiency: UserProficiencies;
+  concentration: EUserConcentrations;
+  proficiency: EUserProficiencies;
 }
 
-export interface User extends UserDetails {
+export interface IUser extends IUserDetails {
   id: string;
   email: string;
   registrationCompletedAt: Timestamp;
