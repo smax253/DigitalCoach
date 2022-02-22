@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { TextField } from "../../components/TextField";
+import { TextField } from "../../components/molecules/TextField";
 import useAuthContext from "../../lib/auth/AuthContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
