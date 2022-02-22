@@ -1,0 +1,76 @@
+@import "@App/styles/colors.scss";
+.logo{
+  display: flex;
+  justify-content: center;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  color: $secondary;
+  background-color: white;
+  max-width: 500px;
+  padding: 60px;
+  border-radius: 10px;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.12);
+  width:100%;
+  height: 100%;
+  color:black;
+}
+.loginContainer{
+  height:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loginBox {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  h1 {
+    font-family: Montserrat;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 24px;
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.44px;
+
+    color: #fb8500;
+
+    text-shadow: -2px 2px 0px #fff8f8;
+  }
+  h2, h3{
+    margin:0;
+  }
+  h3{
+    font-weight: 500;
+  }
+  button{
+    background-color: $secondary;
+    border-radius: 11px;
+    color:#fff;
+    font-family: inherit;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    svg{
+      margin-right: 10px;
+    }
+  }
+  a{
+    text-align: center;
+    color:$secondary;
+    text-decoration: none;
+  }
+}
+
+
