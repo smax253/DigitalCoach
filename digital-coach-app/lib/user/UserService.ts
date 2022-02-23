@@ -8,20 +8,20 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import FireBaseService from "@App/lib/firebase/FirebaseService";
-import { IUser, IUserDetails } from "./models";
+import FirebaseService from "@App/lib/firebase/FirebaseService";
+import { IUser, IUserDetails } from "@App/lib/user/models";
 
-class UserService extends FireBaseService {
-  private db: Firestore;
+class UserService extends FirebaseService {
+  private firestore: Firestore;
 
   constructor() {
     super();
 
-    this.db = getFirestore(this.app);
+    this.firestore = getFirestore(this.app);
   }
 
   private getUserDocRef(userId: string) {
-    return doc(this.db, "users", userId);
+    return doc(this.firestore, "users", userId);
   }
 
   async add(user: IUser) {

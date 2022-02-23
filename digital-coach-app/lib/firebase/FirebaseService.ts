@@ -1,6 +1,6 @@
 import { FirebaseApp, getApp } from "firebase/app";
 
-export default class FireBaseService {
+export default class FirebaseService {
   app: FirebaseApp;
 
   constructor() {
