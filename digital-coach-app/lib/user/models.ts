@@ -21,16 +21,19 @@ export enum EUserProficiencies {
   Late = "Late Career",
 }
 
-export interface IUserDetails {
+export interface IBaseUserAttributes {
   avatarUrl: string;
   name: string;
-  concentration: EUserConcentrations;
-  proficiency: EUserProficiencies;
+  concentration: EUserConcentrations | null;
+  proficiency: EUserProficiencies | null;
 }
 
-export interface IUser extends IUserDetails {
-  id: string;
+export interface IBaseUser extends IBaseUserAttributes {
   email: string;
-  registrationCompletedAt: Timestamp;
+  registrationCompletedAt: Timestamp | null;
   createdAt: Timestamp;
+}
+
+export interface IUser extends IBaseUser {
+  id: string;
 }
