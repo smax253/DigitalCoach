@@ -10,13 +10,13 @@ import StorageService, {
   EStorageFolders,
 } from "@App/lib/storage/StorageService";
 import {
-  IUserDetails,
+  IBaseUserAttributes,
   EUserConcentrations,
   EUserProficiencies,
 } from "@App/lib/user/models";
 import { TextField } from "@App/components/molecules/TextField";
 
-interface RegFormInputs extends IUserDetails {
+interface RegFormInputs extends IBaseUserAttributes {
   avatar: FileList;
 }
 
