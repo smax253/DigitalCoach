@@ -10,9 +10,9 @@ import {
   onAuthStateChanged as firebaseOnAuthStateChanged,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import FireBaseService from "../firebase/FirebaseService";
+import FirebaseService from "@App/lib/firebase/FirebaseService";
 
-class AuthService extends FireBaseService {
+class AuthService extends FirebaseService {
   auth: Auth;
 
   constructor() {

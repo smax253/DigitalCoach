@@ -6,13 +6,13 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { uuid } from "uuidv4";
-import FireBaseService from "@App/lib/firebase/FirebaseService";
+import FirebaseService from "@App/lib/firebase/FirebaseService";
 
 export enum EStorageFolders {
   profilePic = "profilePic",
 }
 
-class StorageService extends FireBaseService {
+class StorageService extends FirebaseService {
   private storage: FirebaseStorage;
 
   constructor() {
