@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Button from "../atoms/Button";
 import style from "./navbar.module.scss";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import Image from "next/image";
 import useAuthContext from "@App/lib/auth/AuthContext";
 
@@ -26,8 +26,8 @@ export default function NavBar() {
         <Link href="/resources">
           <a>Resources</a>
         </Link>
-        <Link href="/settings">
-          <a>Settings</a>
+        <Link href="/profile">
+          <a>Profile</a>
         </Link>
       </div>
 
