@@ -1,5 +1,5 @@
 import { configure } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
@@ -19,7 +19,8 @@ if (!getApps.length) {
     disableWarnings: true,
   });
 
-  getFirestore(app);
+  const db = getFirestore(app);
+  connectFirestoreEmulator(db, localIp, 8080);
 
   const storage = getStorage(app);
   connectStorageEmulator(storage, localIp, 9199);
