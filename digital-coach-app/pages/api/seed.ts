@@ -11,6 +11,7 @@ import InterviewQuestionService from "@App/lib/interviewQuestion/InterviewQuesti
 import { DocumentReference } from "firebase/firestore";
 import { IInterviewAttributes } from "@App/lib/interview/models";
 import AnswerService from "@App/lib/answer/AnswerService";
+import QuestionSetsService from "@App/lib/questionSets/QuestionSetsService";
 
 export default async function seed(
   req: NextApiRequest,
@@ -60,6 +61,23 @@ export default async function seed(
 
     const questions = await QuestionService.getAllQuestions();
 
+    const addQuestionSets = new Array(8).fill(0).map((_, idx) => {
+      const questionSet = {
+        title: "Question Set " + idx,
+        description: "Description " + idx,
+        questions: [
+          questions.docs[getRandomInt(questions.docs.length)].id,
+          questions.docs[getRandomInt(questions.docs.length)].id,
+          questions.docs[getRandomInt(questions.docs.length)].id,
+          questions.docs[getRandomInt(questions.docs.length)].id,
+          questions.docs[getRandomInt(questions.docs.length)].id,
+        ],
+        isFeatured: idx < 5,
+      };
+
+      return QuestionSetsService.createQuestionSet(questionSet);
+    });
+
     const addInterviewQuestions = interviewsCollectionRef
       .map((interviewDocRef) =>
         new Array(5).fill(null).map(async () => {
@@ -78,7 +96,7 @@ export default async function seed(
       )
       .flat();
 
-    await Promise.all(addInterviewQuestions);
+    await Promise.all([...addQuestionSets, ...addInterviewQuestions]);
 
     const questionsRef =
       await InterviewQuestionService.getAllInterviewQuestions();

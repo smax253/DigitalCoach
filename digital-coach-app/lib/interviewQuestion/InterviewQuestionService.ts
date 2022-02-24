@@ -36,14 +36,14 @@ class InterviewQuestionService extends FirebaseService {
       userId,
       "interviews",
       interviewId,
-      "questions"
+      "interviewQuestions"
     ) as CollectionReference<IInterviewQuestion>;
   }
 
   private getCollectionGroupRef() {
     return collectionGroup(
       this.firestore,
-      "questions"
+      "interviewQuestions"
     ) as Query<IInterviewQuestion>;
   }
 
@@ -73,7 +73,7 @@ class InterviewQuestionService extends FirebaseService {
         ? (collection(
             this.firestore,
             ref.path,
-            "questions"
+            "interviewQuestions"
           ) as CollectionReference<IInterviewQuestion>)
         : this.getCollectionRef(ref.userId, ref.interviewId);
 
