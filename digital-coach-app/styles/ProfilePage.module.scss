@@ -1,0 +1,15 @@
+.ProfilePage {
+  &_body {
+    display: flex;
+
+    gap: 2rem;
+  }
+
+  &_bodyLeft {
+    flex-grow: 1;
+  }
+
+  &_bodyRight {
+    flex-grow: 1;
+  }
+}
