@@ -19,6 +19,8 @@ function AuthGuard({ children, router }: PropsWithChildren<WithRouterProps>) {
       router.push("/auth/register");
   }, [currentUser, router]);
 
+  if (!currentUser) return null;
+
   return <>{children}</>;
 }
 
