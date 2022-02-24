@@ -16,7 +16,7 @@ export default function Avatar(props: Props) {
       alt={alt}
       height={height ?? size ?? 52}
       width={width ?? size ?? 52}
-      {...props}
+      {...rest}
     />
   );
 }
