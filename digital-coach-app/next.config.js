@@ -11,4 +11,7 @@ module.exports = withTM({
   images: {
     domains: ["localhost"],
   },
+  typescript:{
+    ignoreBuildErrors: true,
+  }
 });
