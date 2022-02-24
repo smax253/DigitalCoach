@@ -6,6 +6,7 @@ import RegistrationGuard from "@App/lib/user/RegistrationGuard";
 import Button from "@App/components/atoms/Button";
 import { Select } from "@App/components/Select";
 import UserService from "@App/lib/user/UserService";
+import styles from "@App/styles/RegisterPage.module.scss";
 import StorageService, {
   EStorageFolders,
 } from "@App/lib/storage/StorageService";
@@ -59,14 +60,16 @@ export default function RegisterPage() {
 
   return (
     <RegistrationGuard>
-      <h1>Registration</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="file" accept="image/*" {...register("avatar")} />
-
+      <div className= {styles.registerBox}>
+      <form className= {styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <h1>Register</h1>
+        <label>Select a profile picture:</label>
+        <input type="file" accept="image/*" {...register("avatar")}/>
+        <label>Enter your name:</label>
         <TextField placeholder="Full Name" {...register("name")} />
         {formError.name && <span>{formError.name.message}</span>}
 
+        <label>Select a concentration:</label>
         <Select {...register("concentration")}>
           {Object.values(EUserConcentrations).map((concentration) => (
             <option value={concentration} key={concentration}>
@@ -78,6 +81,7 @@ export default function RegisterPage() {
           <span>{formError.concentration.message}</span>
         )}
 
+        <label >Select a proficiency:</label>
         <select {...register("proficiency")}>
           {Object.values(EUserProficiencies).map((proficiency) => (
             <option value={proficiency} key={proficiency}>
@@ -89,6 +93,7 @@ export default function RegisterPage() {
 
         <Button type="submit">sign up</Button>
       </form>
+      </div>
     </RegistrationGuard>
   );
 }
