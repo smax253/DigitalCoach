@@ -22,20 +22,20 @@ class AuthService extends FirebaseService {
   }
 
   async login(email: string, password: string): Promise<UserCredential> {
-    return await signInWithEmailAndPassword(this.auth, email, password);
+    return signInWithEmailAndPassword(this.auth, email, password);
   }
 
   async signup(email: string, password: string): Promise<UserCredential> {
-    return await createUserWithEmailAndPassword(this.auth, email, password);
+    return createUserWithEmailAndPassword(this.auth, email, password);
   }
 
   async loginWithGoogle(): Promise<UserCredential> {
     const provider = new GoogleAuthProvider();
-    return await signInWithPopup(this.auth, provider);
+    return signInWithPopup(this.auth, provider);
   }
 
   async logout(): Promise<void> {
-    await signOut(this.auth);
+    signOut(this.auth);
   }
 
   isSignedIn() {

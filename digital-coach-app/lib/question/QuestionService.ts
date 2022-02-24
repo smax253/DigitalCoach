@@ -1,16 +1,13 @@
 import FirebaseService from "@App/lib/firebase/FirebaseService";
 import {
+  addDoc,
   collection,
   CollectionReference,
-  doc,
-  DocumentData,
   Firestore,
   getDocs,
   getFirestore,
   query,
   QueryDocumentSnapshot,
-  QuerySnapshot,
-  setDoc,
   Timestamp,
   where,
 } from "firebase/firestore";
@@ -26,7 +23,6 @@ class QuestionService extends FirebaseService {
 
   constructor() {
     super();
-
     this.firestore = getFirestore(this.app);
   }
 
@@ -51,7 +47,7 @@ class QuestionService extends FirebaseService {
       createdAt: Timestamp.now(),
     };
 
-    return setDoc(doc(this.getCollectionRef()), question);
+    return addDoc(this.getCollectionRef(), question);
   }
 
   async getAllQuestions() {
@@ -60,6 +56,7 @@ class QuestionService extends FirebaseService {
 
   async getBySubject(subject: TSubject) {
     const ref = this.getCollectionRef();
+
     const filter = where("subject", "==", subject);
 
     return getDocs(query(ref, filter));

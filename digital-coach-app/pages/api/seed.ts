@@ -8,6 +8,9 @@ import InterviewService from "@App/lib/interview/InterviewService";
 import questionsData from "@App/data/questions";
 import getRandomInt from "@App/util/getRandomInt";
 import InterviewQuestionService from "@App/lib/interviewQuestion/InterviewQuestionService";
+import { DocumentReference } from "firebase/firestore";
+import { IInterviewAttributes } from "@App/lib/interview/models";
+import AnswerService from "@App/lib/answer/AnswerService";
 
 export default async function seed(
   req: NextApiRequest,
@@ -44,30 +47,32 @@ export default async function seed(
         InterviewService.create(user.uid, { title: `Interview ${idx}` })
       );
 
-    await Promise.all([
-      ...addUserCollection,
-      ...addQuestionCollection,
-      ...addInterviewCollection,
-    ]);
+    const interviewsCollectionRef = (
+      await Promise.all([
+        ...addInterviewCollection,
+        ...addUserCollection,
+        ...addQuestionCollection,
+      ])
+    ).slice(
+      0,
+      addInterviewCollection.length
+    ) as DocumentReference<IInterviewAttributes>[];
 
-    const [questions, interviews] = await Promise.all([
-      QuestionService.getAllQuestions(),
-      InterviewService.getAllInterviews(),
-    ]);
+    const questions = await QuestionService.getAllQuestions();
 
-    const addInterviewQuestions = interviews.docs
-      .map((interview) =>
+    const addInterviewQuestions = interviewsCollectionRef
+      .map((interviewDocRef) =>
         new Array(5).fill(null).map(async () => {
           const question = questions.docs[getRandomInt(questions.docs.length)],
             questionAttributes = {
               timeLimit: 30 * getRandomInt(20),
-              retries: getRandomInt(3),
+              retries: getRandomInt(3, 1),
             };
 
           return InterviewQuestionService.addQuestion(
             { gid: question.id, ...question.data() },
             questionAttributes,
-            interview.ref
+            interviewDocRef
           );
         })
       )
@@ -75,9 +80,26 @@ export default async function seed(
 
     await Promise.all(addInterviewQuestions);
 
+    const questionsRef =
+      await InterviewQuestionService.getAllInterviewQuestions();
+
+    await Promise.all(
+      questionsRef.docs
+        .map((questionRef) => {
+          const question = questionRef.data();
+
+          return new Array(question.retries).fill(null).map((_, i) =>
+            AnswerService.addAnswer(questionRef.ref, {
+              videoUrl: "Number 1 bullshit man",
+              isSubmission: i === 0 ? true : false,
+            })
+          );
+        })
+        .flat()
+    );
+
     res.status(200).json({
       message: `Finished seeding in ${Date.now() - start}ms`,
-      addInterviewQuestions,
     });
   } catch (error) {
     res.status(500).json({ error });

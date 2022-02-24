@@ -1,15 +1,15 @@
 import {
+  addDoc,
   collection,
   collectionGroup,
   CollectionReference,
-  doc,
   DocumentReference,
   Firestore,
   getDocs,
   getFirestore,
   query,
   Query,
-  setDoc,
+  where,
 } from "firebase/firestore";
 
 import {
@@ -52,6 +52,15 @@ class InterviewQuestionService extends FirebaseService {
     return getDocs(groupQuery);
   }
 
+  async getUnreviewQuestions() {
+    const groupQuery = query(
+      this.getCollectionGroupRef(),
+      where("review", "==", null)
+    );
+
+    return getDocs(groupQuery);
+  }
+
   async addQuestion(
     baseQuestion: IQuestion,
     questionsAttributes: IBaseInterviewQuestionAttributes,
@@ -61,19 +70,22 @@ class InterviewQuestionService extends FirebaseService {
   ) {
     const collectionRef =
       ref instanceof DocumentReference
-        ? collection(this.firestore, ref.path, "questions")
+        ? (collection(
+            this.firestore,
+            ref.path,
+            "questions"
+          ) as CollectionReference<IInterviewQuestion>)
         : this.getCollectionRef(ref.userId, ref.interviewId);
 
-    const question = {
+    const question: IInterviewQuestion = {
       ...baseQuestion,
       ...questionsAttributes,
       review: null,
       score: null,
-      answers: [],
       answeredAt: null,
     };
 
-    return setDoc(doc(collectionRef), question);
+    return addDoc(collectionRef, question);
   }
 }
 
