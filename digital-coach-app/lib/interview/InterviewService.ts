@@ -81,7 +81,7 @@ class InterviewService extends FirebaseService {
 
   async getAllInterviews() {
     const groupQuery = query(this.getCollectionGroupRef());
-    
+
     return getDocs(groupQuery);
   }
 }
