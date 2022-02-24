@@ -1,3 +1,4 @@
+import Avatar from "@App/components/atoms/Avatar";
 import Card from "@App/components/atoms/Card";
 import useAuthContext from "@App/lib/auth/AuthContext";
 import AuthGuard from "@App/lib/auth/AuthGuard";
@@ -10,6 +11,12 @@ function ProfilePage() {
   return (
     <div className={styles.ProfilePage}>
       <h1>Your Profile</h1>
+
+      <div className={styles.ProfilePage_avatarWrapper}>
+        {currentUser?.avatarUrl && (
+          <Avatar size={125} src={currentUser.avatarUrl} />
+        )}
+      </div>
 
       <div className={styles.ProfilePage_body}>
         <div className={styles.ProfilePage_bodyLeft}>
