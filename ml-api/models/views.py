@@ -13,6 +13,10 @@ model = 'model'
 # initalize the Flask object
 app = Flask(__name__)
 
+'''
+POST request with a text option within the text body 
+that has to get processed and then fed into the model.
+'''
 @app.route('/predict-text', method=['POST'])
 def score_text_structure(): 
     pass
