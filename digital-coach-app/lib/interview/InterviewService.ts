@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   collectionGroup,
   CollectionReference,
@@ -10,7 +11,6 @@ import {
   getFirestore,
   Query,
   query,
-  setDoc,
   Timestamp,
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
@@ -64,7 +64,7 @@ class InterviewService extends FirebaseService {
       createdAt: Timestamp.now(),
     };
 
-    return setDoc(doc(collectionRef), interview);
+    return addDoc(collectionRef, interview);
   }
 
   async fetchUserInterviews(userId: string) {
@@ -81,6 +81,7 @@ class InterviewService extends FirebaseService {
 
   async getAllInterviews() {
     const groupQuery = query(this.getCollectionGroupRef());
+    
     return getDocs(groupQuery);
   }
 }

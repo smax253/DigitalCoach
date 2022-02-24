@@ -1,6 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { IAnswer } from "../answer/model";
-import { IQuestion } from "../question/models";
+import { IQuestion } from "@App/lib/question/models";
 
 export interface IBaseInterviewQuestionAttributes {
   timeLimit: number;
@@ -14,6 +13,5 @@ export interface IBaseInterviewQuestion
 export interface IInterviewQuestion extends IBaseInterviewQuestion {
   review: null;
   score: number | null;
-  answers: IAnswer[];
   answeredAt: Timestamp | null;
 }
