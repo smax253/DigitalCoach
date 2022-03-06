@@ -25,6 +25,7 @@ export default class UserBuilder extends BaseBuilder<IUser> {
 
   build() {
     return {
+      id: this.id,
       name: this.name,
       email: this.email,
       avatarUrl: this.avatarUrl,
