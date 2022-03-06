@@ -35,6 +35,7 @@
     "react-hook-form": "^7.22.4",
     "react-media-recorder": "^1.6.3",
     "react-query": "^3.34.14",
+    "react-table": "^7.7.0",
     "sass": "^1.49.7",
     "uuidv4": "^6.2.12",
     "yarn": "^1.22.17",
