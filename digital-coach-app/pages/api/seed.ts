@@ -115,9 +115,8 @@ export default async function seed(
         })
         .flat()
     );
-    await Promise.all(questionsRef.docs.map((questionSnapshot) => {
-      return InterviewQuestionService.scoreQuestion(questionSnapshot.ref, Math.random());
-    }))
+    await Promise.all(questionsRef.docs.map((questionSnapshot) => InterviewQuestionService.scoreQuestion(questionSnapshot.ref, Math.random());
+    ))
 
     res.status(200).json({
       message: `Finished seeding in ${Date.now() - start}ms`,
