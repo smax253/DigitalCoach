@@ -35,9 +35,7 @@ const Home: NextPage = () => {
   if (
     averageScore === undefined ||
     isLoadingAverageScore ||
-    isFetchingAverageScore ||
     isAnswerLoading ||
-    isAnswerFetching ||
     isLoading ||
     isFetching
   )
