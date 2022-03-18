@@ -8,6 +8,7 @@ import ScoreChart from "@App/components/molecules/ScoreChart";
 import PracticeCalendar from "@App/components/molecules/PracticeCalendar";
 import useGetFeaturedQuestionSets from "@App/lib/questionSets/useGetFeaturedQuestionSets";
 import Link from "next/link";
+import useGetUserAverageScore from "@App/lib/interviewQuestion/useGetUserAverageScore";
 
 const Home: NextPage = () => {
   const { currentUser } = useAuthContext();
@@ -18,7 +19,20 @@ const Home: NextPage = () => {
     isFetching,
   } = useGetFeaturedQuestionSets();
 
-  if (isLoading || isFetching) return <div>Loading...</div>;
+  const {
+    data: averageScore,
+    isLoading: isLoadingAverageScore,
+    isFetching: isFetchingAverageScore,
+  } = useGetUserAverageScore(currentUser?.id);
+
+  if (
+    averageScore === undefined ||
+    isLoadingAverageScore ||
+    isFetchingAverageScore ||
+    isLoading ||
+    isFetching
+  )
+    return <div>Loading...</div>;
 
   const mockIssuesData = [
     {
@@ -64,7 +78,7 @@ const Home: NextPage = () => {
   return (
     <AuthGuard>
       <div className={styles.Home}>
-        <h1>Welcome back, {currentUser?.name}!</h1>
+        <h1>Welcome back, {currentUser?.data()?.name}!</h1>
         <h2>Dashboard</h2>
         <div className={styles.cards}>
           <Card title={"Quick Start Interviews"} multiline>
@@ -92,7 +106,7 @@ const Home: NextPage = () => {
               Start by researching the company and your interviewer.
               Understanding key information about the company you’re
               interviewing with can help you go into your interview with
-              confidence.{" "}
+              confidence.
             </p>
           </Card>
           <Card title={"Recent Recordings"} multiline>
@@ -101,7 +115,7 @@ const Home: NextPage = () => {
 
           <Card title={"Average Score"} multiline>
             <div className={styles.scoreChartWrapper}>
-              <ScoreChart score={80} />
+              <ScoreChart score={Math.round(averageScore * 100)} />
             </div>
           </Card>
         </div>

@@ -28,12 +28,8 @@ export interface IBaseUserAttributes {
   proficiency: EUserProficiencies | null;
 }
 
-export interface IBaseUser extends IBaseUserAttributes {
+export interface IUser extends IBaseUserAttributes {
   email: string;
   registrationCompletedAt: Timestamp | null;
   createdAt: Timestamp;
-}
-
-export interface IUser extends IBaseUser {
-  id: string;
 }

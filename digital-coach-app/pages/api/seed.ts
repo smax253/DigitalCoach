@@ -39,7 +39,6 @@ export default async function seed(
         UserService.add(
           user.uid,
           new UserBuilder()
-            .withId(user.uid)
             .with({ email: user.email!, name: user.email?.split("@")[0] })
             .build()
         )
@@ -114,6 +113,14 @@ export default async function seed(
           );
         })
         .flat()
+    );
+    await Promise.all(
+      questionsRef.docs.map((questionSnapshot) => {
+        return InterviewQuestionService.scoreQuestion(
+          questionSnapshot.ref,
+          Math.random()
+        );
+      })
     );
 
     res.status(200).json({

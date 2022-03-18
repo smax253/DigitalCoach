@@ -3,17 +3,19 @@ import AuthService from "./AuthService";
 import { AuthContext } from "./AuthContext";
 import UserService from "../user/UserService";
 import { IUser } from "../user/models";
+import { DocumentSnapshot } from "firebase/firestore";
 
 export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
-  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+  const [currentUser, setCurrentUser] =
+    useState<DocumentSnapshot<IUser> | null>(null);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     AuthService.onAuthStateChanged(async (user) => {
       if (user) {
-        const userDetails = await UserService.getUser(user?.uid);
-        console.log(userDetails);
-        setCurrentUser(userDetails);
+        const userDocSnapshot = await UserService.getUser(user?.uid);
+
+        setCurrentUser(userDocSnapshot);
       }
     });
   }, []);
@@ -22,9 +24,9 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
     const login = async (email: string, password: string) => {
       try {
         const { user } = await AuthService.login(email, password);
-        const userDetails = await UserService.getUser(user.uid);
+        const userDocSnapshot = await UserService.getUser(user.uid);
 
-        setCurrentUser(userDetails);
+        setCurrentUser(userDocSnapshot);
       } catch (error: any) {
         setError(error.message);
       }
@@ -33,9 +35,9 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
     const loginWithGoogle = async () => {
       try {
         const { user } = await AuthService.loginWithGoogle();
-        const userDetails = await UserService.getUser(user.uid);
+        const userDocSnapshot = await UserService.getUser(user.uid);
 
-        setCurrentUser(userDetails);
+        setCurrentUser(userDocSnapshot);
       } catch (error: any) {
         setError(error.message);
       }
@@ -47,9 +49,9 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
 
         await UserService.createNewUser(user);
 
-        const userDetails = await UserService.getUser(user.uid);
+        const userDocSnapshot = await UserService.getUser(user.uid);
 
-        setCurrentUser(userDetails);
+        setCurrentUser(userDocSnapshot);
       } catch (error: any) {
         setError(error.message);
       }
@@ -62,8 +64,8 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
     };
 
     const fetchUser = async (userId: string = currentUser!.id) => {
-      const userDetails = await UserService.getUser(userId);
-      setCurrentUser(userDetails);
+      const userDocSnapshot = await UserService.getUser(userId);
+      setCurrentUser(userDocSnapshot);
     };
 
     return {

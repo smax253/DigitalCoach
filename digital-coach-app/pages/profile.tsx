@@ -13,20 +13,22 @@ function ProfilePage() {
       <h1>Your Profile</h1>
 
       <div className={styles.ProfilePage_avatarWrapper}>
-        {currentUser?.avatarUrl && (
-          <Avatar size={125} src={currentUser.avatarUrl} />
+        {currentUser?.data()?.avatarUrl && (
+          <Avatar size={125} src={currentUser?.data()!.avatarUrl} />
         )}
       </div>
 
       <div className={styles.ProfilePage_body}>
         <div className={styles.ProfilePage_bodyLeft}>
-          <Card title="Name">{currentUser?.name}</Card>
-          <Card title="Email">{currentUser?.email}</Card>
+          <Card title="Name">{currentUser?.data()?.name}</Card>
+          <Card title="Email">{currentUser?.data()?.email}</Card>
         </div>
 
         <div className={styles.ProfilePage_bodyRight}>
-          <Card title="Major">{currentUser?.concentration}</Card>
-          <Card title="Experience Level">{currentUser?.proficiency}</Card>
+          <Card title="Major">{currentUser?.data()?.concentration}</Card>
+          <Card title="Experience Level">
+            {currentUser?.data()?.proficiency}
+          </Card>
           <Card title="Interested Roles">We dont got this info yet</Card>
         </div>
       </div>
