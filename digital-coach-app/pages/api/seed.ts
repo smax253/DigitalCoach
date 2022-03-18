@@ -104,11 +104,12 @@ export default async function seed(
       questionsRef.docs
         .map((questionRef) => {
           const question = questionRef.data();
-
+          const uid = questionRef.ref.path.split('/')[1];
           return new Array(question.retries).fill(null).map((_, i) =>
             AnswerService.addAnswer(questionRef.ref, {
               videoUrl: "Number 1 bullshit man",
               isSubmission: i === 0 ? true : false,
+              userId: uid
             })
           );
         })
