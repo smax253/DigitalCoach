@@ -9,6 +9,8 @@ import {
   getFirestore,
   Query,
   Timestamp,
+  where,
+  query,
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
 import { IAnswer, IAnswerAttributes } from "@App/lib/answer/model";
@@ -67,6 +69,11 @@ class AnswerService extends FirebaseService {
     const collectionGroupRef = this.getCollectionGroupRef();
 
     return getDocs(collectionGroupRef);
+  }
+
+  async getAnswersByUserId(userId: string) {
+    const collectionGroupRef = this.getCollectionGroupRef();
+    return getDocs(query(collectionGroupRef, where("userId", "==", userId)));
   }
 }
 
