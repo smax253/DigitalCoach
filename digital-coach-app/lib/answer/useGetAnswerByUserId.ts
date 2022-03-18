@@ -4,10 +4,7 @@ import AnswerService from "./AnswerService";
 export default function useGetAnswersByUserId(userId: string | undefined) {
   return useQuery(
     ["getAnswersByUserId"],
-    () => {
-      if (userId) return AnswerService.getAnswersByUserId(userId);
-      else return null;
-    },
+    () => AnswerService.getAnswersByUserId(userId!),
     {
       enabled: !!userId,
     }
