@@ -2,13 +2,12 @@ import { Timestamp } from "firebase/firestore";
 import getRandomInt from "@App/util/getRandomInt";
 import BaseBuilder from "@App/lib/builder/BaseBuilder";
 import {
-  IUser,
   EUserConcentrations,
   EUserProficiencies,
+  IUser,
 } from "@App/lib/user/models";
 
 export default class UserBuilder extends BaseBuilder<IUser> {
-  private id = "420";
   private name = "Jon Bellion";
   private email = "jonny@test.com";
   private avatarUrl = "";
@@ -25,7 +24,6 @@ export default class UserBuilder extends BaseBuilder<IUser> {
 
   build() {
     return {
-      id: this.id,
       name: this.name,
       email: this.email,
       avatarUrl: this.avatarUrl,
@@ -34,10 +32,5 @@ export default class UserBuilder extends BaseBuilder<IUser> {
       createdAt: this.createdAt,
       registrationCompletedAt: this.registrationCompletedAt,
     };
-  }
-
-  withId(id: string) {
-    this.id = id;
-    return this;
   }
 }

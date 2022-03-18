@@ -12,7 +12,7 @@ function RegistrationGuard({
 
   useEffect(() => {
     if (!AuthService.auth.currentUser) router.push("/auth/login");
-    if (currentUser?.registrationCompletedAt) router.push("/");
+    if (currentUser?.data()?.registrationCompletedAt) router.push("/");
   });
 
   return <>{children}</>;
