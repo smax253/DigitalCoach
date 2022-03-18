@@ -89,32 +89,55 @@ class InterviewQuestionService extends FirebaseService {
 
     return addDoc(collectionRef, question);
   }
-  async getQuestion(questionId: string){
+  async getQuestion(questionId: string) {
     const groupQuery = query(
       this.getCollectionGroupRef(),
       where("id", "==", questionId)
     );
     return getDocs(groupQuery);
   }
-  async scoreQuestion(questionRef: DocumentReference<IInterviewQuestion>, score: number){
-    return updateDoc(questionRef, {score: score});
+  async scoreQuestion(
+    questionRef: DocumentReference<IInterviewQuestion>,
+    score: number
+  ) {
+    return updateDoc(questionRef, { score: score });
   }
 
-  async getUserAverageScore(userId: string){
-    const interviews = await collection(this.firestore, "users", userId, "interviews");
-    const interviewIds = (await getDocs(interviews)).docs.map(interview => interview.id);
-    const questions = await Promise.all(
-      interviewIds.map(
-        interviewId => getDocs(
-          (collection(this.firestore, "users", userId, "interviews", interviewId, "interviewQuestions") as CollectionReference<IInterviewQuestion>)
-        )
-      )
+  async getUserAverageScore(userId: string) {
+    const interviews = await collection(
+      this.firestore,
+      "users",
+      userId,
+      "interviews"
     );
+    const interviewIds = (await getDocs(interviews)).docs.map(
+      (interview) => interview.id
+    );
+
+    const fetchQuestions = (interviewId: string) =>
+      getDocs(
+        collection(
+          this.firestore,
+          "users",
+          userId,
+          "interviews",
+          interviewId,
+          "interviewQuestions"
+        ) as CollectionReference<IInterviewQuestion>
+      );
+    const questions = await Promise.all(interviewIds.map(fetchQuestions));
+    
     const gradedScores = questions
-                            .map(questions => questions.docs.map(question => question.data().score))
-                            .flat()
-                            .filter((score):score is number => score !== null && score !== undefined);
-    return gradedScores.reduce((acc, score) => acc + score, 0) / gradedScores.length;
+      .map((questions) =>
+        questions.docs.map((question) => question.data().score)
+      )
+      .flat()
+      .filter(
+        (score): score is number => score !== null && score !== undefined
+      );
+    return (
+      gradedScores.reduce((acc, score) => acc + score, 0) / gradedScores.length
+    );
   }
 }
 

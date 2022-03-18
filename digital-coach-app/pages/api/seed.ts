@@ -39,7 +39,6 @@ export default async function seed(
         UserService.add(
           user.uid,
           new UserBuilder()
-            .withId(user.uid)
             .with({ email: user.email!, name: user.email?.split("@")[0] })
             .build()
         )
@@ -105,18 +104,24 @@ export default async function seed(
       questionsRef.docs
         .map((questionRef) => {
           const question = questionRef.data();
-          
+
           return new Array(question.retries).fill(null).map((_, i) =>
             AnswerService.addAnswer(questionRef.ref, {
               videoUrl: "Number 1 bullshit man",
               isSubmission: i === 0 ? true : false,
             })
-          )
+          );
         })
         .flat()
     );
-    await Promise.all(questionsRef.docs.map((questionSnapshot) => InterviewQuestionService.scoreQuestion(questionSnapshot.ref, Math.random());
-    ))
+    await Promise.all(
+      questionsRef.docs.map((questionSnapshot) => {
+        return InterviewQuestionService.scoreQuestion(
+          questionSnapshot.ref,
+          Math.random()
+        );
+      })
+    );
 
     res.status(200).json({
       message: `Finished seeding in ${Date.now() - start}ms`,

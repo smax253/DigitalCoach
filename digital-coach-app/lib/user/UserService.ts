@@ -10,7 +10,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
-import { IUser, IBaseUserAttributes, IBaseUser } from "@App/lib/user/models";
+import { IUser, IBaseUserAttributes } from "@App/lib/user/models";
 
 class UserService extends FirebaseService {
   private firestore: Firestore;
@@ -22,10 +22,10 @@ class UserService extends FirebaseService {
   }
 
   private getDocRef(userId: string) {
-    return doc(this.firestore, "users", userId) as DocumentReference<IBaseUser>;
+    return doc(this.firestore, "users", userId) as DocumentReference<IUser>;
   }
 
-  async add(userId: string, user: IBaseUser) {
+  async add(userId: string, user: IUser) {
     const userDocRef = this.getDocRef(userId);
 
     return setDoc(userDocRef, user);
@@ -57,11 +57,11 @@ class UserService extends FirebaseService {
     });
   }
 
-  async getUser(userId: string): Promise<IUser> {
+  async getUser(userId: string) {
     const userDocRef = this.getDocRef(userId);
 
     try {
-      return (await (await getDoc(userDocRef)).data()) as IUser;
+      return await getDoc(userDocRef);
     } catch (error) {
       throw error;
     }

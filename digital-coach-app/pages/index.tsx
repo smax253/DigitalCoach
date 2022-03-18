@@ -25,7 +25,14 @@ const Home: NextPage = () => {
     isFetching: isFetchingAverageScore,
   } = useGetUserAverageScore(currentUser?.id);
 
-  if (averageScore === undefined || isLoadingAverageScore || isFetchingAverageScore || isLoading || isFetching) return <div>Loading...</div>;
+  if (
+    averageScore === undefined ||
+    isLoadingAverageScore ||
+    isFetchingAverageScore ||
+    isLoading ||
+    isFetching
+  )
+    return <div>Loading...</div>;
 
   const mockIssuesData = [
     {
@@ -71,7 +78,7 @@ const Home: NextPage = () => {
   return (
     <AuthGuard>
       <div className={styles.Home}>
-        <h1>Welcome back, {currentUser?.name}!</h1>
+        <h1>Welcome back, {currentUser?.data()?.name}!</h1>
         <h2>Dashboard</h2>
         <div className={styles.cards}>
           <Card title={"Quick Start Interviews"} multiline>
@@ -99,7 +106,7 @@ const Home: NextPage = () => {
               Start by researching the company and your interviewer.
               Understanding key information about the company you’re
               interviewing with can help you go into your interview with
-              confidence.{" "}
+              confidence.
             </p>
           </Card>
           <Card title={"Recent Recordings"} multiline>
@@ -108,7 +115,7 @@ const Home: NextPage = () => {
 
           <Card title={"Average Score"} multiline>
             <div className={styles.scoreChartWrapper}>
-              <ScoreChart score={Math.round(averageScore*100)} />
+              <ScoreChart score={Math.round(averageScore * 100)} />
             </div>
           </Card>
         </div>

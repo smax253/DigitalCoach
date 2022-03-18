@@ -1,10 +1,11 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 
 import { IUser } from "@App/lib/user/models";
+import { DocumentSnapshot } from "firebase/firestore";
 
 interface AuthContextState {
-  setCurrentUser: Dispatch<SetStateAction<IUser | null>>;
-  currentUser: IUser | null;
+  setCurrentUser: Dispatch<SetStateAction<DocumentSnapshot<IUser> | null>>;
+  currentUser: DocumentSnapshot<IUser> | null;
   error: string;
   fetchUser: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
