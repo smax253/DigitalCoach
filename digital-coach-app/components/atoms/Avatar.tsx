@@ -1,6 +1,5 @@
 import Image, { ImageProps } from "next/image";
-
-import styles from "@App/styles/components/avatar.module.scss";
+import styles from "@App/styles/components/Avatar.module.scss";
 import classNames from "classnames";
 
 interface Props extends ImageProps {
