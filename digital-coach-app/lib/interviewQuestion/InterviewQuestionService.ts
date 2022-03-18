@@ -54,6 +54,10 @@ class InterviewQuestionService extends FirebaseService {
     return getDocs(groupQuery);
   }
 
+  async getInterviewQuestionFromRefPath(userId: string, interviewId: string){
+    return getDocs(this.getCollectionRef(userId, interviewId));
+  }
+
   async getUnreviewQuestions() {
     const groupQuery = query(
       this.getCollectionGroupRef(),
