@@ -9,6 +9,8 @@ import PracticeCalendar from "@App/components/molecules/PracticeCalendar";
 import useGetFeaturedQuestionSets from "@App/lib/questionSets/useGetFeaturedQuestionSets";
 import Link from "next/link";
 import useGetUserAverageScore from "@App/lib/interviewQuestion/useGetUserAverageScore";
+import useFetchUserInterviews from "@App/lib/interview/useFetchUserInterviews";
+import useGetAnswersByUserId from "@App/lib/answer/useGetAnswerByUserId";
 
 const Home: NextPage = () => {
   const { currentUser } = useAuthContext();
@@ -18,6 +20,11 @@ const Home: NextPage = () => {
     isLoading,
     isFetching,
   } = useGetFeaturedQuestionSets();
+  const {
+    data: answerData,
+    isLoading: isAnswerLoading,
+    isFetching: isAnswerFetching,
+  } = useGetAnswersByUserId(currentUser?.id);
 
   const {
     data: averageScore,
@@ -29,6 +36,8 @@ const Home: NextPage = () => {
     averageScore === undefined ||
     isLoadingAverageScore ||
     isFetchingAverageScore ||
+    isAnswerLoading ||
+    isAnswerFetching ||
     isLoading ||
     isFetching
   )
@@ -56,24 +65,13 @@ const Home: NextPage = () => {
       value: 0.4,
     },
   ];
-  const mockEvents = [
-    {
-      start: "2022-02-10T10:00:00",
-      end: "2022-02-10T16:00:00",
-    },
-    {
-      start: "2022-02-14T10:00:00",
-      end: "2022-02-14T16:00:00",
-    },
-    {
-      start: "2022-02-16T10:00:00",
-      end: "2022-02-16T16:00:00",
-    },
-    {
-      start: "2022-02-20T10:00:00",
-      end: "2022-02-20T16:00:00",
-    },
-  ];
+  const events =
+    answerData?.docs.map((answer) => {
+      return {
+        start: answer.data().createdAt.toDate().toISOString(),
+        end: answer.data().createdAt.toDate().toISOString(),
+      };
+    }) || [];
 
   return (
     <AuthGuard>
@@ -93,7 +91,7 @@ const Home: NextPage = () => {
           </Card>
           <Card multiline>
             <div className={styles.calendarWrapper}>
-              <PracticeCalendar events={mockEvents} />
+              <PracticeCalendar events={events} />
             </div>
           </Card>
           <Card title={"Most Common Flags"} multiline>
