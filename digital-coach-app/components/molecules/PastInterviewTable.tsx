@@ -1,4 +1,4 @@
-import usePastInterviewQuery from "@App/lib/interview/pastInterviewQuery";
+import usePastInterviewQuery from "@App/lib/interview/usePastInterviewQuery";
 import { Timestamp } from "@firebase/firestore";
 import { PropsWithoutRef, useMemo } from "react";
 import { useTable } from "react-table";
@@ -41,7 +41,6 @@ function TableBody(props: PropsWithoutRef<TableProps>) {
       { columns, data: tableData }
     );
 
-  console.log("table data", data[0].averageScore);
   return (
     <table {...getTableProps()}>
       <thead>
@@ -84,6 +83,5 @@ export default function PastInterviewTable(props: PropsWithoutRef<Props>) {
   const { data, isLoading, isFetching } = usePastInterviewQuery(userId);
 
   if (isLoading || isFetching || !data) return <div>Loading...</div>;
-  console.log("data", data);
   return <TableBody data={data} />;
 }

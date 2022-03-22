@@ -2,9 +2,9 @@ import { useQuery } from "react-query";
 import InterviewQuestionService from "../interviewQuestion/InterviewQuestionService";
 import InterviewService from "./InterviewService";
 
-export default function pastInterviewQuery(userId: string | undefined) {
+export default function usePastInterviewQuery(userId: string | undefined) {
   return useQuery(
-    ["fetchUserInterviews"],
+    ["pastUserInterviews"],
     async () => {
       const interviews = await InterviewService.fetchUserInterviews(userId!);
       const interviewLookup = interviews.docs.map(async (interview) => {
