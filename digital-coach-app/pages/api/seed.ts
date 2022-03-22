@@ -53,8 +53,6 @@ export default async function seed(
         )
         .flat();
 
-    console.log(addInterviewCollection);
-
     const interviewsCollectionRef = (
       await Promise.all([
         ...addInterviewCollection,
