@@ -23,17 +23,17 @@ def score_text_structure():
     return jsonify(percent_prediction=predictions[0], binary_prediction=predictions[1])
 
 
-@app.route("/predict-facial", methods=["POST"])
-def score_facial():
-    """
-    POST route to score user's facial expressions.
-    """
-    if "file" not in request.files:
-        return jsonify(errors="No video provided.")
-    video = request.files.get("file")
-    if not video:
-        return jsonify(errors="Error grabbing video from request.")
-    path = "/"
+# @app.route("/predict-facial", methods=["POST"])
+# def score_facial():
+#     """
+#     POST route to score user's facial expressions.
+#     """
+#     if "file" not in request.files:
+#         return jsonify(errors="No video provided.")
+#     video = request.files.get("file")
+#     if not video:
+#         return jsonify(errors="Error grabbing video from request.")
+#     path = "/"
     
 
 
