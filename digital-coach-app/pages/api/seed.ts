@@ -43,9 +43,17 @@ export default async function seed(
             .build()
         )
       ),
-      addInterviewCollection = userCredentials.map(async ({ user }, idx) =>
-        InterviewService.create(user.uid, { title: `Interview ${idx}` })
-      );
+      addInterviewCollection = userCredentials
+        .map(({ user }, idx) =>
+          new Array(getRandomInt(10)).fill(0).map((_, i) =>
+            InterviewService.create(user.uid, {
+              title: `Interview ${idx}-${i}`,
+            })
+          )
+        )
+        .flat();
+
+    console.log(addInterviewCollection);
 
     const interviewsCollectionRef = (
       await Promise.all([
@@ -104,12 +112,12 @@ export default async function seed(
       questionsRef.docs
         .map((questionRef) => {
           const question = questionRef.data();
-          const uid = questionRef.ref.path.split('/')[1];
+          const uid = questionRef.ref.path.split("/")[1];
           return new Array(question.retries).fill(null).map((_, i) =>
             AnswerService.addAnswer(questionRef.ref, {
               videoUrl: "Number 1 bullshit man",
               isSubmission: i === 0 ? true : false,
-              userId: uid
+              userId: uid,
             })
           );
         })
