@@ -22,7 +22,7 @@ const inputValidationSchema = yup
       .email("Must be a valid email")
       .max(255)
       .required("Email is required"),
-    password: yup.string().min(7).max(255).required("Password is required"),
+    password: yup.string().max(255).required("Password is required"),
   })
   .required();
 
@@ -51,12 +51,12 @@ export default function LoginPage() {
     <UnAuthGuard>
       <CenteredComponent>
         <div className={styles.loginBox}>
-        {authError && <p>{authError}</p>}
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.logo}>
             <h1>Digital Coach</h1>
           </div>
           <h2>Login</h2>
+          {authError && <p className={styles.issue}>username and password did not match</p>}
           <h3>Email</h3>
           <TextField type="email" placeholder="" {...register("email")} />
           {formError.email && <span>{formError.email.message}</span>}

@@ -51,8 +51,6 @@ export default function SignUpPage() {
       <CenteredComponent>
         <div className={styles.loginBox}>
           <h1>{currentUser?.id}</h1>
-
-          {authError && <p>{authError}</p>}
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.logo}>
               <h1>Digital Coach</h1>
@@ -60,7 +58,7 @@ export default function SignUpPage() {
             <h2>Register an Account</h2>
             <h3>Email</h3>
             <TextField type="email" placeholder="" {...register("email")} />
-            {formError.email && <span>{formError.email.message}</span>}
+            {formError.email && <p className={styles.issue}>{formError.email.message}</p>}
             <h3>Password</h3>
             <TextField
               type="password"
@@ -68,7 +66,7 @@ export default function SignUpPage() {
               placeholder=""
               {...register("password")}
             />
-            {formError.password && <span>{formError.password.message}</span>}
+            {formError.password && <p className={styles.issue}>{formError.password.message}</p>}
             <h3>Confirm Password</h3>
 
             <TextField
@@ -78,7 +76,7 @@ export default function SignUpPage() {
               {...register("passwordConfirm")}
             />
             {formError.passwordConfirm && (
-              <span>{formError.passwordConfirm.message}</span>
+              <p className={styles.issue}>{formError.passwordConfirm.message}</p>
             )}
 
             <Button type="submit">
