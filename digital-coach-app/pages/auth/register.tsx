@@ -6,17 +6,18 @@ import RegistrationGuard from "@App/lib/user/RegistrationGuard";
 import Button from "@App/components/atoms/Button";
 import { Select } from "@App/components/Select";
 import UserService from "@App/lib/user/UserService";
+import styles from "@App/styles/RegisterPage.module.scss";
 import StorageService, {
   EStorageFolders,
 } from "@App/lib/storage/StorageService";
 import {
-  IUserDetails,
+  IBaseUserAttributes,
   EUserConcentrations,
   EUserProficiencies,
 } from "@App/lib/user/models";
 import { TextField } from "@App/components/molecules/TextField";
 
-interface RegFormInputs extends IUserDetails {
+interface RegFormInputs extends IBaseUserAttributes {
   avatar: FileList;
 }
 
@@ -59,36 +60,42 @@ export default function RegisterPage() {
 
   return (
     <RegistrationGuard>
-      <h1>Registration</h1>
+      <div className={styles.registerBox}>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <h1>Register</h1>
+          <label>Select a profile picture:</label>
+          <input type="file" accept="image/*" {...register("avatar")} />
+          <label>Enter your name:</label>
+          <TextField placeholder="Full Name" {...register("name")} />
+          {formError.name && <span>{formError.name.message}</span>}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="file" accept="image/*" {...register("avatar")} />
+          <label>Select a concentration:</label>
+          <Select {...register("concentration")}>
+            {Object.values(EUserConcentrations).map((concentration) => (
+              <option value={concentration} key={concentration}>
+                {concentration}
+              </option>
+            ))}
+          </Select>
+          {formError.concentration && (
+            <span>{formError.concentration.message}</span>
+          )}
 
-        <TextField placeholder="Full Name" {...register("name")} />
-        {formError.name && <span>{formError.name.message}</span>}
+          <label>Select a proficiency:</label>
+          <select {...register("proficiency")}>
+            {Object.values(EUserProficiencies).map((proficiency) => (
+              <option value={proficiency} key={proficiency}>
+                {proficiency}
+              </option>
+            ))}
+          </select>
+          {formError.proficiency && (
+            <span>{formError.proficiency.message}</span>
+          )}
 
-        <Select {...register("concentration")}>
-          {Object.values(EUserConcentrations).map((concentration) => (
-            <option value={concentration} key={concentration}>
-              {concentration}
-            </option>
-          ))}
-        </Select>
-        {formError.concentration && (
-          <span>{formError.concentration.message}</span>
-        )}
-
-        <select {...register("proficiency")}>
-          {Object.values(EUserProficiencies).map((proficiency) => (
-            <option value={proficiency} key={proficiency}>
-              {proficiency}
-            </option>
-          ))}
-        </select>
-        {formError.proficiency && <span>{formError.proficiency.message}</span>}
-
-        <Button type="submit">sign up</Button>
-      </form>
+          <Button type="submit">sign up</Button>
+        </form>
+      </div>
     </RegistrationGuard>
   );
 }

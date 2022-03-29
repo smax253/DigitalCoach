@@ -15,9 +15,11 @@ function AuthGuard({ children, router }: PropsWithChildren<WithRouterProps>) {
       if (!isSignedIn) router.push("/auth/login");
     });
 
-    if (currentUser && !currentUser?.registrationCompletedAt)
+    if (currentUser && !currentUser?.data()?.registrationCompletedAt)
       router.push("/auth/register");
   }, [currentUser, router]);
+
+  if (!currentUser) return null;
 
   return <>{children}</>;
 }

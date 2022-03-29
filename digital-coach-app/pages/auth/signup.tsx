@@ -8,8 +8,7 @@ import { TextField } from "@App/components/molecules/TextField";
 import Link from "next/link";
 import UnAuthGuard from "@App/lib/auth/UnAuthGuard";
 import CenteredComponent from "@App/components/atoms/CenteredComponent";
-import HowToRegIcon from '@mui/icons-material/HowToReg';
-
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 interface LoginFormInputs {
   email: string;
@@ -51,7 +50,6 @@ export default function SignUpPage() {
     <UnAuthGuard>
       <CenteredComponent>
         <div className={styles.loginBox}>
-         
           <h1>{currentUser?.id}</h1>
 
           {authError && <p>{authError}</p>}
@@ -84,15 +82,13 @@ export default function SignUpPage() {
             )}
 
             <Button type="submit">
-              <HowToRegIcon/>
+              <HowToRegIcon />
               Register
             </Button>
             <Link href="/auth/login">
               <a>Have an account? log in</a>
             </Link>
           </form>
-
-          
         </div>
       </CenteredComponent>
     </UnAuthGuard>

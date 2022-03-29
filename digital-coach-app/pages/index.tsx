@@ -6,87 +6,116 @@ import Card from "@App/components/atoms/Card";
 import IssuesChart from "@App/components/molecules/IssuesChart";
 import ScoreChart from "@App/components/molecules/ScoreChart";
 import PracticeCalendar from "@App/components/molecules/PracticeCalendar";
+import useGetFeaturedQuestionSets from "@App/lib/questionSets/useGetFeaturedQuestionSets";
+import Link from "next/link";
+import useGetUserAverageScore from "@App/lib/interviewQuestion/useGetUserAverageScore";
+import useFetchUserInterviews from "@App/lib/interview/useFetchUserInterviews";
+import useGetAnswersByUserId from "@App/lib/answer/useGetAnswerByUserId";
 
 const Home: NextPage = () => {
   const { currentUser } = useAuthContext();
+
+  const {
+    data: questionSets,
+    isLoading,
+    isFetching,
+  } = useGetFeaturedQuestionSets();
+  const {
+    data: answerData,
+    isLoading: isAnswerLoading,
+    isFetching: isAnswerFetching,
+  } = useGetAnswersByUserId(currentUser?.id);
+
+  const {
+    data: averageScore,
+    isLoading: isLoadingAverageScore,
+    isFetching: isFetchingAverageScore,
+  } = useGetUserAverageScore(currentUser?.id);
+
+  if (
+    averageScore === undefined ||
+    isLoadingAverageScore ||
+    isAnswerLoading ||
+    isLoading ||
+    isFetching
+  )
+    return <div>Loading...</div>;
+
   const mockIssuesData = [
     {
       skill: "No Eye Contact",
       value: 0.9,
-    },{
+    },
+    {
       skill: "Filler Word",
       value: 0.75,
-    },{
+    },
+    {
       skill: "Long Pause",
       value: 0.65,
-    },{
+    },
+    {
       skill: "Voice Not Clear",
       value: 0.6,
-    },{
+    },
+    {
       skill: "Off Topic",
       value: 0.4,
     },
-  ]
-  const mockEvents = [
-    {
-      start:"2022-02-10T10:00:00",
-      end: '2022-02-10T16:00:00'
-    },
-    {
-      start:"2022-02-14T10:00:00",
-      end: '2022-02-14T16:00:00'
-    },{
-      start:"2022-02-16T10:00:00",
-      end: '2022-02-16T16:00:00'
-    },{
-      start:"2022-02-20T10:00:00",
-      end: '2022-02-20T16:00:00'
-    },
-  ]
+  ];
+  const events =
+    answerData?.docs.map((answer) => {
+      return {
+        start: answer.data().createdAt.toDate().toISOString(),
+        end: answer.data().createdAt.toDate().toISOString(),
+      };
+    }) || [];
+
   return (
     <AuthGuard>
       <div className={styles.Home}>
-        <h1>Welcome back, {currentUser?.name}!</h1>
+        <h1>Welcome back, {currentUser?.data()?.name}!</h1>
         <h2>Dashboard</h2>
         <div className={styles.cards}>
-            <Card title={"Quick Start Interviews"} multiline>
-              
-              <ul>
-                <li>December Interviews of the Month <span>→</span></li>
-                <li>General Business Interview <span>→</span></li>
-                <li>First Round Interview Questions <span>→</span></li>
-                <li>General Consulting Interview <span>→</span></li>
-                <li>10 Most Common Questions <span>→</span></li>
-              </ul>
-            </Card>
-            <Card multiline>
-              <div className={styles.calendarWrapper}>
-                <PracticeCalendar
-                    events={mockEvents}
-                  />
-              </div>
-            </Card>
-            <Card title={"Most Common Flags"} multiline>
-              <div className={styles.issuesChartWrapper}>
-                <IssuesChart chartData={mockIssuesData}/>
-              </div>
-            </Card>
-            <Card title={"Tip of the Day!"} multiline>
-              <p>Start by researching the company and your interviewer. Understanding key information about the company you’re interviewing with can help you go into your interview with confidence. </p>
-            </Card>
-            <Card title={"Recent Recordings"} multiline>
-              <h4>You have not recorded an interview yet!</h4>
-            </Card>
-            
-            <Card title={"Average Score"} multiline>
-              <div className={styles.scoreChartWrapper}>
-                <ScoreChart score={80}/>
-              </div>
-            </Card>
-            
-            
+          <Card title={"Quick Start Interviews"} multiline>
+            <ul>
+              {questionSets?.docs.map((questionSet) => (
+                <li key={questionSet.id}>
+                  <Link href="/">{questionSet.data().title}</Link>
+                  <span>→</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+          <Card multiline>
+            <div className={styles.calendarWrapper}>
+              <PracticeCalendar events={events} />
+            </div>
+          </Card>
+          <Card title={"Most Common Flags"} multiline>
+            <div className={styles.issuesChartWrapper}>
+              <IssuesChart chartData={mockIssuesData} />
+            </div>
+          </Card>
+          <Card title={"Tip of the Day!"} multiline>
+            <p>
+              Start by researching the company and your interviewer.
+              Understanding key information about the company you’re
+              interviewing with can help you go into your interview with
+              confidence.
+            </p>
+          </Card>
+          <Card title={"Recent Recordings"} multiline>
+            <h4>You have not recorded an interview yet!</h4>
+          </Card>
+
+          <Card title={"Average Score"} multiline>
+            <div className={styles.scoreChartWrapper}>
+              <ScoreChart score={Math.round(averageScore * 100)} />
+            </div>
+          </Card>
         </div>
-        
+
         {/*
         <span>id: {currentUser?.id}</span>
         <span>email: {currentUser?.email}</span>

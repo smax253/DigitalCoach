@@ -1,22 +1,23 @@
 import {
+  addDoc,
   collection,
+  collectionGroup,
+  CollectionReference,
   doc,
+  DocumentReference,
   Firestore,
   getDoc,
   getDocs,
   getFirestore,
-  setDoc,
+  Query,
+  query,
   Timestamp,
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
 import {
   IBaseInterview,
-  IBaseInterviewQuestion,
-  IInterview,
   IInterviewAttributes,
-  IInterviewQuestion,
 } from "@App/lib/interview/models";
-import { IQuestion } from "@App/lib/question/models";
 
 class InterviewService extends FirebaseService {
   private firestore: Firestore;
@@ -27,56 +28,62 @@ class InterviewService extends FirebaseService {
     this.firestore = getFirestore(this.app);
   }
 
+  private getCollectionGroupRef() {
+    return collectionGroup(
+      this.firestore,
+      "interviews"
+    ) as Query<IInterviewAttributes>;
+  }
+
   private getDocRef(userId: string, interviewId: string) {
-    return doc(this.firestore, "users", userId, "interviews", interviewId);
+    return doc(
+      this.firestore,
+      "users",
+      userId,
+      "interviews",
+      interviewId
+    ) as DocumentReference<IInterviewAttributes>;
   }
 
   private getCollectionRef(userId: string) {
-    return collection(this.firestore, "users", userId, "interviews");
+    return collection(
+      this.firestore,
+      "users",
+      userId,
+      "interviews"
+    ) as CollectionReference<IInterviewAttributes>;
   }
 
-  async create(
-    userId: string,
-    baseInterview: IBaseInterview,
-    baseQuestions: IQuestion[],
-    questionsAttributes: IBaseInterviewQuestion
-  ) {
+  async create(userId: string, baseInterview: IBaseInterview) {
     const collectionRef = this.getCollectionRef(userId);
-    const questions: IInterviewQuestion[] = baseQuestions.map(
-      (baseQuestion) => ({
-        ...baseQuestion,
-        ...questionsAttributes,
-        review: null,
-        score: null,
-        answers: [],
-        answeredAt: null,
-      })
-    );
 
     const interview: IInterviewAttributes = {
       ...baseInterview,
-      questions,
       completedAt: null,
       reviewedAt: null,
       createdAt: Timestamp.now(),
     };
 
-    return await setDoc(doc(collectionRef), interview);
+    return addDoc(collectionRef, interview);
   }
 
   async fetchUserInterviews(userId: string) {
     const collectionRef = this.getCollectionRef(userId);
 
-    return await getDocs(collectionRef);
+    return getDocs(collectionRef);
   }
 
   async fetchInterview(userId: string, interviewId: string) {
     const docRef = this.getDocRef(userId, interviewId);
 
-    return (await (await getDoc(docRef)).data()) as IInterview;
+    return getDoc(docRef);
   }
 
-  async addAnswer(userId: string, interviewId: string) {}
+  async getAllInterviews() {
+    const groupQuery = query(this.getCollectionGroupRef());
+
+    return getDocs(groupQuery);
+  }
 }
 
 export default new InterviewService();

@@ -1,15 +1,21 @@
 import FirebaseService from "@App/lib/firebase/FirebaseService";
 import {
+  addDoc,
   collection,
-  doc,
+  CollectionReference,
   Firestore,
+  getDocs,
   getFirestore,
-  setDoc,
+  query,
+  QueryDocumentSnapshot,
   Timestamp,
+  where,
 } from "firebase/firestore";
 import {
   IBaseQuestion,
   IBaseQuestionAttributes,
+  IQuestion,
+  TSubject,
 } from "@App/lib/question/models";
 
 class QuestionService extends FirebaseService {
@@ -17,12 +23,21 @@ class QuestionService extends FirebaseService {
 
   constructor() {
     super();
-
     this.firestore = getFirestore(this.app);
   }
 
   private getCollectionRef() {
-    return collection(this.firestore, "questions");
+    return collection(
+      this.firestore,
+      "questions"
+    ) as CollectionReference<IBaseQuestion>;
+  }
+
+  private docToModel(doc: QueryDocumentSnapshot<IBaseQuestion>): IQuestion {
+    return {
+      gid: doc.id,
+      ...(doc.data() as IBaseQuestion),
+    };
   }
 
   async addQuestion(baseQuestion: IBaseQuestionAttributes) {
@@ -32,7 +47,19 @@ class QuestionService extends FirebaseService {
       createdAt: Timestamp.now(),
     };
 
-    return setDoc(doc(this.getCollectionRef()), question);
+    return addDoc(this.getCollectionRef(), question);
+  }
+
+  async getAllQuestions() {
+    return getDocs(this.getCollectionRef());
+  }
+
+  async getBySubject(subject: TSubject) {
+    const ref = this.getCollectionRef();
+
+    const filter = where("subject", "==", subject);
+
+    return getDocs(query(ref, filter));
   }
 }
 
