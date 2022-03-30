@@ -27,6 +27,12 @@ class StorageService extends FirebaseService {
 
     return getDownloadURL(fileRef);
   }
+
+  async uploadAnswerVideo(file: File|Blob|ArrayBuffer, interviewId: string){
+    const storage = getStorage();
+    const interviewAnswersRef = ref(storage, `interview-responses/${interviewId}.avi`);
+    return uploadBytes(interviewAnswersRef, file, {contentType:"video/avi"});
+  }
 }
 
 export default new StorageService();

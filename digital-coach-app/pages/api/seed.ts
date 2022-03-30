@@ -12,6 +12,8 @@ import { DocumentReference } from "firebase/firestore";
 import { IInterviewAttributes } from "@App/lib/interview/models";
 import AnswerService from "@App/lib/answer/AnswerService";
 import QuestionSetsService from "@App/lib/questionSets/QuestionSetsService";
+import fs from "fs/promises";
+import StorageService from "@App/lib/storage/StorageService";
 
 export default async function seed(
   req: NextApiRequest,
@@ -106,14 +108,17 @@ export default async function seed(
     const questionsRef =
       await InterviewQuestionService.getAllInterviewQuestions();
 
+    let videoFile = await fs.readFile(`assets/video (10).avi`);
+    const videoUploadResult = await StorageService.uploadAnswerVideo(videoFile, "test");
     await Promise.all(
       questionsRef.docs
-        .map((questionRef) => {
+        .map(async (questionRef) => {
           const question = questionRef.data();
           const uid = questionRef.ref.path.split("/")[1];
+
           return new Array(question.retries).fill(null).map((_, i) =>
             AnswerService.addAnswer(questionRef.ref, {
-              videoUrl: "Number 1 bullshit man",
+              videoUrl: videoUploadResult.ref.toString(),
               isSubmission: i === 0 ? true : false,
               userId: uid,
             })
