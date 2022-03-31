@@ -4,7 +4,10 @@ Main Flask application as well as routes of the app.
 from flask import Flask, jsonify, request
 from helpers.text_processor import clean_text
 from helpers.text_predict import predict_text_structure
-from helpers.av_processing import extract_audio 
+from helpers.av_processing import extract_audio
+from helpers.file_management import move_cv_files
+from models.models import detect_emotions
+
 # initalize the Flask object
 app = Flask(__name__)
 
@@ -26,16 +29,31 @@ def score_text_structure():
 @app.route("/predict-audio", methods=["POST"])
 def score_audio():
     """
-    POST route to score user's facial expressions.
+    POST route to score user's audio.
     """
-    return jsonify(extract_audio('sample.mov', 'new_audio.mp3'))
+    return jsonify(extract_audio("sample.mov", "new_audio.mp3"))
     # if "file" not in request.files:
     #     return jsonify(errors="No video provided.")
     # video = request.files.get("file")
     # if not video:
     #     return jsonify(errors="Error grabbing video from request.")
     # path = "/"
-    
+
+
+@app.route("/predict-facial", methods=["POST"])
+def score_facial():
+    """
+    POST route to score user's facial expressions
+    """
+    content = request.get_json()
+    if not content["fname"]:
+        return jsonify(errors="Video file name does not exist.")
+    video_fname = content["fname"]
+    total_emotion_score = detect_emotions(video_fname)
+    move_cv_files()
+    if "errors" in total_emotion_score:
+        return jsonify(total_emotion_score), 400
+    return jsonify(total_emotion_score)
 
 
 @app.route("/", methods=["GET"])
