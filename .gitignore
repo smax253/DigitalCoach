@@ -134,3 +134,6 @@ dist
 .pnp.*
 *.env
 venv
+
+/ml-api/data/*
+
