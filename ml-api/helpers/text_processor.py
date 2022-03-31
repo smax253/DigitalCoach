@@ -9,7 +9,7 @@ from nltk.stem import WordNetLemmatizer
 
 nltk.download("omw-1.4")
 
-#TODO: Along with this, we should include a text analysis on the big five traits
+# TODO: Along with this, we should include a text analysis on the big five traits
 
 # convert to lowercase, strip and remove punctuations
 def _preprocess(text):
