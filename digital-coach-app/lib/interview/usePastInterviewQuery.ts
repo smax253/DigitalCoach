@@ -26,7 +26,7 @@ export default function usePastInterviewQuery(userId: string | undefined) {
         );
         const completionPct =
           completed.filter((item) => item).length / completed.length;
-        return {interviewName: interview.data().title, date: interview.data().createdAt.toDate().toTimeString() ,averageScore, completionPct}
+        return {interviewId: interview.id,interviewName: interview.data().title, date: interview.data().createdAt.toDate() ,averageScore, completionPct}
       });
       return Promise.all(interviewLookup);
     },
