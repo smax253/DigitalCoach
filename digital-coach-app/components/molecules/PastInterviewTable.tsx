@@ -6,6 +6,8 @@ import styles from "@App/components/molecules/PastInterviewTable.module.scss";
 import { LinearProgress } from "@mui/material";
 import { ExpandMore, UnfoldMore, ExpandLess } from "@mui/icons-material";
 import Link from "next/link";
+import PastInterviewTableHeader from "../atoms/PastInterviewTable/PastInterviewTableHeader";
+import PastInterviewTableBody from "../atoms/PastInterviewTable/PastInterviewTableBody";
 interface Props
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,
@@ -22,13 +24,16 @@ interface TableProps
     interviewId: string;
     interviewName: string;
     date: Date;
-    averageScore: number | undefined;
+    averageScore?: number;
     completionPct: number;
   }[];
 }
 
+
+
 function TableBody(props: PropsWithoutRef<TableProps>) {
   const { data } = props;
+  
   const columns = useMemo(
     () => [
       { accessor: "interviewName", Header: "Name" },
@@ -57,7 +62,6 @@ function TableBody(props: PropsWithoutRef<TableProps>) {
     ],
     []
   );
-
   const tableData = useMemo(() => data, [data]);
   const {
     getTableBodyProps,
@@ -74,62 +78,14 @@ function TableBody(props: PropsWithoutRef<TableProps>) {
 
   return (
     <table {...getTableProps()} className={styles.PastInterviewTable}>
-      <thead className={styles.TableHeader}>
-        {headerGroups.map((headerGroup) => {
-          const { key, ...restOfHeaderGroupProps } =
-            headerGroup.getHeaderGroupProps();
-          return (
-            <tr {...restOfHeaderGroupProps} key={key}>
-              {headerGroup.headers.map((header) => {
-                const { ...restOfHeaderProps } = header.getSortByToggleProps();
-                const { key } = header.getHeaderProps();
-                return (
-                  <th
-                    key={key}
-                    {...restOfHeaderProps}
-                    className={styles.TableLabel}
-                  >
-                    <div>
-                      {header.render("Header")}
-                      {header.isSorted ? (
-                        header.isSortedDesc ? (
-                          <ExpandMore />
-                        ) : (
-                          <ExpandLess />
-                        )
-                      ) : (
-                        <UnfoldMore />
-                      )}
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </thead>
+      <PastInterviewTableHeader headerGroups={headerGroups} />
 
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row);
-          const { key: rowKey, ...restOfRowProps } = row.getRowProps();
-          return (
-            <Link key={rowKey} href={`past/${data[i].interviewId}`} passHref>
-              <tr {...restOfRowProps} className={styles.InterviewRow}>
-                {row.cells.map((cell) => {
-                  const { key: cellKey, ...restOfCellProps } =
-                    cell.getCellProps();
-                  return (
-                    <td key={cellKey} {...restOfCellProps}>
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
-              </tr>
-            </Link>
-          );
-        })}
-      </tbody>
+      <PastInterviewTableBody
+        tableBodyProps={getTableBodyProps()}
+        rows={rows}
+        data={data}
+        prepareRow={prepareRow}
+      />
     </table>
   );
 }
