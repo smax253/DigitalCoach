@@ -136,4 +136,5 @@ dist
 venv
 
 /ml-api/data/*
+/ml-api/.env
 
