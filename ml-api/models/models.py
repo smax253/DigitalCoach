@@ -1,11 +1,15 @@
 import os
 import pickle
+import requests
 from fer import Video, FER
+from dotenv import load_dotenv
 from configs.definitions import ROOT_DIR
 
 TEXT_MODEL = pickle.load(open("models/text_model.pkl", "rb"))
 TFIDF_MODEL = pickle.load(open("models/tfidf_model.pkl", "rb"))
 
+env_path = os.path.join(ROOT_DIR, ".env")
+load_dotenv(env_path)
 
 def detect_emotions(video_fname):
     videofile_path = os.path.join(ROOT_DIR, "data", video_fname)
@@ -30,3 +34,6 @@ def detect_emotions(video_fname):
         return sum_emotions
     except OSError as exception:
         return {"errors": str(exception)}
+
+def detect_audio_sentiment():
+    pass
