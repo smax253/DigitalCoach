@@ -2,9 +2,9 @@ import { useQuery } from "react-query";
 import InterviewQuestionService from "../interviewQuestion/InterviewQuestionService";
 import InterviewService from "./InterviewService";
 
-export default function usePastInterviewQuery(userId: string | undefined) {
+export default function useResumeInterviewQuery(userId: string | undefined) {
   return useQuery(
-    ["pastUserInterviews"],
+    ["resumeUserInterviews"],
     async () => {
       const interviews = await InterviewService.fetchUserInterviews(userId!);
       const interviewLookup = interviews.docs.map(async (interview) => {
@@ -14,21 +14,34 @@ export default function usePastInterviewQuery(userId: string | undefined) {
             interview.id
           );
         const interviewQuestions = interviewData.docs;
-        const scores = interviewQuestions
-          .map((interview) => interview.data().score)
-          .filter(
-            (score): score is number => score !== undefined && score !== null
-          );
-        const averageScore =
-          scores.reduce((acc, score) => acc + score, 0) / scores.length;
+       
+
         const completed = interviewQuestions.map(
           (interview) => interview.data().answeredAt !== null
         );
         const completionPct =
           completed.filter((item) => item).length / completed.length;
-        return {interviewId: interview.id,interviewName: interview.data().title, date: interview.data().createdAt.toDate() ,averageScore, completionPct}
+        if (completionPct === 1) {
+          return null;
+        }
+        return {
+          interviewId: interview.id,
+          interviewName: interview.data().title,
+          date: interview.data().createdAt.toDate(),
+          completionPct,
+        };
       });
-      return Promise.all(interviewLookup);
+      const incompleteInterviews = (await Promise.all(interviewLookup)).filter(
+        (
+          item
+        ): item is {
+          interviewId: string;
+          interviewName: string;
+          date: Date;
+          completionPct: number;
+        } => item !== null || item !== undefined
+      );
+      return incompleteInterviews;
     },
     {
       enabled: !!userId,

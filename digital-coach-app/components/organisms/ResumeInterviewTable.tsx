@@ -1,13 +1,10 @@
-import usePastInterviewQuery from "@App/lib/interview/usePastInterviewQuery";
-import { Timestamp } from "@firebase/firestore";
+import useResumeInterviewQuery from "@App/lib/interview/useResumeInterviewQuery";
+import { LinearProgress } from "@mui/material";
 import { PropsWithoutRef, useMemo } from "react";
 import { useSortBy, useTable } from "react-table";
-import styles from "@App/components/molecules/PastInterviewTable.module.scss";
-import { LinearProgress } from "@mui/material";
-import { ExpandMore, UnfoldMore, ExpandLess } from "@mui/icons-material";
-import Link from "next/link";
-import PastInterviewTableHeader from "../atoms/PastInterviewTable/PastInterviewTableHeader";
-import PastInterviewTableBody from "../atoms/PastInterviewTable/PastInterviewTableBody";
+import styles from "@App/components/organisms/ResumeInterviewTable.module.scss";
+import ResumeInterviewTableHeader from "../atoms/ResumeInterviewTable/ResumeInterviewTableHeader";
+import ResumeInterviewTableBody from "../molecules/ResumeInterviewTableBody";
 interface Props
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,
@@ -15,6 +12,7 @@ interface Props
   > {
   userId: string;
 }
+
 interface TableProps
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,
@@ -24,16 +22,13 @@ interface TableProps
     interviewId: string;
     interviewName: string;
     date: Date;
-    averageScore?: number;
     completionPct: number;
   }[];
 }
 
-
-
-function TableBody(props: PropsWithoutRef<TableProps>) {
+function TableBody(props: TableProps) {
   const { data } = props;
-  
+
   const columns = useMemo(
     () => [
       { accessor: "interviewName", Header: "Name" },
@@ -52,13 +47,7 @@ function TableBody(props: PropsWithoutRef<TableProps>) {
             value={props.value ? props.value * 100 : 0}
           />
         ),
-      },
-      {
-        accessor: "averageScore",
-        Header: "Score",
-        Cell: (props: { value: number | undefined }) =>
-          props.value ? (props.value * 100).toFixed(1) + "%" : "--",
-      },
+      }
     ],
     []
   );
@@ -75,24 +64,22 @@ function TableBody(props: PropsWithoutRef<TableProps>) {
     { columns, data: tableData },
     useSortBy
   );
-
   return (
-    <table {...getTableProps()} className={styles.PastInterviewTable}>
-      <PastInterviewTableHeader headerGroups={headerGroups} />
-
-      <PastInterviewTableBody
-        tableBodyProps={getTableBodyProps()}
+    <table {...getTableProps()} className={styles.ResumeInterviewTable}>
+      <ResumeInterviewTableHeader headerGroups={headerGroups} />
+      <ResumeInterviewTableBody
         rows={rows}
-        data={data}
         prepareRow={prepareRow}
+        tableBodyProps={getTableBodyProps()}
+        data={data}
       />
     </table>
   );
 }
 
-export default function PastInterviewTable(props: PropsWithoutRef<Props>) {
+export default function ResumeInterviewTable(props: PropsWithoutRef<Props>) {
   const { userId } = props;
-  const { data, isLoading, isFetching } = usePastInterviewQuery(userId);
+  const { data, isLoading, isFetching } = useResumeInterviewQuery(userId);
 
   if (isLoading || isFetching || !data) return <div>Loading...</div>;
   return <TableBody data={data} />;
