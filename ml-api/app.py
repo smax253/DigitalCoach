@@ -31,7 +31,15 @@ def score_audio():
     """
     POST route to score user's audio.
     """
-    return jsonify(extract_audio("sample.mov", "new_audio.mp3"))
+    content = request.get_json()
+    fname, rename = content["fname"], content["refname"]
+    if not fname and rename:
+        return jsonify(errors="File name and rename does not exist.")
+    audio = extract_audio(fname, rename)
+    if audio["errors"]:
+        return jsonify(errors=audio["errors"])
+    audio_file_path = audio["path_to_file"]
+    
     # if "file" not in request.files:
     #     return jsonify(errors="No video provided.")
     # video = request.files.get("file")
