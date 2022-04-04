@@ -1,6 +1,7 @@
 import { Row } from "react-table";
 import { TableBodyProps } from "@mui/material";
 import Link from "next/link";
+import ResumeInterviewTableRow from "../atoms/ResumeInterviewTable/ResumeInterviewTableRow";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -31,19 +32,7 @@ export default function ResumeInterviewTableBody(props: Props) {
           prepareRow(row);
           const { key: rowKey, ...restOfRowProps } = row.getRowProps();
           return (
-            <Link key={rowKey} href={`start/${data[i].interviewId}`} passHref>
-              <tr {...restOfRowProps}>
-                {row.cells.map((cell) => {
-                  const { key: cellKey, ...restOfCellProps } =
-                    cell.getCellProps();
-                  return (
-                    <td key={cellKey} {...restOfCellProps}>
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
-              </tr>
-            </Link>
+            <ResumeInterviewTableRow key={rowKey} rowProps={restOfRowProps} row={row} data={data[i]} />
           );
         })}
       </tbody>

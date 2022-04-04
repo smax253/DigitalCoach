@@ -2,9 +2,9 @@ import useResumeInterviewQuery from "@App/lib/interview/useResumeInterviewQuery"
 import { LinearProgress } from "@mui/material";
 import { PropsWithoutRef, useMemo } from "react";
 import { useSortBy, useTable } from "react-table";
-import styles from "@App/components/molecules/ResumeInterviewTable.module.scss";
+import styles from "@App/components/organisms/ResumeInterviewTable.module.scss";
 import ResumeInterviewTableHeader from "../atoms/ResumeInterviewTable/ResumeInterviewTableHeader";
-import ResumeInterviewTableBody from "../atoms/ResumeInterviewTable/ResumeInterviewTableBody";
+import ResumeInterviewTableBody from "../molecules/ResumeInterviewTableBody";
 interface Props
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,

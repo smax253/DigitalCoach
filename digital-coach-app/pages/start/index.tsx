@@ -3,7 +3,7 @@ import AuthGuard from "@App/lib/auth/AuthGuard";
 import Link from "next/link";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import styles from "@App/styles/StartInterviewPage.module.scss";
-import ResumeInterviewTable from "@App/components/molecules/ResumeInterviewTable";
+import ResumeInterviewTable from "@App/components/organisms/ResumeInterviewTable";
 import useAuthContext from "@App/lib/auth/AuthContext";
 
 const RightArrow = () => (
@@ -48,7 +48,7 @@ export default function StartInterviewPage() {
           <h1>Resume Interview</h1>
 
           <Card>
-            {currentUser ? <ResumeInterviewTable userId={currentUser.id} /> : null}
+            {currentUser && <ResumeInterviewTable userId={currentUser.id} />}
           </Card>
         </div>
       </div>
