@@ -3,12 +3,15 @@ import AuthGuard from "@App/lib/auth/AuthGuard";
 import Link from "next/link";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import styles from "@App/styles/StartInterviewPage.module.scss";
+import ResumeInterviewTable from "@App/components/organisms/ResumeInterviewTable";
+import useAuthContext from "@App/lib/auth/AuthContext";
 
 const RightArrow = () => (
   <ArrowForwardRoundedIcon className={styles.StartInterviewPage_icon} />
 );
 
 export default function StartInterviewPage() {
+  const {currentUser} = useAuthContext();
   return (
     <AuthGuard>
       <div className={styles.StartInterviewPage}>
@@ -45,7 +48,7 @@ export default function StartInterviewPage() {
           <h1>Resume Interview</h1>
 
           <Card>
-            <span>TODO - Resume Interview Table</span>
+            {currentUser && <ResumeInterviewTable userId={currentUser.id} />}
           </Card>
         </div>
       </div>
