@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Button from "../atoms/Button";
-import style from "./Navbar.module.scss";
+import style from "./navbar.module.scss";
 import LogoutIcon from "@mui/icons-material/Logout";
 import useAuthContext from "@App/lib/auth/AuthContext";
 
