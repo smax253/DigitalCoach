@@ -2,7 +2,6 @@ import Link from "next/link";
 import Button from "../atoms/Button";
 import style from "./Navbar.module.scss";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Image from "next/image";
 import useAuthContext from "@App/lib/auth/AuthContext";
 
 export default function NavBar() {
