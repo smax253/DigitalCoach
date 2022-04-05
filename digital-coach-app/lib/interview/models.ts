@@ -1,6 +1,13 @@
-import { Timestamp } from "firebase/firestore";
-import { IQuestion } from "@App/lib/question/models";
-import { IAnswer } from "../answer/model";
+import { DocumentReference, Timestamp } from "firebase/firestore";
+
+export interface IInterviewDocumentReferenceAttributes {
+  userId: string;
+  interviewId: string;
+}
+
+export type TInterviewDocumentReference =
+  | DocumentReference<IInterviewAttributes>
+  | IInterviewDocumentReferenceAttributes;
 
 export interface IBaseInterview {
   title: string;

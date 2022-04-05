@@ -9,10 +9,8 @@ export default function usePastInterviewQuery(userId: string | undefined) {
       const interviews = await InterviewService.fetchUserInterviews(userId!);
       const interviewLookup = interviews.docs.map(async (interview) => {
         const interviewData =
-          await InterviewQuestionService.getInterviewQuestionFromRefPath(
-            userId!,
-            interview.id
-          );
+          await InterviewQuestionService.getInterviewQuestions(interview.ref);
+
         const interviewQuestions = interviewData.docs;
         const scores = interviewQuestions
           .map((interview) => interview.data().score)
@@ -26,7 +24,13 @@ export default function usePastInterviewQuery(userId: string | undefined) {
         );
         const completionPct =
           completed.filter((item) => item).length / completed.length;
-        return {interviewId: interview.id,interviewName: interview.data().title, date: interview.data().createdAt.toDate() ,averageScore, completionPct}
+        return {
+          interviewId: interview.id,
+          interviewName: interview.data().title,
+          date: interview.data().createdAt.toDate(),
+          averageScore,
+          completionPct,
+        };
       });
       return Promise.all(interviewLookup);
     },
