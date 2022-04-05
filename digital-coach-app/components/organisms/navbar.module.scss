@@ -39,7 +39,9 @@
 .links{
   display: flex;
   flex-direction: column;
-  a{
-    margin: 20px 50px;
-  }
+}
+
+.linksText{
+      margin: 20px 50px;
+      color: white
 }

@@ -18,9 +18,8 @@ import {
   IInterviewQuestion,
 } from "@App/lib/interviewQuestion/models";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
-import { IInterviewAttributes } from "@App/lib/interview/models";
+import { TInterviewDocumentReference } from "@App/lib/interview/models";
 import { IQuestion } from "@App/lib/question/models";
-import { number } from "yup/lib/locale";
 
 class InterviewQuestionService extends FirebaseService {
   private firestore: Firestore;
@@ -31,15 +30,23 @@ class InterviewQuestionService extends FirebaseService {
     this.firestore = getFirestore(this.app);
   }
 
-  private getCollectionRef(userId: string, interviewId: string) {
-    return collection(
-      this.firestore,
-      "users",
-      userId,
-      "interviews",
-      interviewId,
-      "interviewQuestions"
+  private getCollectionRef(ref: TInterviewDocumentReference) {
+    console.log(ref);
+    const collectionRef = (
+      ref instanceof DocumentReference
+        ? collection(ref, "interviewQuestions")
+        : collection(
+            this.firestore,
+            "users",
+            ref.userId,
+            "interviews",
+            ref.interviewId,
+            "interviewQuestions"
+          )
     ) as CollectionReference<IInterviewQuestion>;
+
+    console.log(collectionRef.path);
+    return collectionRef;
   }
 
   private getCollectionGroupRef() {
@@ -54,8 +61,8 @@ class InterviewQuestionService extends FirebaseService {
     return getDocs(groupQuery);
   }
 
-  async getInterviewQuestionFromRefPath(userId: string, interviewId: string){
-    return getDocs(this.getCollectionRef(userId, interviewId));
+  async getInterviewQuestions(ref: TInterviewDocumentReference) {
+    return getDocs(this.getCollectionRef(ref));
   }
 
   async getUnreviewQuestions() {
@@ -70,18 +77,9 @@ class InterviewQuestionService extends FirebaseService {
   async addQuestion(
     baseQuestion: IQuestion,
     questionsAttributes: IBaseInterviewQuestionAttributes,
-    ref:
-      | DocumentReference<IInterviewAttributes>
-      | { userId: string; interviewId: string }
+    ref: TInterviewDocumentReference
   ) {
-    const collectionRef =
-      ref instanceof DocumentReference
-        ? (collection(
-            this.firestore,
-            ref.path,
-            "interviewQuestions"
-          ) as CollectionReference<IInterviewQuestion>)
-        : this.getCollectionRef(ref.userId, ref.interviewId);
+    const collectionRef = this.getCollectionRef(ref);
 
     const question: IInterviewQuestion = {
       ...baseQuestion,
@@ -130,7 +128,7 @@ class InterviewQuestionService extends FirebaseService {
         ) as CollectionReference<IInterviewQuestion>
       );
     const questions = await Promise.all(interviewIds.map(fetchQuestions));
-    
+
     const gradedScores = questions
       .map((questions) =>
         questions.docs.map((question) => question.data().score)
