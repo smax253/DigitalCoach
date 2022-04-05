@@ -45,7 +45,6 @@ class InterviewQuestionService extends FirebaseService {
           )
     ) as CollectionReference<IInterviewQuestion>;
 
-    console.log(collectionRef.path);
     return collectionRef;
   }
 
