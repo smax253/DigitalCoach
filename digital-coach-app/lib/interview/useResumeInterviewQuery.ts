@@ -2,19 +2,17 @@ import { useQuery } from "react-query";
 import InterviewQuestionService from "../interviewQuestion/InterviewQuestionService";
 import InterviewService from "./InterviewService";
 
-export default function useResumeInterviewQuery(userId: string | undefined) {
+export default function useResumeInterviewQuery(userId?: string) {
   return useQuery(
     ["resumeUserInterviews"],
     async () => {
       const interviews = await InterviewService.fetchUserInterviews(userId!);
+
       const interviewLookup = interviews.docs.map(async (interview) => {
         const interviewData =
-          await InterviewQuestionService.getInterviewQuestionFromRefPath(
-            userId!,
-            interview.id
-          );
+          await InterviewQuestionService.getInterviewQuestions(interview.ref);
+
         const interviewQuestions = interviewData.docs;
-       
 
         const completed = interviewQuestions.map(
           (interview) => interview.data().answeredAt !== null
@@ -31,6 +29,7 @@ export default function useResumeInterviewQuery(userId: string | undefined) {
           completionPct,
         };
       });
+
       const incompleteInterviews = (await Promise.all(interviewLookup)).filter(
         (
           item
@@ -41,6 +40,7 @@ export default function useResumeInterviewQuery(userId: string | undefined) {
           completionPct: number;
         } => item !== null || item !== undefined
       );
+
       return incompleteInterviews;
     },
     {

@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
 import { IAnswer, IAnswerAttributes } from "@App/lib/answer/model";
-import { IInterviewQuestion } from "@App/lib/interviewQuestion/models";
+import { TInterviewQuestionDocumentReference } from "@App/lib/interviewQuestion/models";
 
 class AnswerService extends FirebaseService {
   private firestore: Firestore;
@@ -24,20 +24,20 @@ class AnswerService extends FirebaseService {
     this.firestore = getFirestore(this.app);
   }
 
-  private getCollectionRef(
-    userId: string,
-    interviewId: string,
-    questionId: string
-  ) {
-    return collection(
-      this.firestore,
-      "users",
-      userId,
-      "interviews",
-      interviewId,
-      "questions",
-      questionId,
-      "answers"
+  private getCollectionRef(ref: TInterviewQuestionDocumentReference) {
+    return (
+      ref instanceof DocumentReference
+        ? collection(ref, "answers")
+        : collection(
+            this.firestore,
+            "users",
+            ref.userId,
+            "interviews",
+            ref.interviewId,
+            "questions",
+            ref.questionId,
+            "answers"
+          )
     ) as CollectionReference<IAnswer>;
   }
 
@@ -46,19 +46,10 @@ class AnswerService extends FirebaseService {
   }
 
   async addAnswer(
-    ref:
-      | DocumentReference<IInterviewQuestion>
-      | { userId: string; interviewId: string; questionId: string },
+    ref: TInterviewQuestionDocumentReference,
     answerAttr: IAnswerAttributes
   ) {
-    const collectionRef =
-      ref instanceof DocumentReference
-        ? (collection(
-            this.firestore,
-            ref.path,
-            "answers"
-          ) as CollectionReference<IAnswer>)
-        : this.getCollectionRef(ref.userId, ref.interviewId, ref.questionId);
+    const collectionRef = this.getCollectionRef(ref);
 
     const answer = { ...answerAttr, createdAt: Timestamp.now() };
 
@@ -73,7 +64,14 @@ class AnswerService extends FirebaseService {
 
   async getAnswersByUserId(userId: string) {
     const collectionGroupRef = this.getCollectionGroupRef();
+
     return getDocs(query(collectionGroupRef, where("userId", "==", userId)));
+  }
+
+  async getAnswers(ref: TInterviewQuestionDocumentReference) {
+    const collectionRef = this.getCollectionRef(ref);
+
+    return getDocs(collectionRef);
   }
 }
 
