@@ -40,6 +40,8 @@ def score_audio():
         return jsonify(errors=audio["errors"])
     audio_file_path = audio["path_to_file"]
     sentiment = detect_audio_sentiment(audio_file_path)
+    if "errors" in sentiment:
+        return jsonify(errors=sentiment["errors"])
     return sentiment
 
 

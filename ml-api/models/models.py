@@ -1,4 +1,5 @@
 import os
+import time
 import pickle
 import requests
 from fer import Video, FER
@@ -52,7 +53,38 @@ def detect_audio_sentiment(fname):
     res_transcript = requests.post(
         os.getenv("TRANSCRIPT_ENDPOINT"),
         headers=headers,
-        json={"audio_url": upload_url, "sentiment_analysis": True},
+        json={
+            "audio_url": upload_url,
+            "sentiment_analysis": True,
+            "auto_highlights": True,
+            "iab_categories": True,
+        },
     )
 
-    return res_transcript.json()
+    transcript_id = res_transcript.json()["id"]
+
+    polling_endpoint = os.path.join(os.getenv("TRANSCRIPT_ENDPOINT"), transcript_id)
+
+    status = ""
+    while status != "completed":
+        response_result = requests.get(polling_endpoint, headers=headers)
+        status = response_result.json()["status"]
+        print(f"Status: {status}")
+
+        if status == "error":
+            print("Error reached!")
+            return {"errors": "Status error reached"}
+        elif status != "completed":
+            time.sleep(10)
+
+    if status == "completed":
+        sentiment_results = response_result.json()["sentiment_analysis_results"]
+        highlights_results = response_result.json()["auto_highlights_result"]
+        iab_results = response_result.json()["iab_categories_result"]
+        response = {
+            "sentiment_analysis": sentiment_results,
+            "highlights": highlights_results,
+            "iab_results": iab_results,
+        }
+
+        return response
