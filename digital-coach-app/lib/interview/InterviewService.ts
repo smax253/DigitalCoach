@@ -17,6 +17,7 @@ import FirebaseService from "@App/lib/firebase/FirebaseService";
 import {
   IBaseInterview,
   IInterviewAttributes,
+  TInterviewDocumentReference,
 } from "@App/lib/interview/models";
 
 class InterviewService extends FirebaseService {
@@ -35,13 +36,15 @@ class InterviewService extends FirebaseService {
     ) as Query<IInterviewAttributes>;
   }
 
-  private getDocRef(userId: string, interviewId: string) {
+  getDocRef(ref: TInterviewDocumentReference) {
+    if (ref instanceof DocumentReference) return ref;
+
     return doc(
       this.firestore,
       "users",
-      userId,
+      ref.userId,
       "interviews",
-      interviewId
+      ref.interviewId
     ) as DocumentReference<IInterviewAttributes>;
   }
 
@@ -73,8 +76,8 @@ class InterviewService extends FirebaseService {
     return getDocs(collectionRef);
   }
 
-  async fetchInterview(userId: string, interviewId: string) {
-    const docRef = this.getDocRef(userId, interviewId);
+  async fetchInterview(ref: TInterviewDocumentReference) {
+    const docRef = this.getDocRef(ref);
 
     return getDoc(docRef);
   }

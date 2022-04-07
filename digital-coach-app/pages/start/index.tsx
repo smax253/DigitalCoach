@@ -11,7 +11,7 @@ const RightArrow = () => (
 );
 
 export default function StartInterviewPage() {
-  const {currentUser} = useAuthContext();
+  const { currentUser } = useAuthContext();
   return (
     <AuthGuard>
       <div className={styles.StartInterviewPage}>
