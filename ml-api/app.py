@@ -6,7 +6,7 @@ from helpers.text_processor import clean_text
 from helpers.text_predict import predict_text_structure
 from helpers.av_processing import extract_audio
 from helpers.file_management import move_cv_files
-from models.models import detect_emotions
+from models.models import detect_emotions, detect_audio_sentiment
 
 # initalize the Flask object
 app = Flask(__name__)
@@ -39,13 +39,8 @@ def score_audio():
     if audio["errors"]:
         return jsonify(errors=audio["errors"])
     audio_file_path = audio["path_to_file"]
-    
-    # if "file" not in request.files:
-    #     return jsonify(errors="No video provided.")
-    # video = request.files.get("file")
-    # if not video:
-    #     return jsonify(errors="Error grabbing video from request.")
-    # path = "/"
+    sentiment = detect_audio_sentiment(audio_file_path)
+    return sentiment
 
 
 @app.route("/predict-facial", methods=["POST"])
