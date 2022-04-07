@@ -36,7 +36,7 @@ def score_audio():
     if not fname and rename:
         return jsonify(errors="File name and rename does not exist.")
     audio = extract_audio(fname, rename)
-    if audio["errors"]:
+    if "errors" in audio:
         return jsonify(errors=audio["errors"])
     audio_file_path = audio["path_to_file"]
     sentiment = detect_audio_sentiment(audio_file_path)
