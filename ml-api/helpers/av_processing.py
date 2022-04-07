@@ -12,9 +12,10 @@ def extract_audio(fname, des_fname):
         return {"path_to_file": str(des_path)}
     except OSError as exception:
         return {"errors": str(exception)}
-    
+
+
 def read_audio_file(file_path):
-    with open(file_path, 'rb') as f:
+    with open(file_path, "rb") as f:
         while True:
             data = f.read(5242880)
             if not data:
