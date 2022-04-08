@@ -14,16 +14,16 @@ env_path = os.path.join(ROOT_DIR, ".env")
 load_dotenv(env_path)
 
 
-def detect_emotions(video_fname):
+def detect_emotions(video_fname, freq=10):
     videofile_path = os.path.join(ROOT_DIR, "data", video_fname)
-    print(videofile_path)
     face_detection = FER(mtcnn=True)
     try:
         input_video = Video(videofile_path)
         processed_data = input_video.analyze(
-            face_detection, display=False, frequency=15
+            face_detection, display=False, frequency=freq
         )
         vid_df = input_video.to_pandas(processed_data)
+        vid_df = input_video.get_first_face(vid_df)
         vid_df = input_video.get_emotions(vid_df)
         sum_emotions = {
             "angry": sum(vid_df.angry),
@@ -34,7 +34,21 @@ def detect_emotions(video_fname):
             "surprise": sum(vid_df.surprise),
             "neutral": sum(vid_df.neutral),
         }
-        return sum_emotions
+        timelines = {
+            "angry": list(vid_df.loc[:, "angry"]),
+            "disgust": list(vid_df.loc[:, "disgust"]),
+            "fear": list(vid_df.loc[:, "fear"]),
+            "happy": list(vid_df.loc[:, "happy"]),
+            "sad": list(vid_df.loc[:, "sad"]),
+            "surprise": list(vid_df.loc[:, "surprise"]),
+            "neutral": list(vid_df.loc[:, "neutral"]),
+        }
+        response = {
+            "frame_inference_rate": freq,
+            "emotion_sums": sum_emotions,
+            "timeline": timelines,
+        }
+        return response
     except OSError as exception:
         return {"errors": str(exception)}
 
