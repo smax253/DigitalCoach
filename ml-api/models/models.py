@@ -44,6 +44,7 @@ def detect_emotions(video_fname, freq=10):
             "neutral": list(vid_df.loc[:, "neutral"]),
         }
         response = {
+            "total_frames": len(list(vid_df.loc[:, "angry"])),
             "frame_inference_rate": freq,
             "emotion_sums": sum_emotions,
             "timeline": timelines,
