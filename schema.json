@@ -1,0 +1,27 @@
+{
+    "structuredAnswerPercent": float,
+    "createdAt": date,
+    "isSubmission": bool,
+    "userId": string,
+    "videoUrl": string,
+    "timeline": [{
+        "start": int,
+        "end": int,
+        "audioSentiment": "NEGATIVE",
+        "facialEmotion": "ANGRY"    //facial emotion corresponding to the start and end time
+    }],
+    "overallFacialEmotion": string,
+    "overallSentiment": string,
+    "topFiveKeywords": [{
+        "rank": 0.11,
+        "text": "Stevens Institute",
+        "timestamps": [
+            {
+                "end": 3922,
+                "start": 3356
+            }
+        ]
+    }],
+    "aggregateScore": int out of hundred, 
+}
+
