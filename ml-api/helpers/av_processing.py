@@ -20,14 +20,14 @@ def _build_timeline_intervals_sentiment(sent_analysis_lst):
     return timeline
 
 
-def build_timeline_interval_facial(clip_length, facial_data):
+def _build_timeline_interval_facial(clip_length, facial_data):
     """
     Builds the facial data timeline.
     """
     fps = int(math.ceil((facial_data["total_frames"] / clip_length)))
     interval_length = 1000 // fps
     interval_keys = [
-        (k, k + interval_length)
+        (k + 1 if k > 0 else k, k + interval_length)
         for k in range(
             0, interval_length * (facial_data["total_frames"]), interval_length
         )
@@ -37,6 +37,10 @@ def build_timeline_interval_facial(clip_length, facial_data):
     emotion_per_frame = [i for i in max_val_index]
     facial_timeline = {k: v for k, v in zip(interval_keys, emotion_per_frame)}
     return facial_timeline
+
+
+def av_timeline_resolution(audio_timeline, facial_timeline):
+    pass
 
 
 def extract_audio(fname, des_fname):
