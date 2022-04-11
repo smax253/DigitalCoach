@@ -25,7 +25,7 @@ def build_timeline_interval_facial(clip_length, facial_data):
     Builds the facial data timeline.
     """
     fps = int(math.ceil((facial_data["total_frames"] / clip_length)))
-    interval_length = int(1000 / fps)
+    interval_length = 1000 // fps
     interval_keys = [
         (k, k + interval_length)
         for k in range(
