@@ -23,6 +23,7 @@ def score_text_structure(content):
     predictions = predict_text_structure(cleaned)
     return jsonify(percent_prediction=predictions[0], binary_prediction=predictions[1])
 
+
 def score_audio(content):
     """
     score user's audio.
@@ -35,9 +36,11 @@ def score_audio(content):
         return jsonify(errors=audio["errors"])
     audio_file_path = audio["path_to_file"]
     sentiment = detect_audio_sentiment(audio_file_path)
+    sentiment["clip_length_seconds"] = audio["clip_length_seconds"]
     if "errors" in sentiment:
         return jsonify(errors=sentiment["errors"])
     return sentiment
+
 
 def score_facial(content):
     """
@@ -49,15 +52,15 @@ def score_facial(content):
     total_emotion_score = detect_emotions(video_fname)
     move_cv_files()
     if "errors" in total_emotion_score:
-        return jsonify(total_emotion_score), 400
+        return jsonify(total_emotion_score)
     return jsonify(total_emotion_score)
 
 
 @app.route("/predict", methods=["POST"])
 def score():
-    '''
+    """
     POST route that returns total text, audio and video predictions.
-    '''
+    """
     content = request.get_json()
     fname, rename, answer = content["fname"], content["rename"], content["answer"]
     if not fname or not rename or not answer:
@@ -65,9 +68,10 @@ def score():
     text_answer = score_text_structure(content)
     facial_answer = score_facial(content)
     audio_answer = score_audio(content)
-    #call the build answer function here
-    #build out the json schema here
-    return 
+    # call the build answer function here
+    # build out the json schema here
+    return
+
 
 @app.route("/", methods=["GET"])
 def index():
