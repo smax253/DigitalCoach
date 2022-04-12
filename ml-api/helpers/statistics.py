@@ -1,5 +1,6 @@
 import numpy as np
 from helpers.av_processing import build_timeline_interval_facial
+from heapq import nlargest
 
 
 def calculate_overall_facial_sentiment(facial_data):
@@ -8,7 +9,16 @@ def calculate_overall_facial_sentiment(facial_data):
 
 
 def calculate_overall_audio_sentiment(audio_data):
-    pass
+    sentiments = audio_data["sentiment_analysis"]
+    sent_list = [i["sentiment"] for i in sentiments]
+    counted_sents = max(set(sent_list), key=sent_list.count)
+    return counted_sents
+
+
+def grab_top_five_keywords(audio_data):
+    keywords = audio_data["highlights"]["results"]
+    top_five = nlargest(5, keywords, key=lambda item: item["rank"])
+    return top_five
 
 
 def calculate_top_three_facial_with_count(facial_data):

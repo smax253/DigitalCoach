@@ -7,7 +7,11 @@ from helpers.text_predict import predict_text_structure
 from helpers.av_processing import extract_audio, av_timeline_resolution
 from helpers.file_management import move_cv_files
 from models.models import detect_emotions, detect_audio_sentiment
-from helpers.statistics import calculate_top_three_facial_with_count
+from helpers.statistics import (
+    calculate_top_three_facial_with_count,
+    calculate_overall_audio_sentiment,
+    grab_top_five_keywords,
+)
 
 # initalize the Flask object
 app = Flask(__name__)
@@ -89,6 +93,9 @@ def score():
             "frequencyOfSecondEmotion": second_stat,
             "frequencyOfThirdEmotion": third_stat,
         },
+        "overallFacialEmotion": facial_stats[0],
+        "overallSentiment": calculate_overall_audio_sentiment(audio_answer),
+        "topFiveKeywords": grab_top_five_keywords(audio_answer),
     }
     return result
 
