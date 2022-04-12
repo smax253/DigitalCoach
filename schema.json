@@ -1,4 +1,5 @@
 {
+    "isStructured": int, (0 or 1)
     "structuredAnswerPercent": float,
     "createdAt": date,
     "isSubmission": bool,
@@ -8,7 +9,7 @@
         "start": int,
         "end": int,
         "audioSentiment": "NEGATIVE",
-        "facialEmotion": "ANGRY"    //facial emotion corresponding to the start and end time
+        "facialEmotion": ["ANGRY", "NEUTRAL"]    //facial emotion corresponding to the start and end time
     }],
     "overallFacialEmotion": string,
     "overallSentiment": string,
@@ -22,6 +23,12 @@
             }
         ]
     }],
+    "facialStatistics": {
+        "topThreeEmotions": ["NEUTRAL", "SURPRISE", "HAPPY"],
+        "frequencyOfTopEmotion": float,
+        "frequencyOfSecondEmotion": float,
+        "frequencyOfThirdEmotion": float
+    }
     "aggregateScore": int out of hundred, 
 }
 

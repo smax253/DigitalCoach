@@ -4,9 +4,10 @@ Main Flask application as well as routes of the app.
 from flask import Flask, jsonify, request
 from helpers.text_processor import clean_text
 from helpers.text_predict import predict_text_structure
-from helpers.av_processing import extract_audio
+from helpers.av_processing import extract_audio, av_timeline_resolution
 from helpers.file_management import move_cv_files
 from models.models import detect_emotions, detect_audio_sentiment
+from helpers.statistics import calculate_top_three_facial_with_count
 
 # initalize the Flask object
 app = Flask(__name__)
@@ -68,9 +69,28 @@ def score():
     text_answer = score_text_structure(content)
     facial_answer = score_facial(content)
     audio_answer = score_audio(content)
-    # call the build answer function here
-    # build out the json schema here
-    return
+    timeline = av_timeline_resolution(
+        audio_answer["clip_length_seconds"], facial_answer, audio_answer["sentiments"]
+    )
+    (
+        facial_stats,
+        top_stat,
+        second_stat,
+        third_stat,
+    ) = calculate_top_three_facial_with_count(facial_answer)
+    result = {
+        "timeline": timeline,
+        "isStructured": text_answer["binary_prediction"],
+        "isStructuredPercent": text_answer["percent_prediction"],
+        "aggregateScore": 0,
+        "facialStatistics": {
+            "topThreeEmotions": facial_stats,
+            "frequencyOfTopEmotion": top_stat,
+            "frequencyOfSecondEmotion": second_stat,
+            "frequencyOfThirdEmotion": third_stat,
+        },
+    }
+    return result
 
 
 @app.route("/", methods=["GET"])
