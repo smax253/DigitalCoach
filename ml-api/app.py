@@ -73,8 +73,13 @@ def score():
     text_answer = score_text_structure(content)
     facial_answer = score_facial(content)
     audio_answer = score_audio(content)
+    # audio_path = os.path.join(ROOT_DIR, "data", "audio_output.json")
+    # f = open(audio_path)
+    # audio_answer = json.load(f)
     timeline = av_timeline_resolution(
-        audio_answer["clip_length_seconds"], facial_answer, audio_answer["sentiments"]
+        audio_answer["clip_length_seconds"],
+        facial_answer,
+        audio_answer["sentiment_analysis"],
     )
     (
         facial_stats,
@@ -84,8 +89,8 @@ def score():
     ) = calculate_top_three_facial_with_count(facial_answer)
     result = {
         "timeline": timeline,
-        "isStructured": text_answer["binary_prediction"],
-        "isStructuredPercent": text_answer["percent_prediction"],
+        "isStructured": text_answer.json["binary_prediction"],
+        "isStructuredPercent": text_answer.json["percent_prediction"],
         "aggregateScore": 0,
         "facialStatistics": {
             "topThreeEmotions": facial_stats,
