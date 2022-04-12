@@ -4,7 +4,7 @@ from heapq import nlargest
 
 
 def calculate_overall_facial_sentiment(facial_data):
-    emotion_sums = dict(facial_data["emotion_sums"])
+    emotion_sums = dict(facial_data.json["emotion_sums"])
     return max(emotion_sums, key=lambda key: emotion_sums[key])
 
 
@@ -38,5 +38,5 @@ def calculate_top_three_facial_with_count(facial_data):
     )
     top_stat = top_three_with_count[0][1] / denominator
     second_stat = top_three_with_count[1][1] / denominator
-    third_stat = top_three_with_count[0][1] / denominator
+    third_stat = top_three_with_count[2][1] / denominator
     return top_three, top_stat, second_stat, third_stat

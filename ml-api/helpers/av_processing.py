@@ -1,5 +1,4 @@
 import os
-import math
 import moviepy.editor as mp
 import pandas as pd
 from configs.definitions import ROOT_DIR
@@ -24,12 +23,14 @@ def build_timeline_interval_facial(facial_data):
     """
     Builds the facial data timeline.
     """
-    df = pd.DataFrame(data=facial_data["timeline"])
+    df = pd.DataFrame(data=facial_data.json["timeline"])
     max_val_index = df.idxmax(axis=1)
     emotion_per_frame = [i for i in max_val_index]
     facial_timeline = {
         k: v
-        for k, v in zip(list(range(facial_data["total_frames"])), emotion_per_frame)
+        for k, v in zip(
+            list(range(facial_data.json["total_frames"])), emotion_per_frame
+        )
     }
     return facial_timeline
 
@@ -42,8 +43,8 @@ def _emotion_sentiment_match(start, end, interval_length, facial_timeline):
 
 
 def av_timeline_resolution(clip_length, facial_data, audio_sentiments):
-    total_frames = facial_data["total_frames"]
-    fps = int(math.ceil(total_frames / clip_length))
+    total_frames = facial_data.json["total_frames"]
+    fps = round(total_frames / clip_length)
     interval_length = 1000 // fps
     audio_timeline = _build_timeline_intervals_sentiment(audio_sentiments)
     facial_timeline = build_timeline_interval_facial(facial_data)
