@@ -17,13 +17,15 @@ from helpers.statistics import (
 app = Flask(__name__)
 
 
-def score_text_structure(content):
+def score_text_structure(audio_answer):
     """
     score how structured the user's answers are.
     """
-    if "answer" not in content:
-        return jsonify(errors="Text to predict does not exist.")
-    text = content["answer"]
+    sentiments = audio_answer["sentiment_analysis"]
+    text = ""
+    for i in sentiments:
+        text += i["text"]
+    print(text)
     cleaned = clean_text(text)
     predictions = predict_text_structure(cleaned)
     return jsonify(percent_prediction=predictions[0], binary_prediction=predictions[1])
@@ -67,12 +69,12 @@ def score():
     POST route that returns total text, audio and video predictions.
     """
     content = request.get_json()
-    fname, rename, answer = content["fname"], content["rename"], content["answer"]
-    if not fname or not rename or not answer:
+    fname, rename = content["fname"], content["rename"]
+    if not fname or not rename:
         return jsonify(errors="Request body does not have all required fields.")
-    text_answer = score_text_structure(content)
     facial_answer = score_facial(content)
     audio_answer = score_audio(content)
+    text_answer = score_text_structure(audio_answer)
     # audio_path = os.path.join(ROOT_DIR, "data", "audio_output.json")
     # f = open(audio_path)
     # audio_answer = json.load(f)
