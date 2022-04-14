@@ -33,6 +33,11 @@ def calculate_top_three_facial_with_count(facial_data):
     emotions_per_interval = list(timeline_interval.values())
     fdist = dict(zip(*np.unique(emotions_per_interval, return_counts=True)))
     top_three = sorted(fdist, key=fdist.get, reverse=True)[:3]
+    if len(top_three) < 3:
+        iterations = 3 - len(top_three)
+        for _ in range(iterations):
+            top_three.append("N/A")
+        fdist["N/A"] = 0.0
     top_three_with_count = [
         (top_three[0], fdist[top_three[0]]),
         (top_three[1], fdist[top_three[1]]),
