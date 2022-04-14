@@ -49,10 +49,55 @@ def calculate_top_three_facial_with_count(facial_data):
     return top_three, top_stat, second_stat, third_stat
 
 
+def _compute_av_sentiment_matches(timeline):
+    total_pts = len(timeline) * 2
+    pts = 0
+    for entry in timeline:
+        if (
+            entry["facialEmotion"][0] in AV_ASSOCIATIONS[entry["audioSentiment"]]
+            and entry["facialEmotion"][1] in AV_ASSOCIATIONS[entry["audioSentiment"]]
+        ):
+            pts += 2
+        elif (
+            entry["facialEmotion"][0] in AV_ASSOCIATIONS[entry["audioSentiment"]]
+            and entry["facialEmotion"][1]
+            not in AV_ASSOCIATIONS[entry["audioSentiment"]]
+        ):
+            pts += 1
+        elif (
+            entry["facialEmotion"][0] not in AV_ASSOCIATIONS[entry["audioSentiment"]]
+            and entry["facialEmotion"][1] in AV_ASSOCIATIONS[entry["audioSentiment"]]
+        ):
+            pts += 1
+        else:
+            continue
+    av_matches = (pts / total_pts) * 30
+    return av_matches
+
+
+def _compute_pts_for_emotion_occurences(timeline):
+    total_pts = len(timeline) * 6
+    pts = 0
+    for entry in timeline:
+        pts += AUDIO_EMOTION_POINTS[entry["audioSentiment"]]
+        pts += (
+            FACIAL_EMOTION_POINTS[entry["facialEmotion"][0]]
+            + FACIAL_EMOTION_POINTS[entry["facialEmotion"][1]]
+        )
+
+    if pts <= 0:
+        return 0
+    return (pts / total_pts) * 10
+
+
 def compute_aggregate_score(result):
     text_score = result["isStructuredPercent"] * 40
-    overall_facial = OVERAL_FACIAL_POINTS[result["overallFacialEmotion"]] * 0.1
-    overall_audio = OVERALL_AUDIO_POINTS[result["overallSentiment"]] * 0.1
-    
-    aggregate = text_score + overall_facial + overall_audio
-    return aggregate
+    overall_facial = OVERAL_FACIAL_POINTS[result["overallFacialEmotion"]]
+    overall_audio = OVERALL_AUDIO_POINTS[result["overallSentiment"]]
+    av_matches = _compute_av_sentiment_matches(result["timeline"])
+    emotion_occurences = _compute_pts_for_emotion_occurences(result["timeline"])
+    print(text_score, overall_facial, overall_audio, av_matches, emotion_occurences)
+    aggregate = (
+        text_score + overall_facial + overall_audio + av_matches + emotion_occurences
+    )
+    return round(aggregate, 2)

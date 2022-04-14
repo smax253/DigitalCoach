@@ -5,13 +5,13 @@ from flask import Flask, jsonify, request
 from helpers.text_processor import clean_text
 from helpers.text_predict import predict_text_structure
 from helpers.av_processing import extract_audio, av_timeline_resolution
-from helpers.file_management import move_cv_files
+from helpers.file_management import move_cv_files, cleanup_data_folder
 from models.models import detect_emotions, detect_audio_sentiment
 from helpers.statistics import (
     calculate_top_three_facial_with_count,
     calculate_overall_audio_sentiment,
     grab_top_five_keywords,
-    compute_aggregate_score
+    compute_aggregate_score,
 )
 
 # initalize the Flask object
@@ -105,6 +105,7 @@ def score():
         "topFiveKeywords": grab_top_five_keywords(audio_answer),
     }
     result["aggregateScore"] = compute_aggregate_score(result)
+    cleanup_data_folder()
     return result
 
 

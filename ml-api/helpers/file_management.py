@@ -13,3 +13,13 @@ def move_cv_files():
 
     if os.path.exists(output_path):
         shutil.move(output_path, data_path)
+
+
+def cleanup_data_folder():
+    data_path = os.path.join(ROOT_DIR, "data")
+    for files in os.listdir(data_path):
+        path = os.path.join(data_path, files)
+        try:
+            shutil.rmtree(path)
+        except OSError:
+            os.remove(path)
