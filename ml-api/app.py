@@ -5,25 +5,28 @@ from flask import Flask, jsonify, request
 from helpers.text_processor import clean_text
 from helpers.text_predict import predict_text_structure
 from helpers.av_processing import extract_audio, av_timeline_resolution
-from helpers.file_management import move_cv_files
+from helpers.file_management import move_cv_files, cleanup_data_folder
 from models.models import detect_emotions, detect_audio_sentiment
 from helpers.statistics import (
     calculate_top_three_facial_with_count,
     calculate_overall_audio_sentiment,
     grab_top_five_keywords,
+    compute_aggregate_score,
 )
 
 # initalize the Flask object
 app = Flask(__name__)
 
 
-def score_text_structure(content):
+def score_text_structure(audio_answer):
     """
     score how structured the user's answers are.
     """
-    if "answer" not in content:
-        return jsonify(errors="Text to predict does not exist.")
-    text = content["answer"]
+    sentiments = audio_answer["sentiment_analysis"]
+    text = ""
+    for i in sentiments:
+        text += i["text"]
+    print(text)
     cleaned = clean_text(text)
     predictions = predict_text_structure(cleaned)
     return jsonify(percent_prediction=predictions[0], binary_prediction=predictions[1])
@@ -67,12 +70,12 @@ def score():
     POST route that returns total text, audio and video predictions.
     """
     content = request.get_json()
-    fname, rename, answer = content["fname"], content["rename"], content["answer"]
-    if not fname or not rename or not answer:
+    fname, rename = content["fname"], content["rename"]
+    if not fname or not rename:
         return jsonify(errors="Request body does not have all required fields.")
-    text_answer = score_text_structure(content)
     facial_answer = score_facial(content)
     audio_answer = score_audio(content)
+    text_answer = score_text_structure(audio_answer)
     # audio_path = os.path.join(ROOT_DIR, "data", "audio_output.json")
     # f = open(audio_path)
     # audio_answer = json.load(f)
@@ -91,7 +94,6 @@ def score():
         "timeline": timeline,
         "isStructured": text_answer.json["binary_prediction"],
         "isStructuredPercent": text_answer.json["percent_prediction"],
-        "aggregateScore": 0,
         "facialStatistics": {
             "topThreeEmotions": facial_stats,
             "frequencyOfTopEmotion": top_stat,
@@ -102,6 +104,8 @@ def score():
         "overallSentiment": calculate_overall_audio_sentiment(audio_answer),
         "topFiveKeywords": grab_top_five_keywords(audio_answer),
     }
+    result["aggregateScore"] = compute_aggregate_score(result)
+    cleanup_data_folder()
     return result
 
 
