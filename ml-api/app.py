@@ -11,6 +11,7 @@ from helpers.statistics import (
     calculate_top_three_facial_with_count,
     calculate_overall_audio_sentiment,
     grab_top_five_keywords,
+    compute_aggregate_score
 )
 
 # initalize the Flask object
@@ -93,7 +94,6 @@ def score():
         "timeline": timeline,
         "isStructured": text_answer.json["binary_prediction"],
         "isStructuredPercent": text_answer.json["percent_prediction"],
-        "aggregateScore": 0,
         "facialStatistics": {
             "topThreeEmotions": facial_stats,
             "frequencyOfTopEmotion": top_stat,
@@ -104,6 +104,7 @@ def score():
         "overallSentiment": calculate_overall_audio_sentiment(audio_answer),
         "topFiveKeywords": grab_top_five_keywords(audio_answer),
     }
+    result["aggregateScore"] = compute_aggregate_score(result)
     return result
 
 

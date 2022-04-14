@@ -1,6 +1,13 @@
 import numpy as np
 from helpers.av_processing import build_timeline_interval_facial
 from heapq import nlargest
+from configs.rubric import (
+    AUDIO_EMOTION_POINTS,
+    AV_ASSOCIATIONS,
+    FACIAL_EMOTION_POINTS,
+    OVERAL_FACIAL_POINTS,
+    OVERALL_AUDIO_POINTS,
+)
 
 
 def calculate_overall_facial_sentiment(facial_data):
@@ -40,3 +47,12 @@ def calculate_top_three_facial_with_count(facial_data):
     second_stat = top_three_with_count[1][1] / denominator
     third_stat = top_three_with_count[2][1] / denominator
     return top_three, top_stat, second_stat, third_stat
+
+
+def compute_aggregate_score(result):
+    text_score = result["isStructuredPercent"] * 40
+    overall_facial = OVERAL_FACIAL_POINTS[result["overallFacialEmotion"]] * 0.1
+    overall_audio = OVERALL_AUDIO_POINTS[result["overallSentiment"]] * 0.1
+    
+    aggregate = text_score + overall_facial + overall_audio
+    return aggregate

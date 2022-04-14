@@ -15,3 +15,15 @@ AV_ASSOCIATIONS = {
     "NEUTRAL": ["neutral", "surprise"],
     "POSITIVE": ["happy"],
 }
+
+OVERALL_AUDIO_POINTS = {"NEGATIVE": 0, "NEUTRAL": 5, "POSITIVE": 10}
+
+OVERAL_FACIAL_POINTS = {
+    "angry": 0,
+    "neutral": 5,
+    "happy": 10,
+    "fear": 2,
+    "surprise": 4,
+    "disgust": 0,
+    "sad": 3,
+}
