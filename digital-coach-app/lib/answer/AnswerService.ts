@@ -73,6 +73,11 @@ class AnswerService extends FirebaseService {
 
     return getDocs(collectionRef);
   }
+
+  async getSubmission(ref: TInterviewQuestionDocumentReference){
+    const answerDocs = await this.getAnswers(ref);
+    return answerDocs.docs.find(item => item.data().isSubmission);
+  }
 }
 
 export default new AnswerService();

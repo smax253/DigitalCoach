@@ -37,6 +37,7 @@
     "react-dom": "17.0.2",
     "react-hook-form": "^7.22.4",
     "react-media-recorder": "^1.6.3",
+    "react-player": "^2.10.0",
     "react-query": "^3.34.14",
     "react-table": "^7.7.0",
     "sass": "^1.49.7",
@@ -59,5 +60,13 @@
     "jest-transform-stub": "^2.0.0",
     "ts-jest": "^27.1.2",
     "typescript": "4.5.4"
+  },
+  "resolutions": {
+    "@types/react": "^17.0.1",
+    "@types/react-dom": "^17.0.2"
+  },
+  "overrides": {
+    "@types/react": "^17.0.1",
+    "@types/react-dom": "^17.0.2"
   }
 }
