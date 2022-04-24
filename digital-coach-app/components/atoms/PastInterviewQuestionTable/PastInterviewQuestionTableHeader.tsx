@@ -9,6 +9,7 @@ interface Props
   > {
   headerGroups: HeaderGroup<{
     answerId?: string | undefined;
+    questionId: string;
     questionName: string;
     videoUrl?: string | undefined;
     score?: number | null | undefined;

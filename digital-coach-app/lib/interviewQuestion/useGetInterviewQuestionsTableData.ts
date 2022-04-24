@@ -20,6 +20,7 @@ export default function useGetInterviewQuestionsTableData(userId:string|undefine
                 }
                 return {
                     answerId: submission?.id,
+                    questionId: question.id,
                     questionName: data.question,
                     videoUrl: videoDownloadUrl,
                     score: data.score,

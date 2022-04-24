@@ -20,6 +20,7 @@ interface TableProps
   > {
   data: {
     answerId?: string;
+    questionId: string;
     questionName: string;
     videoUrl?: string;
     score?: number | null;
@@ -40,7 +41,7 @@ function Table(props: TableProps) {
   const tableData = useMemo(
     () =>
       data.map((item) => ({
-        url: `/past/${interviewId}/${item.answerId}`,
+        url: `/past/${interviewId}/${item.questionId}`,
         ...item,
       })),
     [data, interviewId]

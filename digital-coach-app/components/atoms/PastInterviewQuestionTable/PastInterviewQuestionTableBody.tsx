@@ -10,6 +10,7 @@ interface Props
   tableBodyProps: TableBodyProps;
   rows: Row<{
     answerId?: string | undefined;
+    questionId: string;
     questionName: string;
     videoUrl?: string | undefined;
     score?: number | null | undefined;
@@ -37,7 +38,7 @@ export default function PastInterviewQuestionTableBody(props: Props) {
                 );
               } else {
                 return (
-                  <Link href={row.original.url} passHref>
+                  <Link key={cellKey} href={row.original.url} passHref>
                     <td key={cellKey} {...restOfCellProps}>
                       {cell.render("Cell")}
                     </td>
