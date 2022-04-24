@@ -11,6 +11,8 @@ import {
   Query,
   where,
   updateDoc,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 
 import {
@@ -71,6 +73,19 @@ class InterviewQuestionService extends FirebaseService {
     );
 
     return getDocs(groupQuery);
+  }
+
+  async getInterviewQuestion( userId: string, interviewId: string, questionId: string) {
+    const question = doc(
+      this.firestore,
+      "users",
+      userId,
+      "interviews",
+      interviewId,
+      "interviewQuestions",
+      questionId
+    ) as DocumentReference<IInterviewQuestion>;
+    return getDoc(question);
   }
 
   async addQuestion(
