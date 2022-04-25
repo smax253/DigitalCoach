@@ -23,3 +23,14 @@ def cleanup_data_folder():
             shutil.rmtree(path)
         except OSError:
             os.remove(path)
+
+
+def cleanup_data_persist_video():
+    data_path = os.path.join(ROOT_DIR, "data")
+    filelist = [f for f in os.listdir(data_path) if not f.endswith(".mov")]
+    for f in filelist:
+        path = os.path.join(data_path, f)
+        try:
+            shutil.rmtree(path)
+        except OSError:
+            os.remove(path)
