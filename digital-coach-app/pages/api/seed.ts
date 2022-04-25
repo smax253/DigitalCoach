@@ -108,7 +108,7 @@ export default async function seed(
     const questionsRef =
       await InterviewQuestionService.getAllInterviewQuestions();
 
-    let videoFile = await fs.readFile(`assets/video (10).avi`);
+    let videoFile = await fs.readFile(`assets/video (1).mp4`);
     const videoUploadResult = await StorageService.uploadAnswerVideo(videoFile, "test");
     await Promise.all(
       questionsRef.docs

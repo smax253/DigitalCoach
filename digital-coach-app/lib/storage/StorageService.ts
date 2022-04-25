@@ -3,6 +3,7 @@ import {
   getDownloadURL,
   getStorage,
   ref,
+  StorageReference,
   uploadBytes,
 } from "firebase/storage";
 import { uuid } from "uuidv4";
@@ -30,8 +31,19 @@ class StorageService extends FirebaseService {
 
   async uploadAnswerVideo(file: File|Blob|ArrayBuffer, interviewId: string){
     const storage = getStorage();
-    const interviewAnswersRef = ref(storage, `interview-responses/${interviewId}.avi`);
-    return uploadBytes(interviewAnswersRef, file, {contentType:"video/avi"});
+    const interviewAnswersRef = ref(storage, `interview-responses/${interviewId}.mp4`);
+    return uploadBytes(interviewAnswersRef, file, {contentType:"video/mp4"});
+  }
+  async getDownloadUrlFromVideoUrlRef(videoUrl: string | StorageReference){
+    const storage = getStorage();
+    if(typeof videoUrl === 'string' || videoUrl instanceof String){ 
+      const videoUrlString = videoUrl as string;
+      const interviewAnswersRef = ref(storage, videoUrlString);
+      return getDownloadURL(interviewAnswersRef);
+    }else {
+      const videoUrlRef = videoUrl as StorageReference;
+      return getDownloadURL(videoUrlRef);
+    }
   }
 }
 
