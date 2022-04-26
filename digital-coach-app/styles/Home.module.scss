@@ -12,23 +12,15 @@
   flex-wrap: wrap;
   gap: 1rem;
   width:100%;
-  ul{
-    list-style-type: none;
-    padding: 0;
-  }
-  span{
-    color:$secondary;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 16px;
-  }
-  div{
-    flex:1;
-  }
+  position: relative;
 }
 .calendarWrapper{
-  width: 20vw;
+  padding: 15px 15px;
 }
 .issuesChartWrapper{
-  width:24vw;
+  padding: 15px 15px;
+}
+
+.tipoftheday{
+  padding: 5px 5px;
 }
