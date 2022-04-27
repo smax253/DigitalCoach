@@ -94,4 +94,4 @@ def create_answer(content):
     }
     result["aggregateScore"] = compute_aggregate_score(result)
     cleanup_data_folder()
-    return result
+    return str(result)
