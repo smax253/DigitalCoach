@@ -3,10 +3,7 @@ Main Flask application as well as routes of the app.
 """
 import uuid
 import redis
-<<<<<<< HEAD
 from threading import Thread
-=======
->>>>>>> afcb4ff (Queueing works)
 from rq import Queue
 from flask import Flask, jsonify, request
 from helpers.download_url import download_video_link
@@ -17,16 +14,12 @@ from db_monitor import poll_connection
 app = Flask(__name__)
 r = redis.Redis()
 q = Queue(connection=r)
-<<<<<<< HEAD
 
 
 @app.before_first_request
 def launch_polling_script():
     Thread(target=poll_connection, args=(r,), daemon=True).start()
     print("Launched polling script in different thread.")
-=======
->>>>>>> afcb4ff (Queueing works)
-
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -76,4 +69,4 @@ def index():
 
 
 if __name__ == "___main__":
-    app.run(debug=True, threaded=False, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0")
