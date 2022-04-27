@@ -28,9 +28,7 @@ def build_timeline_interval_facial(facial_data):
     emotion_per_frame = [i for i in max_val_index]
     facial_timeline = {
         k: v
-        for k, v in zip(
-            list(range(facial_data["total_frames"])), emotion_per_frame
-        )
+        for k, v in zip(list(range(facial_data["total_frames"])), emotion_per_frame)
     }
     return facial_timeline
 
