@@ -87,6 +87,19 @@ const Home: NextPage = () => {
               ))}
             </ul>
           </Card>
+          <Card title={"Tip of the Day!"} multiline>
+          <div className={styles.tipoftheday}>
+            <p>
+              Start by researching the company and your interviewer.
+              Understanding key information about the company you’re
+              interviewing with can help you go into your interview with
+              confidence.
+            </p>
+            </div>
+          </Card>
+          <Card title={"Recent Recordings"} multiline>
+            <h4>You have not recorded an interview yet!</h4>
+          </Card>
           <Card multiline>
             <div className={styles.calendarWrapper}>
               <PracticeCalendar events={events} />
@@ -96,23 +109,7 @@ const Home: NextPage = () => {
             <div className={styles.issuesChartWrapper}>
               <IssuesChart chartData={mockIssuesData} />
             </div>
-          </Card>
-          <Card title={"Tip of the Day!"} multiline>
-            <p>
-              Start by researching the company and your interviewer.
-              Understanding key information about the company you’re
-              interviewing with can help you go into your interview with
-              confidence.
-            </p>
-          </Card>
-          <Card title={"Recent Recordings"} multiline>
-            <h4>You have not recorded an interview yet!</h4>
-          </Card>
-
-          <Card title={"Average Score"} multiline>
-            <div className={styles.scoreChartWrapper}>
-              <ScoreChart score={Math.round(averageScore * 100)} />
-            </div>
+            <h2>Average Score: {Math.round(averageScore * 100)}%</h2>
           </Card>
         </div>
 
