@@ -4,6 +4,7 @@ import { useSortBy, useTable } from "react-table";
 import PastInterviewQuestionTableBody from "../atoms/PastInterviewQuestionTable/PastInterviewQuestionTableBody";
 import PastInterviewQuestionTableHeader from "../atoms/PastInterviewQuestionTable/PastInterviewQuestionTableHeader";
 import PastInterviewThumbnailPlayer from "../atoms/PastInterviewQuestionTable/PastInterviewThumbnailPlayer";
+import styles from "@App/components/organisms/PastInterviewQuestionTable.module.scss";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -34,7 +35,7 @@ function Table(props: TableProps) {
     () => [
       { accessor: "questionName", Header: "Question" },
       { accessor: "videoUrl", Header: "Watch your response", Cell: (props: {value: string | undefined}) => { return props.value && <PastInterviewThumbnailPlayer videoUrl={props.value} /> }},
-      { accessor: "score", Header: "Score" },
+      { accessor: "score", Header: "Score", Cell: (props: { value: number | undefined }) => props.value ? (props.value * 100).toFixed(1) + "%" : "--", },
     ],
     []
   );
@@ -49,7 +50,7 @@ function Table(props: TableProps) {
   const { getTableBodyProps, getTableProps, rows, prepareRow, headerGroups } =
     //@ts-ignore
     useTable({ columns, data: tableData }, useSortBy);
-  return <table {...getTableProps()}>
+  return <table {...getTableProps()} className={styles.PastInterviewQuestionTable}>
     <PastInterviewQuestionTableHeader headerGroups={headerGroups} />
     <PastInterviewQuestionTableBody rows={rows} prepareRow={prepareRow} tableBodyProps={getTableBodyProps()}/>
   </table>;
