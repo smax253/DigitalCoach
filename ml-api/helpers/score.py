@@ -93,5 +93,9 @@ def create_answer(content):
         "topFiveKeywords": grab_top_five_keywords(audio_answer),
     }
     result["aggregateScore"] = compute_aggregate_score(result)
+    result["userId"] = content["user_id"]
+    result["interviewId"] = content["interview_id"]
+    result["questionId"] = content["question_id"]
+    result["answerId"] = content["answer_id"]
     cleanup_data_folder()
     return str(result)

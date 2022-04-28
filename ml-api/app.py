@@ -18,7 +18,7 @@ q = Queue(connection=r)
 
 @app.before_first_request
 def launch_polling_script():
-    Thread(target=poll_connection, args=(r, ), daemon=True).start()
+    Thread(target=poll_connection, args=(r,), daemon=True).start()
     print("Launched polling script in different thread.")
 
 
@@ -27,14 +27,33 @@ def predict():
     """
     POST route that returns total text, audio and video predictions.
     """
-    # req = request.get_json()
-    # video_url = content["videoUrl"]
-    # if not video_url:
-    #     return jsonify(errors="Required video url link not in request body.")
-    # download = download_video_link(video_url)
-    # if "errors" in download:
-    #     return jsonify(message="Download failed.", errors=download["errors"])
-    content = {"fname": "video.mov", "rename": str(uuid.uuid4()) + ".mp3"}
+    req = request.get_json()
+    video_url, user_id, interview_id, question_id, answer_id = (
+        req["videoUrl"],
+        req["user_id"],
+        req["interview_id"],
+        req["question_id"],
+        req["answer_id"],
+    )
+    if (
+        not video_url
+        or not user_id
+        or not interview_id
+        or not question_id
+        or not answer_id
+    ):
+        return jsonify(errors="Required fields not in request body.")
+    download = download_video_link(video_url)
+    if "errors" in download:
+        return jsonify(message="Download failed.", errors=download["errors"])
+    content = {
+        "fname": "video.mov",
+        "rename": str(uuid.uuid4()) + ".mp3",
+        "user_id": user_id,
+        "interview_id": interview_id,
+        "question_id": question_id,
+        "answer_id": answer_id,
+    }
     job = q.enqueue(create_answer, content)
     message = "Task " + str(job.id) + " added to queue at " + str(job.enqueued_at) + "."
     return jsonify(message=message)
