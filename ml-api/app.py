@@ -30,10 +30,10 @@ def predict():
     req = request.get_json()
     video_url, user_id, interview_id, question_id, answer_id = (
         req["videoUrl"],
-        req["user_id"],
-        req["interview_id"],
-        req["question_id"],
-        req["answer_id"],
+        req["userId"],
+        req["interviewId"],
+        req["questionId"],
+        req["answerId"],
     )
     if (
         not video_url
