@@ -47,7 +47,7 @@ def predict():
     if "errors" in download:
         return jsonify(message="Download failed.", errors=download["errors"])
     content = {
-        "fname": "video.mov",
+        "fname": str(uuid.uuid4()) + ".mp4",
         "rename": str(uuid.uuid4()) + ".mp3",
         "user_id": user_id,
         "interview_id": interview_id,
