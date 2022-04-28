@@ -5,6 +5,8 @@ import MicIcon from '@mui/icons-material/Mic';
 import fixCapitalization from '@App/util/fixCapitalization';
 import { EmojiEmotions } from '@mui/icons-material';
 import Card from '../atoms/Card';
+import styles from "@App/components/molecules/PastInterviewAnswerPlayer.module.scss"
+
 interface Props
 extends React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLElement>,
@@ -18,6 +20,18 @@ extends React.DetailedHTMLProps<
         start: number;
       }[];
       playerRef: RefObject<ReactPlayer>;
+}
+const sentimentStyleClass={
+    "POSITIVE": styles.positiveSentiment,
+    "NEGATIVE": styles.negativeSentiment,
+    "NEUTRAL": styles.neutralSentiment 
+}
+const emotionStyleClass={
+  "happiness": styles.positiveEmotion,
+  "fear": styles.negativeEmotion,
+  "surprise": styles.negativeEmotion,
+  "sadness": styles.negativeEmotion,
+  "neutral": styles.neutralEmotion 
 }
 export default function PastInterviewAnswerPlayer(props: Props){
   const {videoUrl, timeline, playerRef} = props;
@@ -34,11 +48,11 @@ export default function PastInterviewAnswerPlayer(props: Props){
     return <Card>
       <ReactPlayer ref={playerRef} url={videoUrl} controls={true} width={'100%'} height={'100%'} onProgress={currentStateCallback}/>
       <div>
-        <Card>
+        <Card className={sentimentStyleClass[currentSentiment]}>
           <MicIcon />
           <span>{fixCapitalization(currentSentiment)}</span>
         </Card>
-        <Card>
+        <Card className={emotionStyleClass[currentEmotion]}>
           <EmojiEmotions />
           <span>{fixCapitalization(currentEmotion)}</span>
         </Card>
