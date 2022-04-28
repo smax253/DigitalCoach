@@ -43,9 +43,10 @@ def predict():
         or not answer_id
     ):
         return jsonify(errors="Required fields not in request body.")
+    print(video_url)
     download = download_video_link(video_url)
     if "errors" in download:
-        return jsonify(message="Download failed.", errors=download["errors"])
+        return jsonify(message="Download failed.", errors=str(download["errors"]))
     content = {
         "fname": str(uuid.uuid4()) + ".mp4",
         "rename": str(uuid.uuid4()) + ".mp3",
