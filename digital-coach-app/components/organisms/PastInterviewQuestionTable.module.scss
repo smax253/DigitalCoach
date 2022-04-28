@@ -13,7 +13,7 @@
       background: rgba(130, 139, 141, 0.1);
       cursor: pointer;
     }
-    tr:nth-last-of-type(even) {
+    tr:nth-last-of-type(odd) {
       &:hover {
         background: rgba(130, 139, 141, 0.4);
         cursor: pointer;
