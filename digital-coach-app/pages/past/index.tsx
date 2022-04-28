@@ -8,10 +8,10 @@ export default function PastInterviewPage() {
   const {currentUser} = useAuthContext();
   return (
     <AuthGuard>
-      <div className={styles.pastBox}>
-        <h1>Past Interviews</h1>
-        {currentUser && <PastInterviewTable userId={currentUser.id}/>}
-      </div>
+        <div className={styles.pastBox}>
+          <h1>Past Interviews</h1>
+          {currentUser && <PastInterviewTable userId={currentUser.id}/>}
+        </div>
     </AuthGuard>
   );
 }
