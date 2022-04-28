@@ -79,7 +79,7 @@ def detect_audio_sentiment(fname):
 
     transcript_id = res_transcript.json()["id"]
 
-    polling_endpoint = os.getenv("TRANSCRIPT_ENDPOINT")+ "/" + transcript_id
+    polling_endpoint = os.getenv("TRANSCRIPT_ENDPOINT") + "/" + transcript_id
     print("polling", polling_endpoint)
     status = ""
     while status != "completed":
