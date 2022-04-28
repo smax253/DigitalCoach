@@ -6,6 +6,7 @@ import PastInterviewAnswerSentiment from "../atoms/PastInterviewAnswer/PastInter
 import PastInterviewAnswerTitle from "../atoms/PastInterviewAnswer/PastInterviewAnswerTitle";
 import PastInterviewAnswerPhrases from "../atoms/PastInterviewAnswer/PastInterviewPhrases";
 import PastInterviewAnswerPlayer from "../molecules/PastInterviewAnswerPlayer";
+import styles from "@App/components/organisms/PastInterviewAnswerPage.module.scss";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -31,6 +32,7 @@ export default function PastInterviewAnswerPageLayout(props: Props) {
   }
 
   return (
+    <div className = {styles.pad}>
     <>
       <PastInterviewAnswerTitle
         interviewName={data.interviewName}
@@ -53,5 +55,6 @@ export default function PastInterviewAnswerPageLayout(props: Props) {
         <h3>This interview has not yet been processed. Check back later.</h3>
       )}
     </>
+    </div>
   );
 }
