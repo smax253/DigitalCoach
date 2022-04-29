@@ -103,5 +103,4 @@ const sampleAPIResponse = {
   ],
 };
 
-
 export default sampleAPIResponse;
