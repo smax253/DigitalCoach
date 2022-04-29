@@ -21,7 +21,6 @@ def launch_polling_script():
     Thread(target=poll_connection, args=(r,), daemon=True).start()
     print("Launched polling script in different thread.")
 
-
 @app.route("/predict", methods=["POST"])
 def predict():
     """

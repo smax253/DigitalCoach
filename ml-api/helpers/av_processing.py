@@ -34,11 +34,18 @@ def build_timeline_interval_facial(facial_data):
 
 
 def _emotion_sentiment_match(start, end, interval_length, facial_timeline):
-    return [
-        facial_timeline[start // interval_length],
-        facial_timeline[end // interval_length],
-    ]
-
+    try: 
+        return [
+            facial_timeline[start // interval_length],
+            facial_timeline[end // interval_length],
+        ]
+    except Exception as _: 
+        print('Running into an exception in sentiment matching....')
+        print(facial_timeline)
+        print(start, end, interval_length)
+        print(start // interval_length)
+        print(end // interval_length)
+        return [-1, -1]
 
 def av_timeline_resolution(clip_length, facial_data, audio_sentiments):
     total_frames = facial_data["total_frames"]
@@ -57,7 +64,8 @@ def av_timeline_resolution(clip_length, facial_data, audio_sentiments):
             ),
         }
         timeline.append(entry)
-
+    
+    timeline = list(filter(lambda x: x['facialEmotion'] != [-1, -1], timeline))
     return timeline
 
 
