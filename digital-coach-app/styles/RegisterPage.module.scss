@@ -51,6 +51,11 @@
   h3{
     font-weight: 500;
   }
+
+  label,Select, TextField{
+    font-size: 20px;
+  }
+
   button{
     background-color: $secondary;
     border-radius: 11px;

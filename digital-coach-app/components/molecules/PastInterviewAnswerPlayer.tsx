@@ -5,6 +5,8 @@ import MicIcon from '@mui/icons-material/Mic';
 import fixCapitalization from '@App/util/fixCapitalization';
 import { EmojiEmotions } from '@mui/icons-material';
 import Card from '../atoms/Card';
+import styles from "@App/components/molecules/PastInterviewAnswerPlayer.module.scss"
+
 interface Props
 extends React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLElement>,
@@ -19,6 +21,18 @@ extends React.DetailedHTMLProps<
       }[];
       playerRef: RefObject<ReactPlayer>;
 }
+const sentimentStyleClass={
+    "POSITIVE": styles.positiveSentiment,
+    "NEGATIVE": styles.negativeSentiment,
+    "NEUTRAL": styles.neutralSentiment 
+}
+const emotionStyleClass={
+  "happiness": styles.positiveEmotion,
+  "fear": styles.negativeEmotion,
+  "surprise": styles.negativeEmotion,
+  "sadness": styles.negativeEmotion,
+  "neutral": styles.neutralEmotion 
+}
 export default function PastInterviewAnswerPlayer(props: Props){
   const {videoUrl, timeline, playerRef} = props;
   const [currentSentiment, setCurrentSentiment] = useState<AudioSentiments>(timeline[0].audioSentiment);
@@ -31,14 +45,16 @@ export default function PastInterviewAnswerPlayer(props: Props){
       setCurrentEmotion(timelineEntry.facialEmotion[0]);
     }
   },[timeline]);
-    return <Card>
-      <ReactPlayer ref={playerRef} url={videoUrl} controls={true} width={'100%'} height={'100%'} onProgress={currentStateCallback}/>
-      <div>
-        <Card>
+    return <Card className={styles.card}>
+      <div className={styles.video}>
+        <ReactPlayer ref={playerRef} url={videoUrl} controls={true} width={'100%'} height={'100%'} onProgress={currentStateCallback}/>
+      </div>
+      <div className={styles.elem}>
+        <Card className={sentimentStyleClass[currentSentiment]}>
           <MicIcon />
           <span>{fixCapitalization(currentSentiment)}</span>
         </Card>
-        <Card>
+        <Card className={emotionStyleClass[currentEmotion]}>
           <EmojiEmotions />
           <span>{fixCapitalization(currentEmotion)}</span>
         </Card>

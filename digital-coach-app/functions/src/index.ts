@@ -1,11 +1,7 @@
 import "./firebase.config";
 import * as functions from "firebase-functions";
-import {getApp} from "firebase/app";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-} from "firebase/storage";
+import { getApp } from "firebase/app";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 import { getDoc, getFirestore, doc, updateDoc } from "firebase/firestore"
 
@@ -51,4 +47,50 @@ export const answerUpload = functions.firestore.document("users/{userId}/intervi
       functions.logger.error(error);
     }
   }
+  const firestore = getFirestore();
+  const answerRef = doc(
+    firestore,
+    `users/${userId}/interviews/${interviewId}/questions/${questionId}/answers/${answerId}`
+  );
+  const answer = await getDoc(answerRef);
+  if (!answer.exists) {
+    res.status(400).send("Resource not found");
+  }
+  await updateDoc(answerRef, { evaluation });
+  res.status(200).send("Success");
 });
+
+export const answerUpload = functions.firestore
+  .document(
+    "users/{userId}/interviews/{interviewId}/interviewQuestions/{questionId}/answers/{answerId}"
+  )
+  .onCreate(async (snapshot, context) => {
+    const data = snapshot.data();
+    const { userId, interviewId, questionId, answerId } = context.params;
+    const videoRefUrl = data.videoUrl;
+    const videoRef = ref(getStorage(app), videoRefUrl);
+    const videoDownloadUrl = await getDownloadURL(videoRef);
+
+    if (!process.env.ML_API_URL) {
+      functions.logger.log("ML_API_URL is not set, using dummy data...");
+
+      const evaluation = videoRef.toString().includes("answer-0")
+        ? answerOneResponse
+        : answerTwoResponse;
+
+      snapshot.ref.update({ evaluation });
+    } else {
+      try {
+        const MLApiResponse = await axios.post(process.env.ML_API_URL, {
+          videoUrl: videoDownloadUrl,
+          userId,
+          interviewId,
+          questionId,
+          answerId,
+        });
+        functions.logger.log("MLApiResponse sent: ", MLApiResponse);
+      } catch (error) {
+        functions.logger.error(error);
+      }
+    }
+  });

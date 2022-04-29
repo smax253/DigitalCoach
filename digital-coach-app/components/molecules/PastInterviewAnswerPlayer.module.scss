@@ -1,0 +1,38 @@
+.positiveSentiment{
+    background-color: green;
+    color: white;
+}
+.negativeSentiment{
+    background-color:  rgb(211, 64, 64);
+    color: white;
+}
+.neutralSentiment{
+    background-color: rgb(198, 155, 44);
+    color: white;
+}
+.positiveEmotion{
+    background-color: green;
+    color: white;
+}
+.negativeEmotion{
+    background-color: rgb(211, 64, 64);
+    color: white;
+}
+.neutralEmotion{
+    background-color: rgb(198, 155, 44);
+    color: white;
+}
+.card{
+    display: flex;
+    flex-direction: row;
+}
+.elem{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    justify-content: center;
+}
+.video{
+    width: 65%;
+    margin-right: 20px;
+}
