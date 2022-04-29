@@ -11,7 +11,7 @@ from configs.rubric import (
 
 
 def calculate_overall_facial_sentiment(facial_data):
-    emotion_sums = dict(facial_data.json["emotion_sums"])
+    emotion_sums = dict(facial_data["emotion_sums"])
     return max(emotion_sums, key=lambda key: emotion_sums[key])
 
 
