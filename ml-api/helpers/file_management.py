@@ -27,7 +27,7 @@ def cleanup_data_folder():
 
 def cleanup_data_persist_video():
     data_path = os.path.join(ROOT_DIR, "data")
-    filelist = [f for f in os.listdir(data_path) if not f.endswith(".mov")]
+    filelist = [f for f in os.listdir(data_path) if not f.endswith(".mp4")]
     for f in filelist:
         path = os.path.join(data_path, f)
         try:

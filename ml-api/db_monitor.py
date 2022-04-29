@@ -28,9 +28,9 @@ def _send_job_results(redis_conn):
         str_res = str_res[:-2]
         parsed_res = ast.literal_eval(str_res)
         print("parsed result here...")
-        firebase_endpnt = os.getenv("FIREBASE_FUNCTIONS_ENDPOINT")
-        requests.post(firebase_endpnt, data=parsed_res)
         print(parsed_res)
+        firebase_endpnt = os.getenv("FIREBASE_FUNCTIONS_ENDPOINT")
+        #requests.post(firebase_endpnt, data=parsed_res)
     ALL_JOBS.clear()
 
 

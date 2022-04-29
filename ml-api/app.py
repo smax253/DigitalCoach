@@ -27,33 +27,34 @@ def predict():
     """
     POST route that returns total text, audio and video predictions.
     """
-    req = request.get_json()
-    video_url, user_id, interview_id, question_id, answer_id = (
-        req["videoUrl"],
-        req["userId"],
-        req["interviewId"],
-        req["questionId"],
-        req["answerId"],
-    )
-    if (
-        not video_url
-        or not user_id
-        or not interview_id
-        or not question_id
-        or not answer_id
-    ):
-        return jsonify(errors="Required fields not in request body.")
-    print(video_url)
-    download = download_video_link(video_url)
-    if "errors" in download:
-        return jsonify(message="Download failed.", errors=str(download["errors"]))
+    # req = request.get_json()
+    # video_url, user_id, interview_id, question_id, answer_id = (
+    #     req["videoUrl"],
+    #     req["userId"],
+    #     req["interviewId"],
+    #     req["questionId"],
+    #     req["answerId"],
+    # )
+    # if (
+    #     not video_url
+    #     or not user_id
+    #     or not interview_id
+    #     or not question_id
+    #     or not answer_id
+    # ):
+    #     return jsonify(errors="Required fields not in request body.")
+    # print(video_url)
+    # download = download_video_link(video_url)
+    # print('download successful!!')
+    # if "errors" in download:
+    #     return jsonify(message="Download failed.", errors=str(download["errors"]))
     content = {
-        "fname": str(uuid.uuid4()) + ".mp4",
+        "fname": "video.mp4",
         "rename": str(uuid.uuid4()) + ".mp3",
-        "user_id": user_id,
-        "interview_id": interview_id,
-        "question_id": question_id,
-        "answer_id": answer_id,
+        # "user_id": user_id,
+        # "interview_id": interview_id,
+        # "question_id": question_id,
+        # "answer_id": answer_id,
     }
     job = q.enqueue(create_answer, content)
     message = "Task " + str(job.id) + " added to queue at " + str(job.enqueued_at) + "."

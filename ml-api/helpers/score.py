@@ -66,6 +66,7 @@ def create_answer(content):
     print("creating answer...")
     facial_answer = _score_facial(content)
     audio_answer = _score_audio(content)
+    print(audio_answer)
     text_answer = _score_text_structure(audio_answer)
     timeline = av_timeline_resolution(
         audio_answer["clip_length_seconds"],
@@ -95,9 +96,9 @@ def create_answer(content):
     result["aggregateScore"] = compute_aggregate_score(result)
     response = {} 
     response['evaluation'] = result
-    response["userId"] = content["user_id"]
-    response["interviewId"] = content["interview_id"]
-    response["questionId"] = content["question_id"]
-    response["answerId"] = content["answer_id"]
+    # response["userId"] = content["user_id"]
+    # response["interviewId"] = content["interview_id"]
+    # response["questionId"] = content["question_id"]
+    # response["answerId"] = content["answer_id"]
     cleanup_data_folder()
     return str(response)
