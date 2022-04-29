@@ -45,9 +45,11 @@ export default function PastInterviewAnswerPlayer(props: Props){
       setCurrentEmotion(timelineEntry.facialEmotion[0]);
     }
   },[timeline]);
-    return <Card>
-      <ReactPlayer ref={playerRef} url={videoUrl} controls={true} width={'100%'} height={'100%'} onProgress={currentStateCallback}/>
-      <div>
+    return <Card className={styles.card}>
+      <div className={styles.video}>
+        <ReactPlayer ref={playerRef} url={videoUrl} controls={true} width={'100%'} height={'100%'} onProgress={currentStateCallback}/>
+      </div>
+      <div className={styles.elem}>
         <Card className={sentimentStyleClass[currentSentiment]}>
           <MicIcon />
           <span>{fixCapitalization(currentSentiment)}</span>
