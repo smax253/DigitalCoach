@@ -6,7 +6,7 @@ import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { getDoc, getFirestore, doc, updateDoc } from "firebase/firestore";
 
 import { default as axios } from "axios";
-import sampleAPIResponse from "./sampledata";
+import { answerOneResponse, answerTwoResponse } from "./sampledata";
 
 const app = getApp();
 
@@ -37,10 +37,16 @@ export const answerUpload = functions.firestore
     const { userId, interviewId, questionId, answerId } = context.params;
     const videoRefUrl = data.videoUrl;
     const videoRef = ref(getStorage(app), videoRefUrl);
-    const videoDownloadUrl = await (await getDownloadURL(videoRef)).toString();
+    const videoDownloadUrl = await getDownloadURL(videoRef);
+
     if (!process.env.ML_API_URL) {
       functions.logger.log("ML_API_URL is not set, using dummy data...");
-      snapshot.ref.update({ evaluation: sampleAPIResponse });
+
+      const evaluation = videoRef.toString().includes("answer-1")
+        ? answerOneResponse
+        : answerTwoResponse;
+
+      snapshot.ref.update({ evaluation });
     } else {
       try {
         const MLApiResponse = await axios.post(process.env.ML_API_URL, {

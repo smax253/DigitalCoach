@@ -109,13 +109,7 @@ export default async function seed(
     const questionsRef =
       await InterviewQuestionService.getAllInterviewQuestions();
 
-    const demoVideoFiles = [
-      "assets/answer-1.mp4",
-      "assets/answer-2.mp4",
-      "assets/answer-3.mp4",
-      "assets/answer-4.mp4",
-      "assets/answer-5.mp4",
-    ];
+    const demoVideoFiles = ["assets/answer-1.mp4", "assets/answer-2.mp4"];
 
     const video = await Promise.all(
       demoVideoFiles.map((filePath) => fs.readFile(filePath))
