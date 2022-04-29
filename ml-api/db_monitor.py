@@ -20,6 +20,7 @@ def _update_all_jobs(redis_conn):
 
 
 def _send_job_results(redis_conn):
+    print(len(ALL_JOBS))
     for job in ALL_JOBS:
         result = redis_conn.hget(job, RESULT_ENCODING)
         b_arr = bytearray(result)
