@@ -42,7 +42,7 @@ export const answerUpload = functions.firestore
     if (!process.env.ML_API_URL) {
       functions.logger.log("ML_API_URL is not set, using dummy data...");
 
-      const evaluation = videoRef.toString().includes("answer-1")
+      const evaluation = videoRef.toString().includes("answer-0")
         ? answerOneResponse
         : answerTwoResponse;
 
