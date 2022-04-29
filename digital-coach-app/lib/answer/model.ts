@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 import { StorageReference } from "firebase/storage";
 
-export type FacialEmotions = "happiness" | "sadness" | "neutral" | "surprise" | "fear";
+export type FacialEmotions = "happy" | "sadness" | "neutral" | "surprise" | "fear";
 export type AudioSentiments = "NEUTRAL" | "POSITIVE" | "NEGATIVE";
 export interface IAnswerEvalAttributes {
   aggregateScore: number;

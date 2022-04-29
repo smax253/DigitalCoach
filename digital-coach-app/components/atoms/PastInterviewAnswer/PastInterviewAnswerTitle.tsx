@@ -14,7 +14,7 @@ export default function PastInterviewAnswerTitle(props: Props) {
     return(
         <Card className={styles.AnswerTitle}>
             <h1>{interviewName}</h1>
-            <h2>{questionName}</h2>
+            <h4>{questionName}</h4>
         </Card>
     )
 }

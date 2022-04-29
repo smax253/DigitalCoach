@@ -46,7 +46,7 @@ export const answerUpload = functions.firestore
         ? answerOneResponse
         : answerTwoResponse;
 
-      snapshot.ref.update({ evaluation });
+      snapshot.ref.update({ ...evaluation });
     } else {
       try {
         const MLApiResponse = await axios.post(process.env.ML_API_URL, {

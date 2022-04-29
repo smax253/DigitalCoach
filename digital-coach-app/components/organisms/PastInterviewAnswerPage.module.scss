@@ -3,3 +3,11 @@
 .pad{
     margin-bottom:20px;
 }
+
+.overall{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+  

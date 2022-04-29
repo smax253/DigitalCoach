@@ -25,15 +25,9 @@
   }
 }
 .main {
-  display: flex;
-  padding: 24px 32px;
-  justify-content: space-between;
-  flex-direction: column;
-  background-color: $primary;
-  color: $light-text;
-  font-weight: 700;
   max-width:10%;
-  min-width:240px;
+  min-width:300px;
+  
 }
 
 .links{
@@ -45,4 +39,20 @@
 .linksText{
       margin: 20px 50px;
       color: white
+}
+
+.barcontainer{
+  display: flex;
+  padding: 30px 20px;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: $primary;
+  color: $light-text;
+  font-weight: 700;
+  position: fixed;
+  top:0;
+  height:100%;
+  max-width:10%;
+  min-width:300px;
+  box-sizing: border-box; 
 }

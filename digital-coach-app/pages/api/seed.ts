@@ -130,7 +130,7 @@ export default async function seed(
           return new Array(question.retries).fill(null).map((_, i) =>
             AnswerService.addAnswer(questionRef.ref, {
               videoUrl:
-                storageRef[getRandomInt(storageRef.length - 1)].ref.toString(),
+                storageRef[getRandomInt(storageRef.length)].ref.toString(),
               isSubmission: i === 0 ? true : false,
               userId: uid,
             })

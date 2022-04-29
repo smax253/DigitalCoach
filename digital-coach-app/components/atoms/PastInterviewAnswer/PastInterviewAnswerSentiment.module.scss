@@ -3,10 +3,8 @@
     justify-content: center;
     align-items: center;
 }
-
 .positiveSentiment{
     @extend .center;
-
     background-color: green;
     color: white;
 }
@@ -39,18 +37,4 @@
 
     background-color: rgb(198, 155, 44);
     color: white;
-}
-.card{
-    display: flex;
-    flex-direction: row;
-}
-.elem{
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    justify-content: center;
-}
-.video{
-    width: 65%;
-    margin-right: 20px;
 }
