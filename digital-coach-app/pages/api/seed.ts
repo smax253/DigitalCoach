@@ -29,6 +29,7 @@ export default async function seed(
       AuthService.signup("mike@test.com", "password"),
       AuthService.signup("max@test.com", "password"),
       AuthService.signup("hamzah@test.com", "password"),
+      AuthService.signup("steven@expo.com", "password"),
     ]);
 
     const addQuestionCollection = questionsData.questions.map((question) =>
@@ -108,8 +109,18 @@ export default async function seed(
     const questionsRef =
       await InterviewQuestionService.getAllInterviewQuestions();
 
-    let videoFile = await fs.readFile(`assets/interview.mp4`);
-    const videoUploadResult = await StorageService.uploadAnswerVideo(videoFile, "test");
+    const demoVideoFiles = ["assets/answer-1.mp4", "assets/answer-2.mp4"];
+
+    const video = await Promise.all(
+      demoVideoFiles.map((filePath) => fs.readFile(filePath))
+    );
+
+    const storageRef = await Promise.all(
+      video.map((ref, idx) =>
+        StorageService.uploadAnswerVideo(ref, `answer-${idx}`)
+      )
+    );
+
     await Promise.all(
       questionsRef.docs
         .map(async (questionRef) => {
@@ -118,7 +129,8 @@ export default async function seed(
 
           return new Array(question.retries).fill(null).map((_, i) =>
             AnswerService.addAnswer(questionRef.ref, {
-              videoUrl: videoUploadResult.ref.toString(),
+              videoUrl:
+                storageRef[getRandomInt(storageRef.length - 1)].ref.toString(),
               isSubmission: i === 0 ? true : false,
               userId: uid,
             })
@@ -126,6 +138,7 @@ export default async function seed(
         })
         .flat()
     );
+
     await Promise.all(
       questionsRef.docs.map((questionSnapshot) => {
         return InterviewQuestionService.scoreQuestion(
