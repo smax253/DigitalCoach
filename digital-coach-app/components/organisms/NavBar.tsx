@@ -9,6 +9,7 @@ export default function NavBar() {
 
   return (
     <div className={style.main}>
+      <div className={style.barcontainer}>
       <Link href="/">
         <a className={style.logo_text}>Digital Coach</a>
       </Link>
@@ -34,6 +35,7 @@ export default function NavBar() {
         <LogoutIcon />
         <div>Log out</div>
       </Button>
+      </div>
     </div>
   );
 }

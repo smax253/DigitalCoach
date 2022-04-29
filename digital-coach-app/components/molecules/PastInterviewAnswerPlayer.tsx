@@ -27,7 +27,7 @@ const sentimentStyleClass={
     "NEUTRAL": styles.neutralSentiment 
 }
 const emotionStyleClass={
-  "happiness": styles.positiveEmotion,
+  "happy": styles.positiveEmotion,
   "fear": styles.negativeEmotion,
   "surprise": styles.negativeEmotion,
   "sadness": styles.negativeEmotion,

@@ -2,7 +2,7 @@ import {FacialEmotions} from "@App/lib/answer/model"
 import fixCapitalization from "@App/util/fixCapitalization";
 import { EmojiEmotions } from "@mui/icons-material";
 import Card from "../Card";
-import styles from "@App/components/molecules/PastInterviewAnswerPlayer.module.scss"
+import styles from "@App/components/atoms/PastInterviewAnswer/PastInterviewAnswerExpression.module.scss"
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -12,15 +12,15 @@ interface Props
   emotion: FacialEmotions;
 }
 const emotionStyleClass={
-  "happiness": styles.positiveEmotion,
+  "happy": styles.positiveEmotion,
   "fear": styles.negativeEmotion,
   "surprise": styles.negativeEmotion,
   "sadness": styles.negativeEmotion,
   "neutral": styles.neutralEmotion 
 }
 export default function PastInterviewAnswerExpression(props: Props){
-    return <Card className={emotionStyleClass[props.emotion]}>
+    return <Card >
       <h3>Most Common Facial Expression</h3>
-      <div><EmojiEmotions/>{fixCapitalization(props.emotion)}</div>
+      <Card className={emotionStyleClass[props.emotion]}><EmojiEmotions/>{fixCapitalization(props.emotion)}</Card>
       </Card>
 }
