@@ -6,6 +6,7 @@ from fer import Video, FER
 from dotenv import load_dotenv
 from configs.definitions import ROOT_DIR
 from helpers.av_processing import read_audio_file
+from urllib.parse import urlparse
 
 TEXT_MODEL = pickle.load(open("models/text_model.pkl", "rb"))
 TFIDF_MODEL = pickle.load(open("models/tfidf_model.pkl", "rb"))
@@ -78,8 +79,8 @@ def detect_audio_sentiment(fname):
 
     transcript_id = res_transcript.json()["id"]
 
-    polling_endpoint = os.path.join(os.getenv("TRANSCRIPT_ENDPOINT"), transcript_id)
-
+    polling_endpoint = os.getenv("TRANSCRIPT_ENDPOINT") + "/" + transcript_id
+    print("polling", polling_endpoint)
     status = ""
     while status != "completed":
         response_result = requests.get(polling_endpoint, headers=headers)
