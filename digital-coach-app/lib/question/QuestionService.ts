@@ -40,6 +40,12 @@ class QuestionService extends FirebaseService {
     };
   }
 
+  /**
+   * This function takes a base question object, adds a timestamp to it, and then adds it to the
+   * database.
+   * @param {IBaseQuestionAttributes} baseQuestion - IBaseQuestionAttributes
+   * @returns A promise that resolves to the document ID of the newly created document.
+   */
   async addQuestion(baseQuestion: IBaseQuestionAttributes) {
     const question: IBaseQuestion = {
       ...baseQuestion,
@@ -50,10 +56,20 @@ class QuestionService extends FirebaseService {
     return addDoc(this.getCollectionRef(), question);
   }
 
+  /**
+   * This function returns a promise that resolves to an array of objects, each of which represents a
+   * question.
+   * @returns An array of objects.
+   */
   async getAllQuestions() {
     return getDocs(this.getCollectionRef());
   }
 
+  /**
+   * It returns a promise that resolves to an array of documents that match the given subject
+   * @param {TSubject} subject - TSubject - the subject to filter by
+   * @returns An array of documents that match the query.
+   */
   async getBySubject(subject: TSubject) {
     const ref = this.getCollectionRef();
 

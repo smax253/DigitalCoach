@@ -28,6 +28,7 @@ export const answerReceive = functions.https.onRequest(async (req, res) => {
   res.status(200).send("Success");
 });
 
+/* A function that is triggered when a new document is created in the specified path. */
 export const answerUpload = functions.firestore
   .document(
     "users/{userId}/interviews/{interviewId}/interviewQuestions/{questionId}/answers/{answerId}"

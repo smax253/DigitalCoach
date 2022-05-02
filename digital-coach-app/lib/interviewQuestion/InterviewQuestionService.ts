@@ -32,6 +32,13 @@ class InterviewQuestionService extends FirebaseService {
     this.firestore = getFirestore(this.app);
   }
 
+  /**
+   * If the ref is a DocumentReference, then return a collection of that DocumentReference, else return
+   * a collection of the userId, interviewId, and interviewQuestions.
+   * </code>
+   * @param {TInterviewDocumentReference} ref - TInterviewDocumentReference
+   * @returns A collection reference to the interview questions.
+   */
   private getCollectionRef(ref: TInterviewDocumentReference) {
     console.log(ref);
     const collectionRef = (
@@ -88,6 +95,15 @@ class InterviewQuestionService extends FirebaseService {
     return getDoc(question);
   }
 
+  /**
+   * This function takes a base question, some attributes, and a reference to a document, and returns a
+   * promise that resolves to the result of adding a document to a collection.
+   * @param {IQuestion} baseQuestion - IQuestion - this is an interface that defines the question
+   * object
+   * @param {IBaseInterviewQuestionAttributes} questionsAttributes - IBaseInterviewQuestionAttributes
+   * @param {TInterviewDocumentReference} ref - TInterviewDocumentReference
+   * @returns A promise that resolves to a DocumentReference.
+   */
   async addQuestion(
     baseQuestion: IQuestion,
     questionsAttributes: IBaseInterviewQuestionAttributes,
@@ -112,6 +128,12 @@ class InterviewQuestionService extends FirebaseService {
     );
     return getDocs(groupQuery);
   }
+  /**
+   * This function takes a question reference and a score, and updates the score of the question.
+   * @param questionRef - DocumentReference<IInterviewQuestion>
+   * @param {number} score - number
+   * @returns A promise
+   */
   async scoreQuestion(
     questionRef: DocumentReference<IInterviewQuestion>,
     score: number
@@ -119,6 +141,12 @@ class InterviewQuestionService extends FirebaseService {
     return updateDoc(questionRef, { score: score });
   }
 
+  /**
+   * It gets all the interviews for a user, gets all the questions for each interview, and then gets
+   * the average score of all the questions
+   * @param {string} userId - string - The user's id
+   * @returns The average score of all the questions that have been graded.
+   */
   async getUserAverageScore(userId: string) {
     const interviews = await collection(
       this.firestore,

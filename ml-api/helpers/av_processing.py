@@ -48,6 +48,16 @@ def _emotion_sentiment_match(start, end, interval_length, facial_timeline):
         return [-1, -1]
 
 def av_timeline_resolution(clip_length, facial_data, audio_sentiments):
+    """
+    It takes the audio and facial data, and creates a timeline of the emotions and sentiments of the
+    video
+    
+    :param clip_length: The length of the video in seconds
+    :param facial_data: a dictionary containing the facial data
+    :param audio_sentiments: a list of tuples, each tuple containing the start and end time of a segment
+    of audio, and the sentiment of that segment
+    :return: A list of dictionaries.
+    """
     total_frames = facial_data["total_frames"]
     fps = round(total_frames / clip_length)
     interval_length = 1000 // fps
@@ -70,6 +80,14 @@ def av_timeline_resolution(clip_length, facial_data, audio_sentiments):
 
 
 def extract_audio(fname, des_fname):
+    """
+    It takes a video file, extracts the audio, and returns the path to the audio file and the length of
+    the video clip
+    
+    :param fname: The name of the file you want to extract audio from
+    :param des_fname: The name of the file you want to save the audio as
+    :return: A dictionary with the path to the file and the clip length in seconds.
+    """
     path = os.path.join(ROOT_DIR, "data", fname)
     des_path = os.path.join(ROOT_DIR, "data", des_fname)
     try:
@@ -84,6 +102,11 @@ def extract_audio(fname, des_fname):
 
 
 def read_audio_file(file_path):
+    """
+    It reads the audio file in chunks of 5MB and yields the data
+    
+    :param file_path: The path to the audio file
+    """
     with open(file_path, "rb") as f:
         while True:
             data = f.read(5242880)

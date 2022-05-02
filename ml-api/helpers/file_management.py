@@ -4,6 +4,10 @@ from configs.definitions import ROOT_DIR
 
 
 def move_cv_files():
+    """
+    If the data.csv file exists in the root directory, move it to the data directory. If the output
+    directory exists in the root directory, move it to the data directory
+    """
     data_csv_path = os.path.join(ROOT_DIR, "data.csv")
     data_path = os.path.join(ROOT_DIR, "data")
     output_path = os.path.join(ROOT_DIR, "output")
@@ -16,6 +20,9 @@ def move_cv_files():
 
 
 def cleanup_data_folder():
+    """
+    It deletes all the files and folders in the data folder
+    """
     data_path = os.path.join(ROOT_DIR, "data")
     for files in os.listdir(data_path):
         path = os.path.join(data_path, files)
@@ -26,6 +33,9 @@ def cleanup_data_folder():
 
 
 def cleanup_data_persist_video():
+    """
+    It deletes all files in the data directory that don't end with .mp4
+    """
     data_path = os.path.join(ROOT_DIR, "data")
     filelist = [f for f in os.listdir(data_path) if not f.endswith(".mp4")]
     for f in filelist:

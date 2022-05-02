@@ -2,6 +2,17 @@ import { useQuery } from "react-query";
 import InterviewQuestionService from "../interviewQuestion/InterviewQuestionService";
 import InterviewService from "./InterviewService";
 
+
+/**
+ * It fetches all interviews for a user, then for each interview, it fetches all questions for that
+ * interview, then it checks if each question has been answered, and if so, it returns the interview
+ * @param {string} [userId] - string - the user id of the user to fetch the interviews for
+ * @returns An array of objects with the following properties:
+ * interviewId: string;
+ * interviewName: string;
+ * date: Date;
+ * completionPct: number;
+ */
 export default function useResumeInterviewQuery(userId?: string) {
   return useQuery(
     ["resumeUserInterviews"],

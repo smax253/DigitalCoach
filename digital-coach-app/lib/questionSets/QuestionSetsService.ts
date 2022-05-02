@@ -38,6 +38,12 @@ class QuestionSetsService extends FirebaseService {
     ) as CollectionReference<IQuestionSet>;
   }
 
+  /**
+   * This function creates a new question set in the database and returns a promise that resolves to
+   * the newly created question set.
+   * @param {IQuestionSetAttributes} questionSetAttr - IQuestionSetAttributes
+   * @returns A promise that resolves to a document reference.
+   */
   createQuestionSet(questionSetAttr: IQuestionSetAttributes) {
     const collectionRef = this.getCollectionRef();
 
@@ -55,6 +61,10 @@ class QuestionSetsService extends FirebaseService {
     return getDocs(collectionRef);
   }
 
+  /**
+   * Get all the documents in the collection where the isFeatured field is true.
+   * @returns An array of question sets.
+   */
   getFeaturedQuestionSets() {
     const collectionRef = this.getCollectionRef();
     const isFeaturedFilter = where("isFeatured", "==", true);

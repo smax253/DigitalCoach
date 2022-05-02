@@ -2,6 +2,13 @@ import { useQuery } from "react-query";
 import InterviewQuestionService from "../interviewQuestion/InterviewQuestionService";
 import InterviewService from "./InterviewService";
 
+/**
+ * It returns a list of interviews for a given user, and for each interview, it returns the average
+ * score and completion percentage.
+ * 
+ * @param {string | undefined} userId - string | undefined
+ * @returns An array of objects.
+ */
 export default function usePastInterviewQuery(userId: string | undefined) {
   return useQuery(
     ["pastUserInterviews"],

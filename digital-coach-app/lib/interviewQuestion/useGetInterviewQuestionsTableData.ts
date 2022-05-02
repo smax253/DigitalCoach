@@ -6,6 +6,13 @@ import StorageService from "../storage/StorageService";
 
 
 
+/**
+ * It returns a list of objects that contain the questionId, questionName, videoUrl, score, and
+ * answerId.
+ * @param {string|undefined} userId - string|undefined
+ * @param {string|undefined} interviewId - string|undefined
+ * @returns An array of objects.
+ */
 export default function useGetInterviewQuestionsTableData(userId:string|undefined, interviewId: string|undefined) {
     return useQuery(["getQuestionsTable"], async () => {
         if(userId && interviewId){

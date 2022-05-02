@@ -4,6 +4,12 @@ import useAuthContext from "../auth/AuthContext";
 import InterviewQuestionService from "../interviewQuestion/InterviewQuestionService";
 import InterviewService from "./InterviewService";
 
+/**
+ * It fetches an interview, then fetches the interview questions, then fetches the answers for each
+ * interview question.
+ * @param {string} interviewId - string - The id of the interview to fetch
+ * @returns An object with two properties: interview and questions.
+ */
 export default function useGetInterviewDetails(interviewId: string) {
   const { currentUser } = useAuthContext();
 
