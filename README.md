@@ -3,6 +3,7 @@ Senior Design Project for Fall 2021-Spring 2022
 
 DigitalCoach is an AI-powered interview prep web application that allows job seekers to practice interviewing and receive immediate feedback. Some key features of DigitalCoach include creating interview sets from our database of questions and then recording corresponding video responses. Our AI uses machine learning models to analyze audio and video through a sentiment analysis. At the end, users are left with an overall score and actionable feedback. 
 
+For more detailed documentation on the different parts of the app ([frontend](/digital-coach-app/README.md), [ml-api](/ml-api/README.md), [ml model](/ml/README.md)) refer to the README.md file in the root directory of the folders.
 # Setup Instructions
 
 ## Setup
@@ -75,8 +76,6 @@ DigitalCoach is an AI-powered interview prep web application that allows job see
  - OpenCV
  - Tensorflow
  - NLTK
-
-
 
 # Members
  - Ming Lin (Fullstack)

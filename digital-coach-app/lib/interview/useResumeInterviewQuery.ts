@@ -3,9 +3,11 @@ import InterviewQuestionService from "../interviewQuestion/InterviewQuestionServ
 import InterviewService from "./InterviewService";
 
 
+
 /**
  * It fetches all interviews for a user, then for each interview, it fetches all questions for that
- * interview, then it checks if each question has been answered, and if so, it returns the interview
+ * interview, then it checks if each question has been answered, and if so, it calculates a completion
+ * percentage for that interview
  * @param {string} [userId] - string - the user id of the user to fetch the interviews for
  * @returns An array of objects with the following properties:
  * interviewId: string;

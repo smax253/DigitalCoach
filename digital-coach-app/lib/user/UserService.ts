@@ -31,6 +31,12 @@ class UserService extends FirebaseService {
     return setDoc(userDocRef, user);
   }
 
+  /**
+   * This function creates a new user in the database, and returns a promise that resolves when the
+   * user is created.
+   * @param {FirebaseUser} user - FirebaseUser
+   * @returns A promise.
+   */
   async createNewUser(user: FirebaseUser) {
     const userDocRef = this.getDocRef(user.uid);
 
