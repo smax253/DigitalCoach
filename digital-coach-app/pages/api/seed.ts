@@ -21,23 +21,6 @@ export default async function seed(
 ) {
   const start = Date.now();
   
-  try { 
-	  	const addQuestionCollection = questionsData.questions.map(async (question) =>
-	  		await QuestionService.addQuestion({
-				subject: questionsData.subject,
-				question,
-				companies: [],
-				popularity: 0,
-			}));
-		console.log("HERE");
-		console.log(addQuestionCollection);
-		// return res.status(200).json({message: "success"});
-	
-	} catch (e) { 
-			console.log(e);
-		}
-		
-
   try {
     const userCredentials = await Promise.all([
       AuthService.signup("ming@test.com", "password"),
