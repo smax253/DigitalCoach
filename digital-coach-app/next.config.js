@@ -9,7 +9,7 @@ const withTM = require("next-transpile-modules")([
 module.exports = withTM({
   reactStrictMode: true,
   images: {
-    domains: ["localhost"],
+    domains: ["localhost", "127.0.0.1"],
   },
   typescript:{
     ignoreBuildErrors: true,

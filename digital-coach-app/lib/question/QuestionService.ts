@@ -24,6 +24,8 @@ class QuestionService extends FirebaseService {
   constructor() {
     super();
     this.firestore = getFirestore(this.app);
+	console.log("this.firestore:" );
+	console.log(this.firestore);
   }
 
   private getCollectionRef() {
@@ -47,13 +49,15 @@ class QuestionService extends FirebaseService {
    * @returns A promise that resolves to the document ID of the newly created document.
    */
   async addQuestion(baseQuestion: IBaseQuestionAttributes) {
+	console.log("In addQuestion");
     const question: IBaseQuestion = {
       ...baseQuestion,
       lastUpdatedAt: Timestamp.now(),
       createdAt: Timestamp.now(),
     };
-
-    return addDoc(this.getCollectionRef(), question);
+	const res = await addDoc(this.getCollectionRef(), question);
+	console.log("RES", res);
+    return res
   }
 
   /**
