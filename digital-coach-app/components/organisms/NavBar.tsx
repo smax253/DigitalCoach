@@ -26,6 +26,9 @@ export default function NavBar() {
         <Link href="/resources">
           <a className={style.linksText}>Resources</a>
         </Link>
+        <Link href='/progress'>
+          <a className={style.linksText}>Progress Tracking</a>
+        </Link>
         <Link href="/profile">
           <a className={style.linksText}>Profile</a>
         </Link>
