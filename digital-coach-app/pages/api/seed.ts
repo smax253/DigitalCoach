@@ -20,7 +20,7 @@ export default async function seed(
   res: NextApiResponse<{}>
 ) {
   const start = Date.now();
-
+  
   try {
     const userCredentials = await Promise.all([
       AuthService.signup("ming@test.com", "password"),
@@ -31,13 +31,13 @@ export default async function seed(
       AuthService.signup("hamzah@test.com", "password"),
       AuthService.signup("steven@expo.com", "password"),
     ]);
-
-    const addQuestionCollection = questionsData.questions.map((question) =>
-        QuestionService.addQuestion({
-          subject: questionsData.subject,
-          question,
-        })
-      ),
+	const addQuestionCollection = questionsData.questions.map(async (question) =>
+	await QuestionService.addQuestion({
+	  subject: questionsData.subject,
+	  question,
+	  companies: [],
+	  popularity: 0,
+  })),
       addUserCollection = userCredentials.map(async ({ user }) =>
         UserService.add(
           user.uid,
@@ -55,7 +55,6 @@ export default async function seed(
           )
         )
         .flat();
-
     const interviewsCollectionRef = (
       await Promise.all([
         ...addInterviewCollection,
@@ -152,6 +151,7 @@ export default async function seed(
       message: `Finished seeding in ${Date.now() - start}ms`,
     });
   } catch (error) {
-    res.status(500).json({ error });
+	console.log(error);
+    res.status(500).json({ "Error": error, "Stack": error instanceof Error ? error.stack : undefined });
   }
 }

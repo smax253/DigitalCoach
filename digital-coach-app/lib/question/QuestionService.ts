@@ -24,6 +24,8 @@ class QuestionService extends FirebaseService {
   constructor() {
     super();
     this.firestore = getFirestore(this.app);
+	console.log("this.firestore:" );
+	console.log(this.firestore);
   }
 
   private getCollectionRef() {
@@ -52,8 +54,8 @@ class QuestionService extends FirebaseService {
       lastUpdatedAt: Timestamp.now(),
       createdAt: Timestamp.now(),
     };
-
-    return addDoc(this.getCollectionRef(), question);
+	const res = await addDoc(this.getCollectionRef(), question);
+    return res
   }
 
   /**
