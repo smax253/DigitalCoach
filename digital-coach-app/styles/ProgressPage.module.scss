@@ -1,0 +1,32 @@
+.ProgressPage {
+    &_body {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+  
+    &_bodyLeft {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 2rem;
+      max-width: 45%;
+    }
+  
+    &_bodyRight {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 2rem;
+    }
+  
+    &_avatarWrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+  }
+  .linksText{
+    margin: 20px 50px;
+    color: black
+}
