@@ -10,6 +10,7 @@ import {
   QueryDocumentSnapshot,
   Timestamp,
   where,
+  orderBy
 } from "firebase/firestore";
 import {
   IBaseQuestion,
@@ -90,6 +91,41 @@ class QuestionService extends FirebaseService {
 	const filter = where("position", "==", position);
 	
 	return await getDocs(query(ref, filter));
+  }
+
+  /**
+   * This function returns a promise that resolves to an array of documents that match the given company
+   * @param {Array<string>} companies - Array<string> - the company to filter by
+   * @returns An array of documents that match the query.
+   */
+  async getByCompany(companies: Array<string>) {
+	const ref = this.getCollectionRef();
+	
+	const filter = where("companies", "array-contains-any", companies);
+
+	return await getDocs(query(ref, filter));
+  }
+
+  /**
+   * This function returns a promise that resolves to an array of documents that match the given question type
+   * @param {string} type - string - the question type to filter by
+   * @returns An array of documents that match the query.
+   */
+  async getByType(type: string) {
+	const ref = this.getCollectionRef();
+
+	const filter = where("type", "==", type)
+
+	return await getDocs(query(ref, filter));
+  }
+
+  async getByPopularityDesc() { 
+	const ref = this.getCollectionRef();
+
+	const filter = orderBy("popularity", "desc");
+
+	return await getDocs(query(ref, filter));
+
   }
 
 
