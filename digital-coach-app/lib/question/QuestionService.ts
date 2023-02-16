@@ -54,8 +54,7 @@ class QuestionService extends FirebaseService {
       lastUpdatedAt: Timestamp.now(),
       createdAt: Timestamp.now(),
     };
-	const res = await addDoc(this.getCollectionRef(), question);
-    return res
+	return await addDoc(this.getCollectionRef(), question);
   }
 
   /**
@@ -64,7 +63,7 @@ class QuestionService extends FirebaseService {
    * @returns An array of objects.
    */
   async getAllQuestions() {
-    return getDocs(this.getCollectionRef());
+    return await getDocs(this.getCollectionRef());
   }
 
   /**
@@ -77,8 +76,23 @@ class QuestionService extends FirebaseService {
 
     const filter = where("subject", "==", subject);
 
-    return getDocs(query(ref, filter));
+    return await getDocs(query(ref, filter));
   }
+
+  /**
+   * This function returns a promise that resolves to an array of documents that match the given position
+   * @param {string} position - string - the position to filter by
+   * @returns An array of documents that match the query.
+   */
+  async getByPosition(position: string) { 
+	const ref = this.getCollectionRef();
+
+	const filter = where("position", "==", position);
+	
+	return await getDocs(query(ref, filter));
+  }
+
+
 }
 
 export default new QuestionService();
