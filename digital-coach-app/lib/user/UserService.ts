@@ -1,4 +1,4 @@
-import { User as FirebaseUser } from "firebase/auth";
+import { User as FirebaseUser} from "firebase/auth";
 import {
   doc,
   DocumentReference,
@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
 import { IUser, IBaseUserAttributes } from "@App/lib/user/models";
+import AuthService from "../auth/AuthService";
 
 class UserService extends FirebaseService {
   private firestore: Firestore;
@@ -83,6 +84,15 @@ class UserService extends FirebaseService {
     } catch (error) {
       throw error;
     }
+  }
+
+  /**
+   * This function gets the current user's id
+   * @param none
+   * @returns The user's id
+   */
+  getUserId(){
+    return AuthService.auth.currentUser?.uid;
   }
 }
 

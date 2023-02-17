@@ -2,8 +2,10 @@ import Link from "next/link";
 import Avatar from "@App/components/atoms/Avatar";
 import Card from "@App/components/atoms/Card";
 import useAuthContext from "@App/lib/auth/AuthContext";
+import AuthService from "@App/lib/auth/AuthService";
 import AuthGuard from "@App/lib/auth/AuthGuard";
-
+import InterviewService from "@App/lib/interview/InterviewService";
+import UserService from "@App/lib/user/UserService";
 import styles from "@App/styles/ProgressPage.module.scss";
 
 function ProgressPage(){
@@ -67,9 +69,17 @@ function ProgressInit(){
 }
 
 export default function Progress() {
-    return (
-      <AuthGuard>
-        <ProgressInit/>
-      </AuthGuard>
-    );
-  }
+  //Store user's id here
+  useAuthContext();
+  let thisUserId = UserService.getUserId();
+  console.log(thisUserId);
+  //Need to await results, but can't await in default function of react elem
+  //const usersInterviews = InterviewService.fetchUserInterviews(thisUserId!);
+  //console.log(usersInterviews);
+  //if(usersInterviews){}
+  return (
+    <AuthGuard>
+      <ProgressInit/>
+    </AuthGuard>
+  );
+}
