@@ -135,6 +135,40 @@ export default async function run_tests(
 		);
 	}
 
+	try { 
+		console.log("Testing updateQuestion()...")
+		const data = await QuestionService.updateQuestion(
+			{
+				qid: "1AUOnRrFpFnrAKkj2V2x",
+				popularity: 88
+			}
+		);
+
+		console.log(data);
+		test_results.push(
+			{
+				"Test": "updateQuestion()",
+				"Result": "Success",
+				"Data": data
+			}
+		);
+
+
+	} catch (e) { 
+		console.log("Error in updateQuestion():");
+		console.log(e);
+
+		test_results.push(
+			{
+				"Test": "updateQuestion()",
+				"Result": "Failure",
+				"Error": e
+			}
+		);
+
+
+	}
+
 	return res.status(200).json({ test_results: test_results })
 
 }

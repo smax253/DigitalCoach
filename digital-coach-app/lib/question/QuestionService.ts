@@ -10,12 +10,17 @@ import {
   QueryDocumentSnapshot,
   Timestamp,
   where,
-  orderBy
+  orderBy,
+  updateDoc,
+  doc,
+  getDoc,
+  setDoc
 } from "firebase/firestore";
 import {
   IBaseQuestion,
   IBaseQuestionAttributes,
   IQuestion,
+  TQuestionType,
   TSubject,
 } from "@App/lib/question/models";
 
@@ -25,8 +30,6 @@ class QuestionService extends FirebaseService {
   constructor() {
     super();
     this.firestore = getFirestore(this.app);
-	console.log("this.firestore:" );
-	console.log(this.firestore);
   }
 
   private getCollectionRef() {
@@ -119,6 +122,11 @@ class QuestionService extends FirebaseService {
 	return await getDocs(query(ref, filter));
   }
 
+  /**
+   * This function returns a promise that resolves to an array of question documents
+   * sorted by popularity, descending.
+   * @returns An array of documents that match the query.
+   */
   async getByPopularityDesc() { 
 	const ref = this.getCollectionRef();
 
@@ -128,7 +136,52 @@ class QuestionService extends FirebaseService {
 
   }
 
+  async updateQuestion(
+	{
+		qid, 
+		subject,
+		question,
+		type,
+		position,
+		companies = [],
+		popularity
+	}: {
+		qid: string,
+		subject?: TSubject,
+		question?: string,
+		type?: TQuestionType,
+		position?: string,
+		companies?: Array<string>,
+		popularity?: number
 
+	})
+	 {
+	const ref = this.getCollectionRef();
+	
+	const foundQuestion = (await getDoc(doc(ref, qid))).data();
+
+	if(foundQuestion === undefined) {
+		throw new Error("Question not found!");
+	}
+
+	let res = await setDoc(
+		doc(ref, qid),
+		{
+			...foundQuestion,
+			subject: subject || foundQuestion.subject,
+			question: question || foundQuestion.question,
+			type: type || foundQuestion.type || null,
+			position: position || foundQuestion.position || "",
+			companies: companies.length > 0 ? companies : foundQuestion.companies,
+			popularity: popularity || foundQuestion.popularity || 0,
+			lastUpdatedAt: Timestamp.now()
+		},
+		{ merge: true } 
+		
+	).catch((e) => { throw new Error("Error updating question: ", e) });
+
+	return res;
+  }
 }
 
 export default new QuestionService();
