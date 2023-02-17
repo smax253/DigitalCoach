@@ -164,6 +164,7 @@ class QuestionService extends FirebaseService {
 		throw new Error("Question not found!");
 	}
 
+	// Note: This returns undefined; it does not return the updated document.
 	let res = await setDoc(
 		doc(ref, qid),
 		{
@@ -178,7 +179,11 @@ class QuestionService extends FirebaseService {
 		},
 		{ merge: true } 
 		
-	).catch((e) => { throw new Error("Error updating question: ", e) });
+	)
+	.then(function() { 
+		return getDoc(doc(ref, qid));	// This returns the updated document. (I think.
+	})
+	.catch((e) => { throw new Error("Error updating question: ", e) });
 
 	return res;
   }

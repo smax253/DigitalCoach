@@ -139,7 +139,7 @@ export default async function run_tests(
 		console.log("Testing updateQuestion()...")
 		const data = await QuestionService.updateQuestion(
 			{
-				qid: "1AUOnRrFpFnrAKkj2V2x",
+				qid: "1AUOnRrFpFnrAKkj2V2x",	// Harcoded for testing purposes
 				popularity: 88
 			}
 		);
@@ -149,7 +149,7 @@ export default async function run_tests(
 			{
 				"Test": "updateQuestion()",
 				"Result": "Success",
-				"Data": data
+				"Data": data.data()
 			}
 		);
 
