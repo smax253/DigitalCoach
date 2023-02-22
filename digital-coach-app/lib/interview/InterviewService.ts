@@ -14,6 +14,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
+import UserService from "@App/lib/user/UserService";
 import {
   IBaseInterview,
   IInterviewAttributes,
@@ -72,20 +73,30 @@ class InterviewService extends FirebaseService {
   }
 
   /**
-   * It creates a new interview in the database
+   * It creates a new interview in the database. The user data is retrieved to update the hasCompletedInterview field of the user
    * @param {string} userId - string
    * @param {IBaseInterview} baseInterview - IBaseInterview
    * @returns a promise.
    */
   async create(userId: string, baseInterview: IBaseInterview) {
     const collectionRef = this.getCollectionRef(userId);
-
+    const userDocRef = await UserService.getUser(userId);
+    const avatarUrl = userDocRef.get("avatarUrl");
+    const name = userDocRef.get("name");
+    const concentration = userDocRef.get("concentration");
+    const proficiency = userDocRef.get("proficiency");
     const interview: IInterviewAttributes = {
       ...baseInterview,
       completedAt: null,
       reviewedAt: null,
       createdAt: Timestamp.now(),
     };
+    await UserService.updateUser(userId, {
+      name, 
+      concentration, 
+      proficiency,
+      avatarUrl
+    });
 
     return addDoc(collectionRef, interview);
   }

@@ -45,7 +45,7 @@ export default async function seed(
             .with({ email: user.email!, name: user.email?.split("@")[0] })
             .build()
         )
-      )/*,
+      ),
       addInterviewCollection = userCredentials
         .map(({ user }, idx) =>
           new Array(getRandomInt(10)).fill(0).map((_, i) =>
@@ -64,7 +64,7 @@ export default async function seed(
     ).slice(
       0,
       addInterviewCollection.length
-    ) as DocumentReference<IInterviewAttributes>[];*/
+    ) as DocumentReference<IInterviewAttributes>[];
 
     const questions = await QuestionService.getAllQuestions();
 

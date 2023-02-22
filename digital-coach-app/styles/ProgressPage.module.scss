@@ -5,17 +5,21 @@
       flex-wrap: wrap;
     }
   
-    &_bodyLeft {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
+    &_bodyCard {
       gap: 2rem;
-      max-width: 45%;
+      max-width: 55%;
     }
   
     &_bodyRight {
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
+      gap: 2rem;
+    }
+
+    &bodyRow {
+      display: flex;
+      flex-direction: row;
       flex-grow: 1;
       gap: 2rem;
     }

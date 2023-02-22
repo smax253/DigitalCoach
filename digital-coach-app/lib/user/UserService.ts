@@ -50,6 +50,7 @@ class UserService extends FirebaseService {
       proficiency: null,
       registrationCompletedAt: null,
       createdAt: Timestamp.now(),
+      hasCompletedInterview: false
     };
 
     return setDoc(userDocRef, userDoc);
@@ -68,6 +69,7 @@ class UserService extends FirebaseService {
     return updateDoc(userDocRef, {
       ...userDetails,
       registrationCompletedAt: Timestamp.now(),
+      hasCompletedInterview: false
     });
   }
 
@@ -87,12 +89,17 @@ class UserService extends FirebaseService {
   }
 
   /**
-   * This function gets the current user's id
-   * @param none
-   * @returns The user's id
+   * This function takes in the userId and updates their hasCompletedInterview to true
+   * @param {string} userId The user's id 
+   * @param {IBaseUserAttributes} userDetails Base User Attributes
+   * @returns A promise that resolves to the result of the update
    */
-  getUserId(){
-    return AuthService.auth.currentUser?.uid;
+  async updateUser(userId: string, userDetails: IBaseUserAttributes) {
+    const userDocRef = this.getDocRef(userId);
+    return updateDoc(userDocRef, {
+      ...userDetails, 
+      hasCompletedInterview: true
+    }); 
   }
 }
 
