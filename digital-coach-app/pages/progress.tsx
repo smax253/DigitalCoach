@@ -8,31 +8,36 @@ import styles from "@App/styles/ProgressPage.module.scss";
 
 function ProgressPage(){
     const { currentUser } = useAuthContext();
-    //Use grids instead of lists of cards
     return (
         <div className={styles.ProgressPage}>
           <h1>Your Progress</h1>
-    
           <div className={styles.ProgressPage_avatarWrapper}>
                 {currentUser?.data()?.avatarUrl && (
                 <Avatar size={125} src={currentUser?.data()!.avatarUrl} />
                 )}
           </div>
-    
-          <div className={styles.ProgressPage_body}>
-            <Grid className={styles.ProgressPage_body} container alignItems="center" justifyContent="center">
-                <Card className={styles.ProgressPage_bodyCard} title="Followup Interview">{currentUser?.data()?.email}</Card>
-                <Card title="Big Five Score">
-                  Current Score: xyz<br></br>
-                  Target Score: abc<br></br>
-                </Card>
-                <Card title="How to Improve">
-                  1) .....<br></br>
-                  2) .....<br></br>
-                </Card>
-                <Card title="Graph of User's Score Progress"></Card>
-            </Grid>
-          </div>
+          <Grid className={styles.ProgressPage_body} 
+                container 
+                alignItems="center" 
+                justifyContent="center"
+                columns={3}
+            >
+              <Card className={styles.ProgressPage_bodyCard} title="Followup Interview">
+                  <Link href="/start">
+                      <a className={styles.linksText}>Start Followup Interview</a>
+                  </Link>
+                  <p>Need to update link if we ever get to create a different way to start an interview</p>  
+              </Card>
+              <Card className={styles.ProgressPage_bodyCard} title="Big Five Score">
+                Current Score: xyz<br></br>
+                Target Score: abc<br></br>
+              </Card>
+              <Card className={styles.ProgressPage_bodyCard} title="How to Improve">
+                1) .....<br></br>
+                2) .....<br></br>
+              </Card>
+              <Card className={styles.ProgressPage_bodyGraph} title="Graph of User's Score Progress">Insert Graph Here</Card>
+          </Grid>
         </div>
       );
 }
