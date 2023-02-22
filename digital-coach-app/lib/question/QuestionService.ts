@@ -55,6 +55,11 @@ class QuestionService extends FirebaseService {
   async addQuestion(baseQuestion: IBaseQuestionAttributes) {
     const question: IBaseQuestion = {
       ...baseQuestion,
+	  type: baseQuestion.type || null,
+	  position: baseQuestion.position || null,
+	  companies: baseQuestion.companies || [],
+	  popularity: baseQuestion.popularity || 0,
+	  createdBy: baseQuestion.createdBy || null,
       lastUpdatedAt: Timestamp.now(),
       createdAt: Timestamp.now(),
     };
@@ -155,7 +160,7 @@ class QuestionService extends FirebaseService {
 		popularity?: number
 
 	})
-	 {
+	{
 	const ref = this.getCollectionRef();
 	
 	const foundQuestion = (await getDoc(doc(ref, qid))).data();
@@ -181,7 +186,7 @@ class QuestionService extends FirebaseService {
 		
 	)
 	.then(function() { 
-		return getDoc(doc(ref, qid));	// This returns the updated document. (I think.
+		return getDoc(doc(ref, qid));	// This returns the updated document.
 	})
 	.catch((e) => { throw new Error("Error updating question: ", e) });
 
