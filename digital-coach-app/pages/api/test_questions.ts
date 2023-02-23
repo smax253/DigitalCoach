@@ -139,7 +139,7 @@ export default async function run_tests(
 		console.log("Testing updateQuestion()...")
 		const data = await QuestionService.updateQuestion(
 			{
-				qid: "1AUOnRrFpFnrAKkj2V2x",	// Harcoded for testing purposes
+				qid: "47MQn7GU7NHFRyXVtoLj",	// Harcoded for testing purposes
 				popularity: 88
 			}
 		);
@@ -165,7 +165,21 @@ export default async function run_tests(
 				"Error": e
 			}
 		);
+	}
 
+	try { 
+		console.log("Testing deleteQuestion()...")
+		const data = await QuestionService.deleteQuestion("1D3Rz2o2oZ4TbtJh4eLs");	// Harcoded for testing purposes
+
+		console.log(data);
+		test_results.push(
+			{
+				"Test": "deleteQuestion()",
+				"Result": "Success",
+				"Data": data.data()
+			}
+		);
+	} catch (e) { 
 
 	}
 

@@ -1,5 +1,21 @@
 import FirebaseService from "@App/lib/firebase/FirebaseService";
-import { addDoc, collection, CollectionReference, Firestore, getDocs, getFirestore, query, QueryDocumentSnapshot, Timestamp, where, orderBy, updateDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { 
+	addDoc, 
+	collection, 
+	CollectionReference, 
+	Firestore, 
+	getDocs, 
+	getFirestore, 
+	query, 
+	QueryDocumentSnapshot, 
+	Timestamp, 
+	where, 
+	orderBy, 
+	doc, 
+	getDoc, 
+	setDoc,
+	deleteDoc
+} from "firebase/firestore";
 import { IBaseQuestion, IBaseQuestionAttributes, IQuestion, TQuestionType, TSubject } from "@App/lib/question/models";
 
 class QuestionService extends FirebaseService {
@@ -141,7 +157,7 @@ class QuestionService extends FirebaseService {
     }
 
     // Note: This returns undefined; it does not return the updated document.
-    let res = await setDoc(
+	await setDoc(
       doc(ref, qid),
       {
         ...foundQuestion,
@@ -149,20 +165,29 @@ class QuestionService extends FirebaseService {
         question: question || foundQuestion.question,
         type: type || foundQuestion.type,
         position: position || foundQuestion.position,
-        companies: companies.length > 0 ? companies : foundQuestion.companies,
+        companies: companies ? companies : foundQuestion.companies,
         popularity: popularity || foundQuestion.popularity || 0,
         lastUpdatedAt: Timestamp.now(),
       },
       { merge: true }
     )
-      .then(function () {
-        return getDoc(doc(ref, qid)); // This returns the updated document.
-      })
-      .catch((e) => {
-        throw new Error("Error updating question: ", e);
-      });
 
-    return res;
+    return await getDoc(doc(ref, qid)); // This returns the updated document.
+  }
+
+  /**
+   * This function deletes a question from the database.
+   * @param {string} qid - string - the question ID
+   * @returns A promise that resolves to the deleted question.
+   **/
+  async deleteQuestion(qid: string) {
+	const ref = this.getCollectionRef();
+
+	const foundQuestion = (await getDoc(doc(ref, qid)));
+
+	await deleteDoc(doc(ref, qid))
+
+	return foundQuestion;
   }
 }
 
