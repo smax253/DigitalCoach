@@ -14,7 +14,9 @@ import {
 	doc, 
 	getDoc, 
 	setDoc,
-	deleteDoc
+	deleteDoc,
+	updateDoc,
+	arrayUnion
 } from "firebase/firestore";
 import { IBaseQuestion, IBaseQuestionAttributes, IQuestion, TQuestionType, TSubject } from "@App/lib/question/models";
 
@@ -167,7 +169,7 @@ class QuestionService extends FirebaseService {
     if (!foundQuestion) throw new Error("Question not found!");
 
     // Note: This returns undefined; it does not return the updated document.
-	await setDoc(
+	await updateDoc(
       doc(ref, qid),
       {
         ...foundQuestion,
@@ -178,8 +180,7 @@ class QuestionService extends FirebaseService {
         companies: companies || foundQuestion.companies,
         popularity: popularity || foundQuestion.popularity || 0,
         lastUpdatedAt: Timestamp.now(),
-      },
-      { merge: true }
+      }
     )
 
     return await getDoc(doc(ref, qid)); // This returns the updated document.
@@ -194,6 +195,8 @@ class QuestionService extends FirebaseService {
 	const ref = this.getCollectionRef();
 
 	const foundQuestion = (await getDoc(doc(ref, qid)));
+
+	if(!foundQuestion) throw new Error("Error deleting question: Question not found!");
 
 	await deleteDoc(doc(ref, qid))
 
@@ -212,22 +215,20 @@ class QuestionService extends FirebaseService {
 
 	const foundQuestion = (await getDoc(doc(ref, qid))).data();
 
-	if (foundQuestion === undefined) {
-		throw new Error("Error adding company to question: Question not found!");
-	}
+	if (!foundQuestion) throw new Error("Error adding company to question: Question not found!");
+	
 
-	if (foundQuestion.companies.some((company) => companies.includes(company))) {
+	if (foundQuestion.companies.some((company) => companies.includes(company))) 
 		throw new Error("Error adding company to question: Company already exists!");
-	}
+	
 
-	await setDoc(
+	await updateDoc(
 		doc(ref, qid),
 		{
 			...foundQuestion,
-			companies: foundQuestion.companies.concat(companies),
+			companies: arrayUnion(...companies),
 			lastUpdatedAt: Timestamp.now(),
-		},
-		{ merge: true }
+		}
 	);
 
 	return await getDoc(doc(ref, qid));

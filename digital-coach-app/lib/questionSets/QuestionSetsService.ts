@@ -11,8 +11,11 @@ import {
   setDoc,
   Timestamp,
   where,
+  updateDoc,
+  arrayUnion
 } from "firebase/firestore";
 import FirebaseService from "../firebase/FirebaseService";
+import { IBaseQuestion } from "../question/models";
 
 interface IQuestionSetAttributes {
   title: string;
@@ -107,6 +110,28 @@ class QuestionSetsService extends FirebaseService {
 	return await getDoc(doc(ref, qsid));
 
   }
+
+  async addQuestionToSet(qsid: string, qid: string) { 
+	const questionSetRef = this.getCollectionRef();
+	const questionsRef = collection(this.firestore, "questions") as CollectionReference<IBaseQuestion>;
+
+	const foundQuestionSet = (await getDoc(doc(questionSetRef, qsid)));
+	const foundQuestion = (await getDoc(doc(questionsRef, qid)));
+
+	if(!foundQuestionSet) throw new Error("Error adding question set: Question set not found!");
+	if(!foundQuestion) throw new Error("Error adding question set: Question not found!");
+
+	if(foundQuestionSet.data()?.questions.includes(qid)) throw new Error("Error adding question set: Question already exists in set!");
+
+	await updateDoc(
+		doc(questionSetRef, qsid),
+		{
+			questions: arrayUnion(qid)
+		}
+	);
+
+  }
+
 }
 
 export default new QuestionSetsService();
