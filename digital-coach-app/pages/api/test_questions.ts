@@ -196,7 +196,7 @@ export default async function run_tests(
 		console.log("Testing addCompanyToQuestion()...");
 		const data = await QuestionService.addCompaniesToQuestion(
 			
-				"APeiv5lULaesamamXWpV",	// Harcoded for testing purposes
+				"H3lqUFR0BAfzrtP5rIBJ",	// Harcoded for testing purposes
 				["amazon", "google"]
 			
 		);

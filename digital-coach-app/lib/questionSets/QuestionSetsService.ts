@@ -2,10 +2,13 @@ import {
   addDoc,
   collection,
   CollectionReference,
+  doc,
   Firestore,
+  getDoc,
   getDocs,
   getFirestore,
   query,
+  setDoc,
   Timestamp,
   where,
 } from "firebase/firestore";
@@ -71,6 +74,38 @@ class QuestionSetsService extends FirebaseService {
     const q = query(collectionRef, isFeaturedFilter);
 
     return getDocs(q);
+  }
+
+  async updateQuestionSet({
+	qsid,
+	title, 
+	description,
+	questions = []
+	}: {
+		qsid: string;
+		title?: string;
+		description?: string;
+		questions?: string[];
+	}) { 
+	const ref = this.getCollectionRef();
+	
+	const foundQuestionSet = (await getDoc(doc(ref, qsid))).data();
+	
+	if(!foundQuestionSet) throw new Error("Question set not found");
+
+
+	await setDoc(
+		doc(ref, qsid),
+		{
+			...foundQuestionSet,
+			title: title || foundQuestionSet.title,
+			description: description || foundQuestionSet.description,
+			questions: questions || foundQuestionSet.questions
+		},
+		{ merge: true }
+	);
+	return await getDoc(doc(ref, qsid));
+
   }
 }
 

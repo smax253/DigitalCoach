@@ -164,9 +164,7 @@ class QuestionService extends FirebaseService {
 
     const foundQuestion = (await getDoc(doc(ref, qid))).data();
 
-    if (foundQuestion === undefined) {
-      throw new Error("Question not found!");
-    }
+    if (!foundQuestion) throw new Error("Question not found!");
 
     // Note: This returns undefined; it does not return the updated document.
 	await setDoc(
@@ -177,7 +175,7 @@ class QuestionService extends FirebaseService {
         question: question || foundQuestion.question,
         type: type || foundQuestion.type,
         position: position || foundQuestion.position,
-        companies: companies ? companies : foundQuestion.companies,
+        companies: companies || foundQuestion.companies,
         popularity: popularity || foundQuestion.popularity || 0,
         lastUpdatedAt: Timestamp.now(),
       },
@@ -207,6 +205,7 @@ class QuestionService extends FirebaseService {
    * @param {string} qid - string - the question ID
    * @param {Array<string>} companies - Array<string> - the companies to add
    * @returns A promise that resolves to the updated question.
+   * @todo Re-implement using transactions to reduce the number of database calls.
    */
   async addCompaniesToQuestion(qid: string, companies: string[]) {
 	const ref = this.getCollectionRef();
@@ -233,7 +232,7 @@ class QuestionService extends FirebaseService {
 
 	return await getDoc(doc(ref, qid));
 
-}
+  }
 
 }
 
