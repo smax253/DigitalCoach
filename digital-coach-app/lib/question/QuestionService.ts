@@ -131,6 +131,18 @@ class QuestionService extends FirebaseService {
     return await getDocs(query(ref, filter));
   }
 
+  /**
+   * 
+   * 
+   * @param {string} qid - string - the question ID
+   * @param {TSubject} subject - TSubject - the new subject
+   * @param {string} question - string - the new question text
+   * @param {TQuestionType} type - TQuestionType - the new question type
+   * @param {string} position - string - the new job position
+   * @param {Array<string>} companies - Array<string> - the new companies
+   * @param {number} popularity - number - the new popularitye
+   * @returns 
+   */
   async updateQuestion({
     qid,
     subject,
@@ -189,6 +201,40 @@ class QuestionService extends FirebaseService {
 
 	return foundQuestion;
   }
+
+  /**
+   * This function adds companies to a question.
+   * @param {string} qid - string - the question ID
+   * @param {Array<string>} companies - Array<string> - the companies to add
+   * @returns A promise that resolves to the updated question.
+   */
+  async addCompaniesToQuestion(qid: string, companies: string[]) {
+	const ref = this.getCollectionRef();
+
+	const foundQuestion = (await getDoc(doc(ref, qid))).data();
+
+	if (foundQuestion === undefined) {
+		throw new Error("Error adding company to question: Question not found!");
+	}
+
+	if (foundQuestion.companies.some((company) => companies.includes(company))) {
+		throw new Error("Error adding company to question: Company already exists!");
+	}
+
+	await setDoc(
+		doc(ref, qid),
+		{
+			...foundQuestion,
+			companies: foundQuestion.companies.concat(companies),
+			lastUpdatedAt: Timestamp.now(),
+		},
+		{ merge: true }
+	);
+
+	return await getDoc(doc(ref, qid));
+
+}
+
 }
 
 export default new QuestionService();

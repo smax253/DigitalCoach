@@ -21,7 +21,7 @@ export interface IBaseQuestionAttributes {
   question: string;
   type?: TQuestionType;	// nullable, for now
   position?: string | null;	// nullable
-  companies?: string[];
+  companies: string[];
   popularity?: number;
   createdBy?: string | null;	// nullable
 } 

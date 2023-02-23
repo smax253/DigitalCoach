@@ -180,7 +180,46 @@ export default async function run_tests(
 			}
 		);
 	} catch (e) { 
+		console.log("Error in deleteQuestion():");
+		console.log(e);
 
+		test_results.push(
+			{
+				"Test": "deleteQuestion()",
+				"Result": "Failure",
+				"Error": e
+			}
+		);
+	}
+
+	try { 
+		console.log("Testing addCompanyToQuestion()...");
+		const data = await QuestionService.addCompaniesToQuestion(
+			
+				"APeiv5lULaesamamXWpV",	// Harcoded for testing purposes
+				["amazon", "google"]
+			
+		);
+
+		console.log(data);
+		test_results.push(
+			{
+				"Test": "addCompanyToQuestion()",
+				"Result": "Success",
+				"Data": data.data()
+			}
+		);
+	} catch (e) { 
+		console.log("Error in addCompanyToQuestion():");
+		console.log(e);
+
+		test_results.push(
+			{
+				"Test": "addCompanyToQuestion()",
+				"Result": "Failure",
+				"Error": e
+			}
+		);
 	}
 
 	return res.status(200).json({ test_results: test_results })
