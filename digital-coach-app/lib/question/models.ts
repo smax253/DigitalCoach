@@ -8,7 +8,8 @@ export type TSubject =
   | "geography"
   | "chemistry"
   | "physics"
-  | "Business Accounting and Analytics";
+  | "Business Accounting and Analytics"
+  | "Any";		// For questions not specific to any subject.
 
 export type TQuestionType = 
   | "behaviorial"
@@ -19,10 +20,10 @@ export interface IBaseQuestionAttributes {
   subject: TSubject;
   question: string;
   type?: TQuestionType;	// nullable, for now
-  position?: string;	// nullable
+  position?: string | null;	// nullable
   companies: string[];
-  popularity: number;
-  createdBy?: string;	// nullable
+  popularity?: number;
+  createdBy?: string | null;	// nullable
 } 
 
 export interface IBaseQuestion extends IBaseQuestionAttributes {

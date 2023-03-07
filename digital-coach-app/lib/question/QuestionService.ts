@@ -1,22 +1,24 @@
 import FirebaseService from "@App/lib/firebase/FirebaseService";
-import {
-  addDoc,
-  collection,
-  CollectionReference,
-  Firestore,
-  getDocs,
-  getFirestore,
-  query,
-  QueryDocumentSnapshot,
-  Timestamp,
-  where,
+import { 
+	addDoc, 
+	collection, 
+	CollectionReference, 
+	Firestore, 
+	getDocs, 
+	getFirestore, 
+	query, 
+	QueryDocumentSnapshot, 
+	Timestamp, 
+	where, 
+	orderBy, 
+	doc, 
+	getDoc, 
+	setDoc,
+	deleteDoc,
+	updateDoc,
+	arrayUnion
 } from "firebase/firestore";
-import {
-  IBaseQuestion,
-  IBaseQuestionAttributes,
-  IQuestion,
-  TSubject,
-} from "@App/lib/question/models";
+import { IBaseQuestion, IBaseQuestionAttributes, IQuestion, TQuestionType, TSubject } from "@App/lib/question/models";
 
 class QuestionService extends FirebaseService {
   private firestore: Firestore;
@@ -24,15 +26,10 @@ class QuestionService extends FirebaseService {
   constructor() {
     super();
     this.firestore = getFirestore(this.app);
-	console.log("this.firestore:" );
-	console.log(this.firestore);
   }
 
   private getCollectionRef() {
-    return collection(
-      this.firestore,
-      "questions"
-    ) as CollectionReference<IBaseQuestion>;
+    return collection(this.firestore, "questions") as CollectionReference<IBaseQuestion>;
   }
 
   private docToModel(doc: QueryDocumentSnapshot<IBaseQuestion>): IQuestion {
@@ -51,11 +48,15 @@ class QuestionService extends FirebaseService {
   async addQuestion(baseQuestion: IBaseQuestionAttributes) {
     const question: IBaseQuestion = {
       ...baseQuestion,
+      type: baseQuestion.type || null,
+      position: baseQuestion.position || null,
+      companies: baseQuestion.companies || [],
+      popularity: baseQuestion.popularity || 0,
+      createdBy: baseQuestion.createdBy || null,
       lastUpdatedAt: Timestamp.now(),
       createdAt: Timestamp.now(),
     };
-	const res = await addDoc(this.getCollectionRef(), question);
-    return res
+    return await addDoc(this.getCollectionRef(), question);
   }
 
   /**
@@ -64,7 +65,7 @@ class QuestionService extends FirebaseService {
    * @returns An array of objects.
    */
   async getAllQuestions() {
-    return getDocs(this.getCollectionRef());
+    return await getDocs(this.getCollectionRef());
   }
 
   /**
@@ -77,8 +78,163 @@ class QuestionService extends FirebaseService {
 
     const filter = where("subject", "==", subject);
 
-    return getDocs(query(ref, filter));
+    return await getDocs(query(ref, filter));
   }
+
+  /**
+   * This function returns a promise that resolves to an array of documents that match the given position
+   * @param {string} position - string - the position to filter by
+   * @returns An array of documents that match the query.
+   */
+  async getByPosition(position: string) {
+    const ref = this.getCollectionRef();
+
+    const filter = where("position", "==", position);
+
+    return await getDocs(query(ref, filter));
+  }
+
+  /**
+   * This function returns a promise that resolves to an array of documents that match the given company
+   * @param {Array<string>} companies - Array<string> - the company to filter by
+   * @returns An array of documents that match the query.
+   */
+  async getByCompany(companies: Array<string>) {
+    const ref = this.getCollectionRef();
+
+    const filter = where("companies", "array-contains-any", companies);
+
+    return await getDocs(query(ref, filter));
+  }
+
+  /**
+   * This function returns a promise that resolves to an array of documents that match the given question type
+   * @param {string} type - string - the question type to filter by
+   * @returns An array of documents that match the query.
+   */
+  async getByType(type: string) {
+    const ref = this.getCollectionRef();
+
+    const filter = where("type", "==", type);
+
+    return await getDocs(query(ref, filter));
+  }
+
+  /**
+   * This function returns a promise that resolves to an array of question documents
+   * sorted by popularity, descending.
+   * @returns An array of documents that match the query.
+   */
+  async getByPopularityDesc() {
+    const ref = this.getCollectionRef();
+
+    const filter = orderBy("popularity", "desc");
+
+    return await getDocs(query(ref, filter));
+  }
+
+  /**
+   * 
+   * 
+   * @param {string} qid - string - the question ID
+   * @param {TSubject} subject - TSubject - the new subject
+   * @param {string} question - string - the new question text
+   * @param {TQuestionType} type - TQuestionType - the new question type
+   * @param {string} position - string - the new job position
+   * @param {Array<string>} companies - Array<string> - the new companies
+   * @param {number} popularity - number - the new popularitye
+   * @returns 
+   */
+  async updateQuestion({
+    qid,
+    subject,
+    question,
+    type,
+    position,
+    companies = [],
+    popularity,
+  }: {
+    qid: string;
+    subject?: TSubject;
+    question?: string;
+    type?: TQuestionType;
+    position?: string;
+    companies?: Array<string>;
+    popularity?: number;
+  }) {
+    const ref = this.getCollectionRef();
+
+    const foundQuestion = (await getDoc(doc(ref, qid))).data();
+
+    if (!foundQuestion) throw new Error("Question not found!");
+
+    // Note: This returns undefined; it does not return the updated document.
+	await updateDoc(
+      doc(ref, qid),
+      {
+        ...foundQuestion,
+        subject: subject || foundQuestion.subject,
+        question: question || foundQuestion.question,
+        type: type || foundQuestion.type,
+        position: position || foundQuestion.position,
+        companies: companies || foundQuestion.companies,
+        popularity: popularity || foundQuestion.popularity || 0,
+        lastUpdatedAt: Timestamp.now(),
+      }
+    )
+
+    return await getDoc(doc(ref, qid)); // This returns the updated document.
+  }
+
+  /**
+   * This function deletes a question from the database.
+   * @param {string} qid - string - the question ID
+   * @returns A promise that resolves to the deleted question.
+   **/
+  async deleteQuestion(qid: string) {
+	const ref = this.getCollectionRef();
+
+	const foundQuestion = (await getDoc(doc(ref, qid)));
+
+	if(!foundQuestion) throw new Error("Error deleting question: Question not found!");
+
+	await deleteDoc(doc(ref, qid))
+
+	return foundQuestion;
+  }
+
+  /**
+   * This function adds companies to a question.
+   * @param {string} qid - string - the question ID
+   * @param {Array<string>} companies - Array<string> - the companies to add
+   * @returns A promise that resolves to the updated question.
+   * @todo Re-implement using transactions to reduce the number of database calls.
+   */
+  async addCompaniesToQuestion(qid: string, companies: string[]) {
+	const ref = this.getCollectionRef();
+
+	const foundQuestion = (await getDoc(doc(ref, qid))).data();
+
+	if (!foundQuestion) throw new Error("Error adding company to question: Question not found!");
+	
+
+	if (foundQuestion.companies.some((company) => companies.includes(company))) 
+		throw new Error("Error adding company to question: Company already exists!");
+	
+
+	await updateDoc(
+		doc(ref, qid),
+		{
+			...foundQuestion,
+			companies: arrayUnion(...companies),
+			lastUpdatedAt: Timestamp.now(),
+		}
+	);
+
+	return await getDoc(doc(ref, qid));
+
+  }
+
 }
 
 export default new QuestionService();
