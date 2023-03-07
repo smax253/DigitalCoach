@@ -85,25 +85,25 @@ export default async function seed(
       return QuestionSetsService.createQuestionSet(questionSet);
     });
 
-    const addInterviewQuestions = interviewsCollectionRef
-      .map((interviewDocRef) =>
-        new Array(5).fill(null).map(async () => {
-          const question = questions.docs[getRandomInt(questions.docs.length)],
-            questionAttributes = {
-              timeLimit: 30 * getRandomInt(20),
-              retries: getRandomInt(3, 1),
-            };
+    // const addInterviewQuestions = interviewsCollectionRef
+    //   .map((interviewDocRef) =>
+    //     new Array(5).fill(null).map(async () => {
+    //       const question = questions.docs[getRandomInt(questions.docs.length)],
+    //         questionAttributes = {
+    //           timeLimit: 30 * getRandomInt(20),
+    //           retries: getRandomInt(3, 1),
+    //         };
 
-          return InterviewQuestionService.addQuestion(
-            { gid: question.id, ...question.data() },
-            questionAttributes,
-            interviewDocRef
-          );
-        })
-      )
-      .flat();
+    //       return InterviewQuestionService.addQuestion(
+    //         { gid: question.id, ...question.data() },
+    //         questionAttributes,
+    //         interviewDocRef
+    //       );
+    //     })
+    //   )
+    //   .flat();
 
-    await Promise.all([...addQuestionSets, ...addInterviewQuestions]);
+  await Promise.all([...addQuestionSets/*, ...addInterviewQuestions*/]);
 
     const questionsRef =
       await InterviewQuestionService.getAllInterviewQuestions();

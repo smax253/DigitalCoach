@@ -32,4 +32,5 @@ export interface IUser extends IBaseUserAttributes {
   email: string;
   registrationCompletedAt: Timestamp | null;
   createdAt: Timestamp;
+  hasCompletedInterview: boolean;
 }

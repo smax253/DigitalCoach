@@ -9,7 +9,7 @@ export default function AddQuestionsCard() {
     <Card title="Add Questions">
       <div className={styles.AddQuestionsCard}>
         <div className={styles.AddQuestionsCard_browseList}>
-          <TextField title="Enter Custom Question" />
+          <TextField title="Enter Custom Question" placeholder=' Enter Custom Question'/>
           <BrowseQuestionsList />
         </div>
 

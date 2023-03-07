@@ -3,19 +3,32 @@
       display: flex;
       gap: 2rem;
       flex-wrap: wrap;
+      grid-auto-rows: 1fr;
     }
   
-    &_bodyLeft {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
+    &_bodyCard {
       gap: 2rem;
-      max-width: 45%;
+      width: 350px;
+      height: 190px;
+    }
+
+    &_bodyGraph {
+      gap: 2rem;
+      max-width: 55%;
+      width: 350px;
+      height: 300px;
     }
   
     &_bodyRight {
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
+      gap: 2rem;
+    }
+
+    &bodyRow {
+      display: flex;
+      flex-direction: row;
       flex-grow: 1;
       gap: 2rem;
     }

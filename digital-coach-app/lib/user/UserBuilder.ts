@@ -21,6 +21,7 @@ export default class UserBuilder extends BaseBuilder<IUser> {
     ];
   private createdAt = Timestamp.now();
   private registrationCompletedAt = Timestamp.now();
+  private hasCompletedInterview = false;
 
   build() {
     return {
@@ -31,6 +32,7 @@ export default class UserBuilder extends BaseBuilder<IUser> {
       proficiency: this.proficiency,
       createdAt: this.createdAt,
       registrationCompletedAt: this.registrationCompletedAt,
+      hasCompletedInterview: this.hasCompletedInterview
     };
   }
 }
