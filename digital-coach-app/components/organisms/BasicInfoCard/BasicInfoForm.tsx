@@ -9,10 +9,10 @@ export default function BasicInfoForm() {
 
   return (
     <form>
-      <TextField title="Interview Name" placeholder=' Interview Name'/><br></br>
-      <TextField title="Minutes Given to Answer" placeholder=' Minutes Given to Answer'/>
-      <CheckboxInput>No Time Limit</CheckboxInput><br></br>
-      <TextField title='Number of Retries Per Question' placeholder=' Number of Retries Per Question'/>
+      <TextField type="text" title="Interview Name" placeholder=' Interview Name' required/><br/>
+      <TextField type="number" title="Minutes Given to Answer" placeholder=' Minutes Given to Answer' min='0' defaultValue=''/>
+      <CheckboxInput>No Time Limit</CheckboxInput><br/>
+      <TextField type="number" title='Number of Retries Per Question' placeholder=' Number of Retries Per Question' min='0' defaultValue=''/>
     </form>
   );
 }

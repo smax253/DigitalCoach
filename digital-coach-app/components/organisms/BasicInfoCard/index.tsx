@@ -3,7 +3,7 @@ import BasicInfoForm from "./BasicInfoForm";
 
 export default function BasicInfoCard() {
   return (
-    <Card title="Basic Info">
+    <Card title="New Interview Set Information">
       <BasicInfoForm />
     </Card>
   );
