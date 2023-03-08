@@ -33,11 +33,19 @@ export default async function seed(
     ]);
 	const addQuestionCollection = questionsData.questions.map(async (question) =>
 	await QuestionService.addQuestion({
+<<<<<<< Updated upstream
 	  subject: questionsData.subject,
 	  question,
 	  companies: [],
 	  popularity: 0,
 	  experienceLevel: "Any",
+=======
+    subject: questionsData.subject,
+    question,
+    companies: [],
+    popularity: 0,
+    experienceLevel: "Any"
+>>>>>>> Stashed changes
   })),
       addUserCollection = userCredentials.map(async ({ user }) =>
         UserService.add(
