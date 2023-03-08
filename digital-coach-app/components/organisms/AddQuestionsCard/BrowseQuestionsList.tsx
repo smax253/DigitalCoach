@@ -1,3 +1,11 @@
+import Link from "next/link";
+
 export default function BrowseQuestionsList() {
-  return <div>BrowseQuestionsList</div>;
+  return (
+  	<div>
+		<Link href='/browsequestions'>
+			BrowseQuestionsList
+		</Link>
+	</div>
+  )
 }
