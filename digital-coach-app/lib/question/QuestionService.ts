@@ -18,7 +18,7 @@ import {
 	updateDoc,
 	arrayUnion
 } from "firebase/firestore";
-import { IBaseQuestion, IBaseQuestionAttributes, IQuestion, TQuestionType, TSubject } from "@App/lib/question/models";
+import { IBaseQuestion, IBaseQuestionAttributes, IQuestion, TQuestionType, TSubject, TExperienceLevel } from "@App/lib/question/models";
 
 class QuestionService extends FirebaseService {
   private firestore: Firestore;
@@ -49,7 +49,7 @@ class QuestionService extends FirebaseService {
     const question: IBaseQuestion = {
       ...baseQuestion,
       type: baseQuestion.type || null,
-      position: baseQuestion.position || null,
+      experienceLevel: baseQuestion.experienceLevel || null,
       companies: baseQuestion.companies || [],
       popularity: baseQuestion.popularity || 0,
       createdBy: baseQuestion.createdBy || null,
@@ -150,7 +150,7 @@ class QuestionService extends FirebaseService {
     subject,
     question,
     type,
-    position,
+    experienceLevel,
     companies = [],
     popularity,
   }: {
@@ -158,7 +158,7 @@ class QuestionService extends FirebaseService {
     subject?: TSubject;
     question?: string;
     type?: TQuestionType;
-    position?: string;
+    experienceLevel?: TExperienceLevel;
     companies?: Array<string>;
     popularity?: number;
   }) {
@@ -176,7 +176,7 @@ class QuestionService extends FirebaseService {
         subject: subject || foundQuestion.subject,
         question: question || foundQuestion.question,
         type: type || foundQuestion.type,
-        position: position || foundQuestion.position,
+        experienceLevel: experienceLevel || foundQuestion.experienceLevel,
         companies: companies || foundQuestion.companies,
         popularity: popularity || foundQuestion.popularity || 0,
         lastUpdatedAt: Timestamp.now(),
