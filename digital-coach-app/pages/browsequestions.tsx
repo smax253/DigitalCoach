@@ -2,7 +2,7 @@ import useAuthContext from "@App/lib/auth/AuthContext";
 import AuthGuard from "@App/lib/auth/AuthGuard";
 
 import styles from "@App/styles/BrowseQuestionsPage.module.scss";
-
+console.log("STYLES", styles)
 
 // import { DataGrid } from '@mui/x-data-grid';
 
@@ -110,10 +110,25 @@ function BrowseQuestionsPage() {
 						))
 					}
 				</List>
-				<div className='filter-div'>
+				<Box 
+				id='#filters'
+				sx={{
+					maxWidth: '20%',
+					display: 'flex',
+					flexDirection: 'column',
+					verticalAlign: 'top',
+					mt: 2,
+					ml: 4,
+					border: '1px solid black',
+					padding: 4,
+				}}>
+					
 					<h2>Filters</h2>
-					<label htmlFor='popularity-check-box'>Sort By Popularity</label>
-					<input type="checkbox" id='popularity-check-box'></input>
+					<div>
+						<label htmlFor='popularity-check-box'>Sort By Popularity</label>
+						<input type="checkbox" id='popularity-check-box'></input>
+
+					</div>
 					<label htmlFor='subject-select'>Subject</label>
 					<select id='subject-select'>
 						{
@@ -134,7 +149,7 @@ function BrowseQuestionsPage() {
 						<option value='Senior'>Senior</option>
 					</select>
 
-				</div>
+				</Box>
 			</Box>
 		</div>
 	);
