@@ -37,6 +37,7 @@ export default async function seed(
 	  question,
 	  companies: [],
 	  popularity: 0,
+	  experienceLevel: "Any",
   })),
       addUserCollection = userCredentials.map(async ({ user }) =>
         UserService.add(

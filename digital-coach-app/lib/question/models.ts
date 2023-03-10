@@ -16,11 +16,17 @@ export type TQuestionType =
   | "technical" 
   | null;
 
+export type TExperienceLevel = 
+  | "Entry"
+  | "Mid"
+  | "Senior"
+  | "Any"
+
 export interface IBaseQuestionAttributes {
   subject: TSubject;
   question: string;
   type?: TQuestionType;	// nullable, for now
-  position?: string | null;	// nullable
+  experienceLevel: TExperienceLevel;	// nullable
   companies: string[];
   popularity?: number;
   createdBy?: string | null;	// nullable

@@ -23,6 +23,10 @@ export default function NavBar() {
         <Link href="/past">
           <a className={style.linksText}>Review Past Interviews</a>
         </Link>
+        <Link href='/start/custom'>
+          <a className={style.linksText}>Create Custom Interview Set</a>
+        </Link>
+        {/*Here while developing, can be removed later if desired */}
         <Link href="/resources">
           <a className={style.linksText}>Resources</a>
         </Link>
