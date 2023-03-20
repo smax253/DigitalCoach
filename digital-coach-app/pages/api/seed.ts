@@ -39,7 +39,7 @@ export default async function seed(
 	  companies: [],
 	  popularity: Math.floor(Math.random() * 100),
 	  experienceLevel: ["Entry", "Mid", "Senior", "Any"][Math.floor(Math.random() * 4)] as TExperienceLevel,
-	  type: ["Behavioral", "Technical"][Math.floor(Math.random() * 2)] as TQuestionType,
+	  type: ["Behavioral", "Technical", "Any"][Math.floor(Math.random() * 3)] as TQuestionType,
   })),
       addUserCollection = userCredentials.map(async ({ user }) =>
         UserService.add(

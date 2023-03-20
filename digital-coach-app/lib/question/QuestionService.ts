@@ -235,6 +235,14 @@ class QuestionService extends FirebaseService {
 
   }
 
+  /**
+   * 
+   * @param {TSubject} subject - The subject to filter by
+   * @param {TQuestionType} type - The question type to filter by
+   * @param {TExperienceLevel} experience - The experience level to filter by
+   * @param {boolean} popularitySort - Determines whether or not to sort by popularity, descending
+   * @returns A promise that resolves to an array of documents that match the given filters.
+   */
   async getByFilters(
 		subject: TSubject,
 		type: TQuestionType,
@@ -242,17 +250,7 @@ class QuestionService extends FirebaseService {
 		popularitySort: boolean
 	) { 
 
-		console.log(subject);
-		console.log(type);
-		console.log(experience);
-		console.log(popularitySort);
-
 		const ref = this.getCollectionRef();
-		// const subjectFilter = subject === "Any" ? null as any: where("subject", "==", subject);
-		// const typeFilter = type === "Any" ? null as any : where("type", "==", type);
-		// const experienceFilter = experience === "Any" ? null as any : where("experienceLevel", "==", experience);
-		// const popularityFilter = popularitySort ? orderBy("popularity", "desc") : null as any;
-
 		const filters = [
 			subject === "Any" ? null : where("subject", "==", subject),
 			type === "Any" ? null : where("type", "==", type),
@@ -260,12 +258,7 @@ class QuestionService extends FirebaseService {
 			popularitySort ? orderBy("popularity", "desc") : null as any
 		].filter((f) => f !== null);
 
-
-
 		return await getDocs(query(ref, ...filters));
-
-		
-
 
   }
 
