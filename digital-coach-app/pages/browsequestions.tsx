@@ -1,12 +1,8 @@
 import useAuthContext from "@App/lib/auth/AuthContext";
 import AuthGuard from "@App/lib/auth/AuthGuard";
+import { useState, useEffect } from "react";
 
 import styles from "@App/styles/BrowseQuestionsPage.module.scss";
-console.log("STYLES", styles)
-
-// import { DataGrid } from '@mui/x-data-grid';
-
-// import { TextField } from "@App/components/molecules/TextField";
 
 import { 
 	List,
@@ -17,7 +13,11 @@ import {
 	Divider,
 	TextField,
 	Box,
-	Checkbox
+	Checkbox,
+	Select,
+	MenuItem,
+	InputLabel,
+	FormControl
 } from "@mui/material";
 
 import AddIcon from '@mui/icons-material/Add';
@@ -78,6 +78,9 @@ const sampleSubjects = [
 function BrowseQuestionsPage() { 
 	const { currentUser } = useAuthContext();
 
+	
+
+
 	return (
 		<div className={styles.BrowseQuestionsPage}>
 			<h1>Browse Questions</h1>
@@ -124,31 +127,46 @@ function BrowseQuestionsPage() {
 				}}>
 					
 					<h2>Filters</h2>
-					<div>
-						<label htmlFor='popularity-check-box'>Sort By Popularity</label>
-						<input type="checkbox" id='popularity-check-box'></input>
 
-					</div>
-					<label htmlFor='subject-select'>Subject</label>
-					<select id='subject-select'>
-						{
-							sampleSubjects.map((subject) => (
-								<option value={subject}>{subject}</option>
-							))
-						}
-					</select>
-					<label htmlFor='type-select'>Type</label>
-					<select id='type-select'>
-						<option value='Technical'>Technical</option>
-						<option value='Behavioral'>Behavioral</option>
-					</select>
-					<label htmlFor='experience-level-select'>Experience Level</label>
-					<select id='experience-level-select'>
-						<option value='Entry'>Entry</option>
-						<option value='Mid'>Mid</option>
-						<option value='Senior'>Senior</option>
-					</select>
+					<FormControl size="small">
+						<div>
+							<label htmlFor='popularity-check-box'>Sort By Popularity</label>
+							<Checkbox id='popularity-check-box'></Checkbox>
+						</div>
+						<label htmlFor='subject-select'>Subject</label>
+						<Select
+							id='subject-select'
+							value="Any"
+						>
+							<MenuItem value='Any'>Any</MenuItem>
+							{
+								sampleSubjects.map((subject) => (
+									<MenuItem value={subject}>{subject}</MenuItem>
+									))
+							}
+						</Select>
+						<label htmlFor='type-select'>Type</label>
+						<Select
+							id='type-select'
+							value="Any"
+						>
+							<MenuItem value='Any'>Any</MenuItem>
+							<MenuItem value='Technical'>Technical</MenuItem>
+							<MenuItem value='Behavioral'>Behavioral</MenuItem>
+						</Select>
+						<label htmlFor='experience-level-select'>Experience Level</label>
+						<Select
+							id='experience-level-select'
+							value="Any"
+						>
+							<MenuItem value='Any'>Any</MenuItem>
+							<MenuItem value='Entry'>Entry</MenuItem>
+							<MenuItem value='Mid'>Mid</MenuItem>
+							<MenuItem value='Senior'>Senior</MenuItem>
+						</Select>
 
+
+					</FormControl>
 				</Box>
 			</Box>
 		</div>
