@@ -48,8 +48,8 @@ class QuestionService extends FirebaseService {
   async addQuestion(baseQuestion: IBaseQuestionAttributes) {
     const question: IBaseQuestion = {
       ...baseQuestion,
-      type: baseQuestion.type || null,
-      experienceLevel: baseQuestion.experienceLevel || null,
+      type: baseQuestion.type || "Any",
+      experienceLevel: baseQuestion.experienceLevel || "Any",
       companies: baseQuestion.companies || [],
       popularity: baseQuestion.popularity || 0,
       createdBy: baseQuestion.createdBy || null,

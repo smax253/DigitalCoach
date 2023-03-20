@@ -14,6 +14,7 @@ import AnswerService from "@App/lib/answer/AnswerService";
 import QuestionSetsService from "@App/lib/questionSets/QuestionSetsService";
 import fs from "fs/promises";
 import StorageService from "@App/lib/storage/StorageService";
+import { TExperienceLevel, TQuestionType } from "@App/lib/question/models";
 
 export default async function seed(
   req: NextApiRequest,
@@ -36,8 +37,9 @@ export default async function seed(
 	  subject: questionsData.subject,
 	  question,
 	  companies: [],
-	  popularity: 0,
-	  experienceLevel: "Any",
+	  popularity: Math.floor(Math.random() * 100),
+	  experienceLevel: ["Entry", "Mid", "Senior", "Any"][Math.floor(Math.random() * 4)] as TExperienceLevel,
+	  type: ["Behavioral", "Technical"][Math.floor(Math.random() * 2)] as TQuestionType,
   })),
       addUserCollection = userCredentials.map(async ({ user }) =>
         UserService.add(
