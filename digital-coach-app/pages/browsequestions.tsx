@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 
 import AddIcon from '@mui/icons-material/Add';
+import { TExperienceLevel, TQuestionType, TSubject } from "@App/lib/question/models";
 
 
 
@@ -79,7 +80,18 @@ function BrowseQuestionsPage() {
 		setTypeSelect(event.target.value);
 	};
 
-
+	const handleFilterSubmit = async () => {
+		const data = await QuestionService.getByFilters( 
+			subjectSelect as TSubject, 
+			typeSelect as TQuestionType,
+			experienceLevelSelect as TExperienceLevel, 
+			popularityCheckbox, 
+			);
+		setQuestionsData(data.docs.map((doc) => doc.data()));
+		// console.log(
+		// 	data.docs.map((doc) => doc.data())
+		// );
+	};
 
 	return (
 		<div className={styles.BrowseQuestionsPage}>
@@ -178,7 +190,7 @@ function BrowseQuestionsPage() {
 							<MenuItem value='Mid'>Mid</MenuItem>
 							<MenuItem value='Senior'>Senior</MenuItem>
 						</Select>
-						<Button variant='contained'>Apply Filters</Button>
+						<Button variant='contained' onClick={handleFilterSubmit}>Apply Filters</Button>
 
 					</FormControl>
 				</Box>

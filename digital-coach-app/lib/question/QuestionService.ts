@@ -235,6 +235,41 @@ class QuestionService extends FirebaseService {
 
   }
 
+  async getByFilters(
+		subject: TSubject,
+		type: TQuestionType,
+		experience: TExperienceLevel,
+		popularitySort: boolean
+	) { 
+
+		console.log(subject);
+		console.log(type);
+		console.log(experience);
+		console.log(popularitySort);
+
+		const ref = this.getCollectionRef();
+		// const subjectFilter = subject === "Any" ? null as any: where("subject", "==", subject);
+		// const typeFilter = type === "Any" ? null as any : where("type", "==", type);
+		// const experienceFilter = experience === "Any" ? null as any : where("experienceLevel", "==", experience);
+		// const popularityFilter = popularitySort ? orderBy("popularity", "desc") : null as any;
+
+		const filters = [
+			subject === "Any" ? null : where("subject", "==", subject),
+			type === "Any" ? null : where("type", "==", type),
+			experience === "Any" ? null : where("experienceLevel", "==", experience),
+			popularitySort ? orderBy("popularity", "desc") : null as any
+		].filter((f) => f !== null);
+
+
+
+		return await getDocs(query(ref, ...filters));
+
+		
+
+
+  }
+
+
 }
 
 export default new QuestionService();
