@@ -14,7 +14,7 @@ export type TSubject =
 export type TQuestionType = 
   | "behaviorial"
   | "technical" 
-  | null;
+  | "Any";
 
 export type TExperienceLevel = 
   | "Entry"
@@ -25,8 +25,8 @@ export type TExperienceLevel =
 export interface IBaseQuestionAttributes {
   subject: TSubject;
   question: string;
-  type?: TQuestionType;	// nullable, for now
-  experienceLevel: TExperienceLevel;	// nullable
+  type: TQuestionType;
+  experienceLevel: TExperienceLevel;
   companies: string[];
   popularity?: number;
   createdBy?: string | null;	// nullable

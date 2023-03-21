@@ -1,12 +1,11 @@
 import useAuthContext from "@App/lib/auth/AuthContext";
 import AuthGuard from "@App/lib/auth/AuthGuard";
+import { useState, useEffect } from "react";
+
+import QuestionService from "@App/lib/question/QuestionService";
+
 
 import styles from "@App/styles/BrowseQuestionsPage.module.scss";
-console.log("STYLES", styles)
-
-// import { DataGrid } from '@mui/x-data-grid';
-
-// import { TextField } from "@App/components/molecules/TextField";
 
 import { 
 	List,
@@ -17,49 +16,19 @@ import {
 	Divider,
 	TextField,
 	Box,
-	Checkbox
+	Checkbox,
+	Select,
+	MenuItem,
+	FormControl,
+	SelectChangeEvent,
+	Button
 } from "@mui/material";
 
 import AddIcon from '@mui/icons-material/Add';
+import { TExperienceLevel, TQuestionType, TSubject } from "@App/lib/question/models";
 
 
 
-const sampleData = [
-	{
-		"createdAt": {
-		"seconds": 1678232583,
-		"nanoseconds": 198000000
-		},
-		"companies": [],
-		"question": "If you are interested in public accounting, are you more interested in tax or audit?",
-		"createdBy": null,
-		"lastUpdatedAt": {
-		"seconds": 1678232583,
-		"nanoseconds": 198000000
-		},
-		"subject": "Business Accounting and Analytics",
-		"popularity": 0,
-		"position": "Accountant",
-		"type": "Technical"
-	},
-	{
-		"createdAt": {
-		"seconds": 1678232583,
-		"nanoseconds": 199000000
-		},
-		"companies": [],
-		"question": "What are some of your strengths that will allow you to endure the frantic demands of tax season or a difficult audit?",
-		"createdBy": null,
-		"lastUpdatedAt": {
-		"seconds": 1678232583,
-		"nanoseconds": 199000000
-		},
-		"subject": "Business Accounting and Analytics",
-		"popularity": 0,
-		"position": "Accountant",
-		"type": "Technical"
-		},
-];
 
 const sampleSubjects = [ 
 	"Business Accounting and Analytics",
@@ -78,6 +47,52 @@ const sampleSubjects = [
 function BrowseQuestionsPage() { 
 	const { currentUser } = useAuthContext();
 
+	const [popularityCheckbox, setPopularityCheckbox] = useState(true);
+	const [experienceLevelSelect, setExperienceLevelSelect] = useState('Any');
+	const [subjectSelect, setSubjectSelect] = useState('Any');
+	const [typeSelect, setTypeSelect] = useState('Any');
+
+	const [questionsData, setQuestionsData]= useState<any[]>([]);
+
+	useEffect(() => { 
+		async function fetchData() { 
+			const questions : any[] = (await QuestionService.getByPopularityDesc()).docs.map((doc) => doc.data());
+			setQuestionsData(questions);
+			console.log(questions);
+		}
+		fetchData();
+	}, []);
+
+
+	const handlePopularityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setPopularityCheckbox(event.target.checked);
+	};
+
+	const handleExperienceLevelChange = (event: SelectChangeEvent) => {
+		setExperienceLevelSelect(event.target.value);
+	};
+
+	const handleSubjectChange = (event: SelectChangeEvent) => {
+		setSubjectSelect(event.target.value);
+	};
+
+	const handleTypeChange = (event: SelectChangeEvent) => {
+		setTypeSelect(event.target.value);
+	};
+
+	const handleFilterSubmit = async () => {
+		const data = await QuestionService.getByFilters( 
+			subjectSelect as TSubject, 
+			typeSelect as TQuestionType,
+			experienceLevelSelect as TExperienceLevel, 
+			popularityCheckbox, 
+			);
+		setQuestionsData(data.docs.map((doc) => doc.data()));
+		// console.log(
+		// 	data.docs.map((doc) => doc.data())
+		// );
+	};
+
 	return (
 		<div className={styles.BrowseQuestionsPage}>
 			<h1>Browse Questions</h1>
@@ -92,7 +107,7 @@ function BrowseQuestionsPage() {
 			>
 				<List sx={{ bgcolor: 'background.paper' }}>
 					{
-						sampleData.map((question) => (
+						questionsData.map((question) => (
 							<div>
 								<ListItem>
 									<ListItemIcon>
@@ -100,10 +115,18 @@ function BrowseQuestionsPage() {
 											<AddIcon />
 										</IconButton>
 									</ListItemIcon>
+									<div>
+
 									<ListItemText 
 										primary={question.question}
-										secondary={[question.subject, question.type, question.position].join(" | ")}
+										secondary={[
+											"Subject: " + question.subject, 
+											"Type: " + question.type, 
+											"Experience: " + 
+											question.experienceLevel].join(" | ")}
 										/>
+										<ListItemText secondary={"Popularity: " + question.popularity}/>
+									</div>
 								</ListItem>
 								<Divider />
 							</div>
@@ -124,31 +147,52 @@ function BrowseQuestionsPage() {
 				}}>
 					
 					<h2>Filters</h2>
-					<div>
-						<label htmlFor='popularity-check-box'>Sort By Popularity</label>
-						<input type="checkbox" id='popularity-check-box'></input>
 
-					</div>
-					<label htmlFor='subject-select'>Subject</label>
-					<select id='subject-select'>
-						{
-							sampleSubjects.map((subject) => (
-								<option value={subject}>{subject}</option>
-							))
-						}
-					</select>
-					<label htmlFor='type-select'>Type</label>
-					<select id='type-select'>
-						<option value='Technical'>Technical</option>
-						<option value='Behavioral'>Behavioral</option>
-					</select>
-					<label htmlFor='experience-level-select'>Experience Level</label>
-					<select id='experience-level-select'>
-						<option value='Entry'>Entry</option>
-						<option value='Mid'>Mid</option>
-						<option value='Senior'>Senior</option>
-					</select>
+					<FormControl size="small">
+						<div>
+							<label htmlFor='popularity-check-box'>Sort By Popularity</label>
+							<Checkbox id='popularity-check-box' 
+								checked={popularityCheckbox}
+								onChange={handlePopularityChange}
+							></Checkbox>
+						</div>
+						<label htmlFor='subject-select'>Subject</label>
+						<Select
+							id='subject-select'
+							value={subjectSelect}
+							onChange={handleSubjectChange}
+						>
+							<MenuItem value='Any'>Any</MenuItem>
+							{
+								sampleSubjects.map((subject) => (
+									<MenuItem value={subject}>{subject}</MenuItem>
+									))
+							}
+						</Select>
+						<label htmlFor='type-select'>Type</label>
+						<Select
+							id='type-select'
+							value={typeSelect}
+							onChange={handleTypeChange}
+						>
+							<MenuItem value='Any'>Any</MenuItem>
+							<MenuItem value='Technical'>Technical</MenuItem>
+							<MenuItem value='Behavioral'>Behavioral</MenuItem>
+						</Select>
+						<label htmlFor='experience-level-select'>Experience Level</label>
+						<Select
+							id='experience-level-select'
+							value={experienceLevelSelect}
+							onChange={handleExperienceLevelChange}
+						>
+							<MenuItem value='Any'>Any</MenuItem>
+							<MenuItem value='Entry'>Entry</MenuItem>
+							<MenuItem value='Mid'>Mid</MenuItem>
+							<MenuItem value='Senior'>Senior</MenuItem>
+						</Select>
+						<Button variant='contained' onClick={handleFilterSubmit}>Apply Filters</Button>
 
+					</FormControl>
 				</Box>
 			</Box>
 		</div>

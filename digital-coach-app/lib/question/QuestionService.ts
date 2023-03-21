@@ -48,8 +48,8 @@ class QuestionService extends FirebaseService {
   async addQuestion(baseQuestion: IBaseQuestionAttributes) {
     const question: IBaseQuestion = {
       ...baseQuestion,
-      type: baseQuestion.type || null,
-      experienceLevel: baseQuestion.experienceLevel || null,
+      type: baseQuestion.type || "Any",
+      experienceLevel: baseQuestion.experienceLevel || "Any",
       companies: baseQuestion.companies || [],
       popularity: baseQuestion.popularity || 0,
       createdBy: baseQuestion.createdBy || null,
@@ -234,6 +234,34 @@ class QuestionService extends FirebaseService {
 	return await getDoc(doc(ref, qid));
 
   }
+
+  /**
+   * 
+   * @param {TSubject} subject - The subject to filter by
+   * @param {TQuestionType} type - The question type to filter by
+   * @param {TExperienceLevel} experience - The experience level to filter by
+   * @param {boolean} popularitySort - Determines whether or not to sort by popularity, descending
+   * @returns A promise that resolves to an array of documents that match the given filters.
+   */
+  async getByFilters(
+		subject: TSubject,
+		type: TQuestionType,
+		experience: TExperienceLevel,
+		popularitySort: boolean
+	) { 
+
+		const ref = this.getCollectionRef();
+		const filters = [
+			subject === "Any" ? null : where("subject", "==", subject),
+			type === "Any" ? null : where("type", "==", type),
+			experience === "Any" ? null : where("experienceLevel", "==", experience),
+			popularitySort ? orderBy("popularity", "desc") : null as any
+		].filter((f) => f !== null);
+
+		return await getDocs(query(ref, ...filters));
+
+  }
+
 
 }
 
