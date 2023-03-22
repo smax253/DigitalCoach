@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField, FormControl, Button } from '@mui/material';
 import { useForm } from 'react-hook-form';
+import InterviewSetsService from '@App/lib/interviewSets/interviewSetsService';
 import QuestionSetsService from '@App/lib/questionSets/QuestionSetsService';
+import useAuthContext from '@App/lib/auth/AuthContext';
 
 export default function BasicInfoForm() {
   const {} = useForm();
@@ -18,9 +20,21 @@ export default function BasicInfoForm() {
    * @returns The created question set
    */
   const createInterviewSet = () => {
+    //!Invalid way of getting userId here
+    console.log('Trying to get current userId');
+    const { currentUser } = useAuthContext();
+    const thisUserId = currentUser?.get('id');
+    console.log('Got current userId');
     console.log(`${interviewName}, ${timePerQ}, ${numRetries}`);
     //Create interview set first
-
+    //TODO: Find a way to get userId to pass to createInterviewSet
+    // const interviewSet = {
+    //   name: interviewName,
+    //   minutesToAnswer: parseInt(timePerQ),
+    //   numberOfRetries: parseInt(numRetries),
+    // };
+    // console.log('Calling create function in BasicInfoForm');
+    // InterviewSetsService.create(thisUserId, interviewSet);
     //Now create question set
     //!Does not work on safari?
     const questionSet = {
