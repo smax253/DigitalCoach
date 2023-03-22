@@ -1,5 +1,5 @@
 # DigitalCoach
-Senior Design Project for Fall 2021-Spring 2022
+Senior Design Project for Fall 2022-Spring 2023
 
 DigitalCoach is an AI-powered interview prep web application that allows job seekers to practice interviewing and receive immediate feedback. Some key features of DigitalCoach include creating interview sets from our database of questions and then recording corresponding video responses. Our AI uses machine learning models to analyze audio and video through a sentiment analysis. At the end, users are left with an overall score and actionable feedback. 
 
