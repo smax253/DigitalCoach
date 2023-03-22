@@ -28,23 +28,24 @@ function ProgressPage() {
           <Link href='/start'>
             <a className={styles.linksText}>Start Followup Interview</a>
           </Link>
-          <p>
-            Need to update link if we ever get to create a different way to
-            start an interview
-          </p>
+          <p></p>
         </Card>
         <Card className={styles.ProgressPage_bodyCard} title='Big Five Score'>
-          Current Score: xyz<br></br>
-          Target Score: abc<br></br>
+          Current Score: 75<br></br>
+          Target Score: 100<br></br>
         </Card>
         <Card className={styles.ProgressPage_bodyCard} title='How to Improve'>
-          1) .....<br></br>
-          2) .....<br></br>
+          1) Make more eye contact<br></br>
+          2) Say "Um" less<br></br>
         </Card>
         <Card
           className={styles.ProgressPage_bodyGraph}
           title="Graph of User's Score Progress">
-          Insert Graph Here
+          <img
+            src='sampleLineGraph.png'
+            alt='Sample Graph'
+            width='300'
+            height='200'></img>
         </Card>
       </Grid>
     </div>

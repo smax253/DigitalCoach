@@ -21,10 +21,10 @@ export default function BasicInfoForm() {
    */
   const createInterviewSet = () => {
     //!Invalid way of getting userId here
-    console.log('Trying to get current userId');
-    const { currentUser } = useAuthContext();
-    const thisUserId = currentUser?.get('id');
-    console.log('Got current userId');
+    // console.log('Trying to get current userId');
+    // const { currentUser } = useAuthContext();
+    // const thisUserId = currentUser?.get('id');
+    // console.log('Got current userId');
     console.log(`${interviewName}, ${timePerQ}, ${numRetries}`);
     //Create interview set first
     //TODO: Find a way to get userId to pass to createInterviewSet
