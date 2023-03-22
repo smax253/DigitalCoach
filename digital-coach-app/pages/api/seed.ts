@@ -1,51 +1,57 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-import AuthService from "@App/lib/auth/AuthService";
-import UserBuilder from "@App/lib/user/UserBuilder";
-import UserService from "@App/lib/user/UserService";
-import QuestionService from "@App/lib/question/QuestionService";
-import InterviewService from "@App/lib/interview/InterviewService";
-import questionsData from "@App/data/questions";
-import getRandomInt from "@App/util/getRandomInt";
-import InterviewQuestionService from "@App/lib/interviewQuestion/InterviewQuestionService";
-import { DocumentReference } from "firebase/firestore";
-import { IInterviewAttributes } from "@App/lib/interview/models";
-import AnswerService from "@App/lib/answer/AnswerService";
-import QuestionSetsService from "@App/lib/questionSets/QuestionSetsService";
-import fs from "fs/promises";
-import StorageService from "@App/lib/storage/StorageService";
-import { TExperienceLevel, TQuestionType } from "@App/lib/question/models";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import AuthService from '@App/lib/auth/AuthService';
+import UserBuilder from '@App/lib/user/UserBuilder';
+import UserService from '@App/lib/user/UserService';
+import QuestionService from '@App/lib/question/QuestionService';
+import InterviewService from '@App/lib/interview/InterviewService';
+import questionsData from '@App/data/questions';
+import getRandomInt from '@App/util/getRandomInt';
+import InterviewQuestionService from '@App/lib/interviewQuestion/InterviewQuestionService';
+import { DocumentReference } from 'firebase/firestore';
+import { IInterviewAttributes } from '@App/lib/interview/models';
+import AnswerService from '@App/lib/answer/AnswerService';
+import QuestionSetsService from '@App/lib/questionSets/QuestionSetsService';
+import fs from 'fs/promises';
+import StorageService from '@App/lib/storage/StorageService';
+import { TExperienceLevel, TQuestionType } from '@App/lib/question/models';
 
 export default async function seed(
   req: NextApiRequest,
   res: NextApiResponse<{}>
 ) {
   const start = Date.now();
-  
+
   try {
     const userCredentials = await Promise.all([
-      AuthService.signup("ming@test.com", "password"),
-      AuthService.signup("appu@test.com", "password"),
-      AuthService.signup("suzy@test.com", "password"),
-      AuthService.signup("mike@test.com", "password"),
-      AuthService.signup("max@test.com", "password"),
-      AuthService.signup("hamzah@test.com", "password"),
-      AuthService.signup("steven@expo.com", "password"),
+      AuthService.signup('ming@test.com', 'password'),
+      AuthService.signup('appu@test.com', 'password'),
+      AuthService.signup('suzy@test.com', 'password'),
+      AuthService.signup('mike@test.com', 'password'),
+      AuthService.signup('max@test.com', 'password'),
+      AuthService.signup('hamzah@test.com', 'password'),
+      AuthService.signup('steven@expo.com', 'password'),
     ]);
-	const addQuestionCollection = questionsData.questions.map(async (question) =>
-	await QuestionService.addQuestion({
-	  subject: questionsData.subject,
-	  question,
-	  companies: [],
-	  popularity: Math.floor(Math.random() * 100),
-	  experienceLevel: ["Entry", "Mid", "Senior", "Any"][Math.floor(Math.random() * 4)] as TExperienceLevel,
-	  type: ["Behavioral", "Technical", "Any"][Math.floor(Math.random() * 3)] as TQuestionType,
-  })),
+    const addQuestionCollection = questionsData.questions.map(
+        async (question) =>
+          await QuestionService.addQuestion({
+            subject: questionsData.subject,
+            question,
+            companies: [],
+            popularity: Math.floor(Math.random() * 100),
+            experienceLevel: ['Entry', 'Mid', 'Senior', 'Any'][
+              Math.floor(Math.random() * 4)
+            ] as TExperienceLevel,
+            type: ['Behavioral', 'Technical', 'Any'][
+              Math.floor(Math.random() * 3)
+            ] as TQuestionType,
+          })
+      ),
       addUserCollection = userCredentials.map(async ({ user }) =>
         UserService.add(
           user.uid,
           new UserBuilder()
-            .with({ email: user.email!, name: user.email?.split("@")[0] })
+            .with({ email: user.email!, name: user.email?.split('@')[0] })
             .build()
         )
       ),
@@ -73,8 +79,8 @@ export default async function seed(
 
     const addQuestionSets = new Array(8).fill(0).map((_, idx) => {
       const questionSet = {
-        title: "Question Set " + idx,
-        description: "Description " + idx,
+        title: 'Question Set ' + idx,
+        description: 'Description ' + idx,
         questions: [
           questions.docs[getRandomInt(questions.docs.length)].id,
           questions.docs[getRandomInt(questions.docs.length)].id,
@@ -83,6 +89,7 @@ export default async function seed(
           questions.docs[getRandomInt(questions.docs.length)].id,
         ],
         isFeatured: idx < 5,
+        createdBy: undefined,
       };
 
       return QuestionSetsService.createQuestionSet(questionSet);
@@ -106,12 +113,12 @@ export default async function seed(
       )
       .flat();
 
-  await Promise.all([...addQuestionSets, ...addInterviewQuestions]);
+    await Promise.all([...addQuestionSets, ...addInterviewQuestions]);
 
     const questionsRef =
       await InterviewQuestionService.getAllInterviewQuestions();
 
-    const demoVideoFiles = ["assets/answer-1.mp4", "assets/answer-2.mp4"];
+    const demoVideoFiles = ['assets/answer-1.mp4', 'assets/answer-2.mp4'];
 
     const video = await Promise.all(
       demoVideoFiles.map((filePath) => fs.readFile(filePath))
@@ -127,7 +134,7 @@ export default async function seed(
       questionsRef.docs
         .map(async (questionRef) => {
           const question = questionRef.data();
-          const uid = questionRef.ref.path.split("/")[1];
+          const uid = questionRef.ref.path.split('/')[1];
 
           return new Array(question.retries).fill(null).map((_, i) =>
             AnswerService.addAnswer(questionRef.ref, {
@@ -154,7 +161,10 @@ export default async function seed(
       message: `Finished seeding in ${Date.now() - start}ms`,
     });
   } catch (error) {
-	console.log(error);
-    res.status(500).json({ "Error": error, "Stack": error instanceof Error ? error.stack : undefined });
+    console.log(error);
+    res.status(500).json({
+      Error: error,
+      Stack: error instanceof Error ? error.stack : undefined,
+    });
   }
 }

@@ -17,6 +17,7 @@ import {
   IInterviewSetAttributes,
   TInterviewSetDocumentReference,
 } from '@App/lib/interviewSets/models';
+import useAuthContext from '@App/lib/auth/AuthContext';
 
 class InterviewSetsService extends FirebaseService {
   private firestore: Firestore;
@@ -71,9 +72,9 @@ class InterviewSetsService extends FirebaseService {
   }
 
   /**
-   * It creates a new interview in the database. The user data is retrieved to update the hasCompletedInterview field of the user
+   * It creates a new interviewSet in the database.
    * @param {string} userId - string
-   * @param {IBaseInterview} baseInterview - IBaseInterview
+   * @param {IInterviewSetAttributes} interviewSet - The interview set to be added to the db
    * @returns a promise.
    */
   async create(userId: string, interviewSet: IInterviewSetAttributes) {
