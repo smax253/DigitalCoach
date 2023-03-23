@@ -22,7 +22,7 @@ interface IQuestionSetAttributes {
   description: string;
   questions: string[];
   isFeatured: boolean;
-  createdBy: string | undefined;
+  createdBy: string | null;
 }
 
 interface IQuestionSet extends IQuestionSetAttributes {
@@ -117,9 +117,10 @@ class QuestionSetsService extends FirebaseService {
       'questions'
     ) as CollectionReference<IBaseQuestion>;
 
+	console.log(qsid);
     const foundQuestionSet = await getDoc(doc(questionSetRef, qsid));
     const foundQuestion = await getDoc(doc(questionsRef, qid));
-
+ 
     if (!foundQuestionSet)
       throw new Error('Error adding question set: Question set not found!');
     if (!foundQuestion)
@@ -134,6 +135,15 @@ class QuestionSetsService extends FirebaseService {
       questions: arrayUnion(qid),
     });
   }
+
+  async getQuestionSetByUserId(userId: string) {
+	const collectionRef = this.getCollectionRef();
+	const createdByFilter = where('createdBy', '==', userId);
+	const q = query(collectionRef, createdByFilter);
+
+	return await getDocs(q);
+  }
+
 }
 
 export default new QuestionSetsService();

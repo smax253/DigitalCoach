@@ -247,7 +247,8 @@ class QuestionService extends FirebaseService {
 		subject: TSubject,
 		type: TQuestionType,
 		experience: TExperienceLevel,
-		popularitySort: boolean
+		popularitySort: boolean,
+		searchTerm: string
 	) { 
 
 		const ref = this.getCollectionRef();

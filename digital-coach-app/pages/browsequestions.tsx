@@ -3,7 +3,9 @@ import AuthGuard from "@App/lib/auth/AuthGuard";
 import { useState, useEffect } from "react";
 
 import QuestionService from "@App/lib/question/QuestionService";
+import QuestionSetsService from "@App/lib/questionSets/QuestionSetsService";
 
+import AddQuestionToSetModal from '@App/components/molecules/modals/AddQuestionToSetModal';
 
 import styles from "@App/styles/BrowseQuestionsPage.module.scss";
 
@@ -26,9 +28,7 @@ import {
 
 import AddIcon from '@mui/icons-material/Add';
 import { TExperienceLevel, TQuestionType, TSubject } from "@App/lib/question/models";
-
-
-
+import { idID } from "@mui/material/locale";
 
 const sampleSubjects = [ 
 	"Business Accounting and Analytics",
@@ -46,21 +46,40 @@ const sampleSubjects = [
 
 function BrowseQuestionsPage() { 
 	const { currentUser } = useAuthContext();
+	// console.log(currentUser!.id);
 
 	const [popularityCheckbox, setPopularityCheckbox] = useState(true);
 	const [experienceLevelSelect, setExperienceLevelSelect] = useState('Any');
 	const [subjectSelect, setSubjectSelect] = useState('Any');
 	const [typeSelect, setTypeSelect] = useState('Any');
+	const [searchText, setSearchText] = useState('');
+
+	const [showAddQuestionModal, setShowAddQuestionModal] = useState(false);
+
+	const [selectedQuestion, setSelectedQuestion] = useState<any>({});
 
 	const [questionsData, setQuestionsData]= useState<any[]>([]);
+	const [userQuestionSets, setUserQuestionSets] = useState<any[]>([]);
 
 	useEffect(() => { 
-		async function fetchData() { 
-			const questions : any[] = (await QuestionService.getByPopularityDesc()).docs.map((doc) => doc.data());
+		async function fetchQuestions() { 
+			const questions : any[] = (await QuestionService.getByPopularityDesc()).docs.map(
+				(doc) => {
+					return { "id": doc.id, ...(doc.data()) }
+				}
+			);
 			setQuestionsData(questions);
-			console.log(questions);
 		}
-		fetchData();
+		async function fetchUserQuestionSets() {
+			const userQuestionSets : any[] = (await QuestionSetsService.getQuestionSetByUserId(currentUser!.id)).docs.map(
+				(doc) => {
+					return {"id": doc.id, ...doc.data() }
+				}
+			);
+			setUserQuestionSets(userQuestionSets);
+		}
+		fetchQuestions();
+		fetchUserQuestionSets();
 	}, []);
 
 
@@ -80,23 +99,39 @@ function BrowseQuestionsPage() {
 		setTypeSelect(event.target.value);
 	};
 
-	const handleFilterSubmit = async () => {
+	const handleFilterSubmit = async (event: React.FormEvent<HTMLButtonElement>) => {
+		event.preventDefault();
 		const data = await QuestionService.getByFilters( 
 			subjectSelect as TSubject, 
 			typeSelect as TQuestionType,
 			experienceLevelSelect as TExperienceLevel, 
 			popularityCheckbox, 
+			searchText
 			);
 		setQuestionsData(data.docs.map((doc) => doc.data()));
-		// console.log(
-		// 	data.docs.map((doc) => doc.data())
-		// );
 	};
+
+	const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => { 
+		setSearchText(event.target.value);
+	}
+
+	const handleOpenAddQuestionModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setSelectedQuestion(event);
+		setShowAddQuestionModal(true);
+	}
+
+	const handleAddQuestionToSet = async (questionId: string, questionSetId: string) => {
+		await QuestionSetsService.addQuestionToSet(questionId, questionSetId);
+	}
 
 	return (
 		<div className={styles.BrowseQuestionsPage}>
 			<h1>Browse Questions</h1>
-			<TextField label='Search Questions'></TextField>
+			<TextField 
+				sx={{minWidth: '80%'}}
+				label='Search Questions'
+				onChange={handleTextFieldChange}
+				></TextField>
 			<Box sx={{
 				maxWidth: '80%',
 				display: 'flex', 
@@ -111,7 +146,9 @@ function BrowseQuestionsPage() {
 							<div>
 								<ListItem>
 									<ListItemIcon>
-										<IconButton>
+										<IconButton 
+											onClick={() => handleOpenAddQuestionModal(question)}
+										>
 											<AddIcon />
 										</IconButton>
 									</ListItemIcon>
@@ -133,11 +170,14 @@ function BrowseQuestionsPage() {
 						))
 					}
 				</List>
+				
 				<Box 
 				id='#filters'
 				sx={{
-					maxWidth: '20%',
+					maxWidth: '25%',
+					height: '50%',
 					display: 'flex',
+					minWidth: '20%',
 					flexDirection: 'column',
 					verticalAlign: 'top',
 					mt: 2,
@@ -190,11 +230,24 @@ function BrowseQuestionsPage() {
 							<MenuItem value='Mid'>Mid</MenuItem>
 							<MenuItem value='Senior'>Senior</MenuItem>
 						</Select>
-						<Button variant='contained' onClick={handleFilterSubmit}>Apply Filters</Button>
+						<Button sx={{mt: 1}} variant='contained' onClick={handleFilterSubmit}>Apply Filters</Button>
 
 					</FormControl>
 				</Box>
 			</Box>
+			{ showAddQuestionModal && 
+				userQuestionSets &&
+				questionsData &&
+				<AddQuestionToSetModal
+					isOpen={showAddQuestionModal}
+					handleClose={() => setShowAddQuestionModal(false)}
+					handleAdd={handleAddQuestionToSet}
+					modal="addModal"
+					questionSets={userQuestionSets}
+					question={selectedQuestion}
+
+				/>
+			}
 		</div>
 	);
 }

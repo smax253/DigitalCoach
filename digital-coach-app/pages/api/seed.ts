@@ -89,7 +89,7 @@ export default async function seed(
           questions.docs[getRandomInt(questions.docs.length)].id,
         ],
         isFeatured: idx < 5,
-        createdBy: undefined,
+        createdBy: null,
       };
 
       return QuestionSetsService.createQuestionSet(questionSet);
