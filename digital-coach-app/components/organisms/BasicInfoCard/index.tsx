@@ -7,7 +7,7 @@ interface userInfo {
 
 export default function BasicInfoCard(userInfo: userInfo) {
   return (
-    <Card title='New Interview Set Information'>
+    <Card title='New Question Set Information'>
       <BasicInfoForm {...userInfo} />
     </Card>
   );

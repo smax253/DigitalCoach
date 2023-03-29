@@ -13,7 +13,7 @@ export default function StartCustomInterviewPage() {
   //Ignore the error, the code works
   return (
     <AuthGuard>
-      <h1>Create Custom Interview Set</h1>
+      <h1>Create Custom Question Set</h1>
       <div className={styles.StartCustomInterviewPage}>
         <BasicInfoCard {...userInfo} />
         <AddQuestionsCard />
