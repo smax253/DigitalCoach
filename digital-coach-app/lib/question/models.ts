@@ -30,6 +30,7 @@ export interface IBaseQuestionAttributes {
   companies: string[];
   popularity?: number;
   createdBy?: string | null;	// nullable
+  keywords: string[];
 } 
 
 export interface IBaseQuestion extends IBaseQuestionAttributes {

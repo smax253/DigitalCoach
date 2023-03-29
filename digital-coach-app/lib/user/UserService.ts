@@ -8,10 +8,12 @@ import {
   setDoc,
   Timestamp,
   updateDoc,
+  collection,
+  CollectionReference,
+  getDocs,
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
 import { IUser, IBaseUserAttributes } from "@App/lib/user/models";
-import AuthService from "../auth/AuthService";
 
 class UserService extends FirebaseService {
   private firestore: Firestore;
@@ -20,6 +22,10 @@ class UserService extends FirebaseService {
     super();
 
     this.firestore = getFirestore(this.app);
+  }
+
+  private getCollectionRef() {
+    return collection(this.firestore, "users") as CollectionReference<IUser>;
   }
 
   private getDocRef(userId: string) {
@@ -86,6 +92,10 @@ class UserService extends FirebaseService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async getAllUsers() {
+	return await getDocs(this.getCollectionRef());
   }
 
   /**

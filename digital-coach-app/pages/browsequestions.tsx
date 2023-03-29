@@ -28,7 +28,6 @@ import {
 
 import AddIcon from '@mui/icons-material/Add';
 import { TExperienceLevel, TQuestionType, TSubject } from "@App/lib/question/models";
-import { idID } from "@mui/material/locale";
 
 const sampleSubjects = [ 
 	"Business Accounting and Analytics",
@@ -46,7 +45,6 @@ const sampleSubjects = [
 
 function BrowseQuestionsPage() { 
 	const { currentUser } = useAuthContext();
-	// console.log(currentUser!.id);
 
 	const [popularityCheckbox, setPopularityCheckbox] = useState(true);
 	const [experienceLevelSelect, setExperienceLevelSelect] = useState('Any');
@@ -106,7 +104,7 @@ function BrowseQuestionsPage() {
 			typeSelect as TQuestionType,
 			experienceLevelSelect as TExperienceLevel, 
 			popularityCheckbox, 
-			searchText
+			searchText.toLowerCase().trim()
 			);
 		setQuestionsData(data.docs.map((doc) => doc.data()));
 	};
@@ -116,6 +114,10 @@ function BrowseQuestionsPage() {
 	}
 
 	const handleOpenAddQuestionModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+		if(userQuestionSets.length === 0) { 
+			alert("You have no question sets to add questions to. Please create a question set first.");
+			return;
+		}
 		setSelectedQuestion(event);
 		setShowAddQuestionModal(true);
 	}
@@ -127,11 +129,11 @@ function BrowseQuestionsPage() {
 	return (
 		<div className={styles.BrowseQuestionsPage}>
 			<h1>Browse Questions</h1>
-			<TextField 
+			{/* <TextField 
 				sx={{minWidth: '80%'}}
-				label='Search Questions'
+				label='Question Keyword Search'
 				onChange={handleTextFieldChange}
-				></TextField>
+				></TextField> */}
 			<Box sx={{
 				maxWidth: '80%',
 				display: 'flex', 
@@ -196,6 +198,13 @@ function BrowseQuestionsPage() {
 								onChange={handlePopularityChange}
 							></Checkbox>
 						</div>
+						<TextField 
+							// sx={{minWidth: '80%'}}
+							variant='outlined'
+							size='small'
+							label='Question Keyword Search'
+							onChange={handleTextFieldChange}
+						></TextField>
 						<label htmlFor='subject-select'>Subject</label>
 						<Select
 							id='subject-select'

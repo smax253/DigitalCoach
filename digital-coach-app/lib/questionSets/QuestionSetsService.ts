@@ -117,7 +117,6 @@ class QuestionSetsService extends FirebaseService {
       'questions'
     ) as CollectionReference<IBaseQuestion>;
 
-	console.log(qsid);
     const foundQuestionSet = await getDoc(doc(questionSetRef, qsid));
     const foundQuestion = await getDoc(doc(questionsRef, qid));
  

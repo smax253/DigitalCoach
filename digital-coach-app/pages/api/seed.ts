@@ -45,6 +45,7 @@ export default async function seed(
             type: ['Behavioral', 'Technical', 'Any'][
               Math.floor(Math.random() * 3)
             ] as TQuestionType,
+			keywords: question.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').split(' ')
           })
       ),
       addUserCollection = userCredentials.map(async ({ user }) =>
@@ -75,25 +76,62 @@ export default async function seed(
       addInterviewCollection.length
     ) as DocumentReference<IInterviewAttributes>[];
 
+	const users = await UserService.getAllUsers();
+	const userData = users.docs.map((user) => { return user.id });
+
     const questions = await QuestionService.getAllQuestions();
 
-    const addQuestionSets = new Array(8).fill(0).map((_, idx) => {
-      const questionSet = {
-        title: 'Question Set ' + idx,
-        description: 'Description ' + idx,
-        questions: [
-          questions.docs[getRandomInt(questions.docs.length)].id,
-          questions.docs[getRandomInt(questions.docs.length)].id,
-          questions.docs[getRandomInt(questions.docs.length)].id,
-          questions.docs[getRandomInt(questions.docs.length)].id,
-          questions.docs[getRandomInt(questions.docs.length)].id,
-        ],
-        isFeatured: idx < 5,
-        createdBy: null,
-      };
+	const addFeaturedQuestionSets = new Array(5).fill(0).map((_, idx) => {
+		const questionSet = {
+			title: 'Featured Question Set ' + idx,
+			description: 'Description ' + idx,
+			questions: [
+				questions.docs[getRandomInt(questions.docs.length)].id,
+				questions.docs[getRandomInt(questions.docs.length)].id,
+				questions.docs[getRandomInt(questions.docs.length)].id,
+				questions.docs[getRandomInt(questions.docs.length)].id,
+				questions.docs[getRandomInt(questions.docs.length)].id,
+			],
+			isFeatured: true,
+			createdBy: null,
+		};
+		return QuestionSetsService.createQuestionSet(questionSet);
+	});
 
-      return QuestionSetsService.createQuestionSet(questionSet);
-    });
+	const addQuestionSets = userData.map((user, idx) => {
+		const questionSet = {
+			title: 'Question Set ' + idx,
+			description: 'Description ' + idx,
+			questions: [
+				questions.docs[getRandomInt(questions.docs.length)].id,
+				questions.docs[getRandomInt(questions.docs.length)].id,
+				questions.docs[getRandomInt(questions.docs.length)].id,
+				questions.docs[getRandomInt(questions.docs.length)].id,
+				questions.docs[getRandomInt(questions.docs.length)].id,
+			],
+			isFeatured: false,
+			createdBy: user,
+		};
+		return QuestionSetsService.createQuestionSet(questionSet);
+	});
+
+    // const addQuestionSets = new Array(8).fill(0).map((_, idx) => {
+    //   const questionSet = {
+    //     title: 'Question Set ' + idx,
+    //     description: 'Description ' + idx,
+    //     questions: [
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //     ],
+    //     isFeatured: false,
+    //     createdBy: userData[getRandomInt(userData.length)],
+    //   };
+
+    //   return QuestionSetsService.createQuestionSet(questionSet);
+    // });
 
     const addInterviewQuestions = interviewsCollectionRef
       .map((interviewDocRef) =>
@@ -113,7 +151,7 @@ export default async function seed(
       )
       .flat();
 
-    await Promise.all([...addQuestionSets, ...addInterviewQuestions]);
+    await Promise.all([...addFeaturedQuestionSets, ...addQuestionSets, ...addInterviewQuestions]);
 
     const questionsRef =
       await InterviewQuestionService.getAllInterviewQuestions();

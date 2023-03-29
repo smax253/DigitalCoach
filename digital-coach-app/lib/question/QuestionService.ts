@@ -241,6 +241,7 @@ class QuestionService extends FirebaseService {
    * @param {TQuestionType} type - The question type to filter by
    * @param {TExperienceLevel} experience - The experience level to filter by
    * @param {boolean} popularitySort - Determines whether or not to sort by popularity, descending
+   * @param {string} searchTerm - The search term to filter by
    * @returns A promise that resolves to an array of documents that match the given filters.
    */
   async getByFilters(
@@ -256,7 +257,8 @@ class QuestionService extends FirebaseService {
 			subject === "Any" ? null : where("subject", "==", subject),
 			type === "Any" ? null : where("type", "==", type),
 			experience === "Any" ? null : where("experienceLevel", "==", experience),
-			popularitySort ? orderBy("popularity", "desc") : null as any
+			popularitySort ? orderBy("popularity", "desc") : null as any,
+			searchTerm ? where("keywords", "array-contains", searchTerm) : null
 		].filter((f) => f !== null);
 
 		return await getDocs(query(ref, ...filters));
