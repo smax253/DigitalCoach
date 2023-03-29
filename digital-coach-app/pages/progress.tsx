@@ -81,7 +81,6 @@ export default function Progress() {
   //Store user's id here
   const { currentUser } = useAuthContext();
   let hasInterviewed = currentUser?.get('hasCompletedInterview');
-  console.log(hasInterviewed);
   //Add flag to user that says if they've completed an interview or not
   if (hasInterviewed) {
     return (

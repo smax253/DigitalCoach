@@ -51,7 +51,7 @@ class QuestionSetsService extends FirebaseService {
    * @param {IQuestionSetAttributes} questionSetAttr - IQuestionSetAttributes
    * @returns A promise that resolves to a document reference.
    */
-  createQuestionSet(questionSetAttr: IQuestionSetAttributes) {
+  async createQuestionSet(questionSetAttr: IQuestionSetAttributes) {
     const collectionRef = this.getCollectionRef();
 
     const questionSet = {
@@ -59,7 +59,8 @@ class QuestionSetsService extends FirebaseService {
       createdAt: Timestamp.now(),
     };
 
-    return addDoc(collectionRef, questionSet);
+    const questionSetRef = await addDoc(collectionRef, questionSet);
+    return getDoc(questionSetRef);
   }
 
   getAllQuestionSets() {
@@ -119,7 +120,7 @@ class QuestionSetsService extends FirebaseService {
 
     const foundQuestionSet = await getDoc(doc(questionSetRef, qsid));
     const foundQuestion = await getDoc(doc(questionsRef, qid));
- 
+
     if (!foundQuestionSet)
       throw new Error('Error adding question set: Question set not found!');
     if (!foundQuestion)
@@ -136,13 +137,12 @@ class QuestionSetsService extends FirebaseService {
   }
 
   async getQuestionSetByUserId(userId: string) {
-	const collectionRef = this.getCollectionRef();
-	const createdByFilter = where('createdBy', '==', userId);
-	const q = query(collectionRef, createdByFilter);
+    const collectionRef = this.getCollectionRef();
+    const createdByFilter = where('createdBy', '==', userId);
+    const q = query(collectionRef, createdByFilter);
 
-	return await getDocs(q);
+    return await getDocs(q);
   }
-
 }
 
 export default new QuestionSetsService();

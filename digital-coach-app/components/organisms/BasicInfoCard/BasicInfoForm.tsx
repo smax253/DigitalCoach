@@ -29,20 +29,10 @@ export default function BasicInfoForm({ userId }: userInfo) {
    * the user inputted time per question and number of retries
    * @returns The created question set
    */
-  const createInterviewSet = () => {
+  const createInterviewSet = async () => {
     console.log(`${questionSetName}, ${timePerQ}, ${numRetries}`);
     //Create interview set first
     // !Does not work on safari for some reason
-    if (makeInterview) {
-      //! This throws an auth error
-      // const interviewSet = {
-      //   name: questionSetName,
-      //   minutesToAnswer: parseInt(timePerQ),
-      //   numberOfRetries: parseInt(numRetries),
-      // };
-      // console.log('Calling create function in BasicInfoForm');
-      // InterviewSetsService.create(userId, interviewSet);
-    }
     //Now create question set
     const questionSet = {
       title: questionSetName,
@@ -51,7 +41,20 @@ export default function BasicInfoForm({ userId }: userInfo) {
       isFeatured: false,
       createdBy: userId,
     };
-    return QuestionSetsService.createQuestionSet(questionSet);
+    const thisQuestionSet = await QuestionSetsService.createQuestionSet(
+      questionSet
+    );
+    // TODO: Figure out how to add a reference to question set in the interviewSets collection
+    console.log(thisQuestionSet);
+    if (makeInterview) {
+      const interviewSet = {
+        name: questionSetName,
+        minutesToAnswer: parseInt(timePerQ),
+        numberOfRetries: parseInt(numRetries),
+      };
+      console.log('Calling create function in BasicInfoForm');
+      InterviewSetsService.create(userId, interviewSet);
+    }
   };
 
   return (
