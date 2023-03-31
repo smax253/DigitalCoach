@@ -9,7 +9,7 @@ import AddQuestionToSetModal from '@App/components/molecules/modals/AddQuestionT
 
 import styles from "@App/styles/BrowseQuestionsPage.module.scss";
 
-import { 
+import {
 	List,
 	ListItem,
 	ListItemText,
@@ -29,7 +29,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { TExperienceLevel, TQuestionType, TSubject } from "@App/lib/question/models";
 
-const sampleSubjects = [ 
+const sampleSubjects = [
 	"Business Accounting and Analytics",
 	"Business Management",
 	"Business Marketing",
@@ -43,7 +43,7 @@ const sampleSubjects = [
 	"Law",
 ]
 
-function BrowseQuestionsPage() { 
+function BrowseQuestionsPage() {
 	const { currentUser } = useAuthContext();
 
 	const [popularityCheckbox, setPopularityCheckbox] = useState(true);
@@ -56,12 +56,12 @@ function BrowseQuestionsPage() {
 
 	const [selectedQuestion, setSelectedQuestion] = useState<any>({});
 
-	const [questionsData, setQuestionsData]= useState<any[]>([]);
+	const [questionsData, setQuestionsData] = useState<any[]>([]);
 	const [userQuestionSets, setUserQuestionSets] = useState<any[]>([]);
 
-	useEffect(() => { 
-		async function fetchQuestions() { 
-			const questions : any[] = (await QuestionService.getByPopularityDesc()).docs.map(
+	useEffect(() => {
+		async function fetchQuestions() {
+			const questions: any[] = (await QuestionService.getByPopularityDesc()).docs.map(
 				(doc) => {
 					return { "id": doc.id, ...(doc.data()) }
 				}
@@ -69,9 +69,9 @@ function BrowseQuestionsPage() {
 			setQuestionsData(questions);
 		}
 		async function fetchUserQuestionSets() {
-			const userQuestionSets : any[] = (await QuestionSetsService.getQuestionSetByUserId(currentUser!.id)).docs.map(
+			const userQuestionSets: any[] = (await QuestionSetsService.getQuestionSetByUserId(currentUser!.id)).docs.map(
 				(doc) => {
-					return {"id": doc.id, ...doc.data() }
+					return { "id": doc.id, ...doc.data() }
 				}
 			);
 			setUserQuestionSets(userQuestionSets);
@@ -80,41 +80,24 @@ function BrowseQuestionsPage() {
 		fetchUserQuestionSets();
 	}, []);
 
-
-	const handlePopularityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setPopularityCheckbox(event.target.checked);
-	};
-
-	const handleExperienceLevelChange = (event: SelectChangeEvent) => {
-		setExperienceLevelSelect(event.target.value);
-	};
-
-	const handleSubjectChange = (event: SelectChangeEvent) => {
-		setSubjectSelect(event.target.value);
-	};
-
-	const handleTypeChange = (event: SelectChangeEvent) => {
-		setTypeSelect(event.target.value);
-	};
-
 	const handleFilterSubmit = async (event: React.FormEvent<HTMLButtonElement>) => {
 		event.preventDefault();
-		const data = await QuestionService.getByFilters( 
-			subjectSelect as TSubject, 
+		const data = await QuestionService.getByFilters(
+			subjectSelect as TSubject,
 			typeSelect as TQuestionType,
-			experienceLevelSelect as TExperienceLevel, 
-			popularityCheckbox, 
+			experienceLevelSelect as TExperienceLevel,
+			popularityCheckbox,
 			searchText.toLowerCase().trim()
-			);
+		);
 		setQuestionsData(data.docs.map((doc) => doc.data()));
 	};
 
-	const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => { 
+	const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchText(event.target.value);
 	}
 
 	const handleOpenAddQuestionModal = (event: React.MouseEvent<HTMLButtonElement>) => {
-		if(userQuestionSets.length === 0) { 
+		if (userQuestionSets.length === 0) {
 			alert("You have no question sets to add questions to. Please create a question set first.");
 			return;
 		}
@@ -129,18 +112,13 @@ function BrowseQuestionsPage() {
 	return (
 		<div className={styles.BrowseQuestionsPage}>
 			<h1>Browse Questions</h1>
-			{/* <TextField 
-				sx={{minWidth: '80%'}}
-				label='Question Keyword Search'
-				onChange={handleTextFieldChange}
-				></TextField> */}
 			<Box sx={{
 				maxWidth: '80%',
-				display: 'flex', 
-				flexDirection: 'row',   
+				display: 'flex',
+				flexDirection: 'row',
 				verticalAlign: 'top',
 				mt: 2
-				}}
+			}}
 			>
 				<List sx={{ bgcolor: 'background.paper' }}>
 					{
@@ -148,7 +126,7 @@ function BrowseQuestionsPage() {
 							<div>
 								<ListItem>
 									<ListItemIcon>
-										<IconButton 
+										<IconButton
 											onClick={() => handleOpenAddQuestionModal(question)}
 										>
 											<AddIcon />
@@ -156,15 +134,15 @@ function BrowseQuestionsPage() {
 									</ListItemIcon>
 									<div>
 
-									<ListItemText 
-										primary={question.question}
-										secondary={[
-											"Subject: " + question.subject, 
-											"Type: " + question.type, 
-											"Experience: " + 
-											question.experienceLevel].join(" | ")}
+										<ListItemText
+											primary={question.question}
+											secondary={[
+												"Subject: " + question.subject,
+												"Type: " + question.type,
+												"Experience: " +
+												question.experienceLevel].join(" | ")}
 										/>
-										<ListItemText secondary={"Popularity: " + question.popularity}/>
+										<ListItemText secondary={"Popularity: " + question.popularity} />
 									</div>
 								</ListItem>
 								<Divider />
@@ -172,34 +150,33 @@ function BrowseQuestionsPage() {
 						))
 					}
 				</List>
-				
-				<Box 
-				id='#filters'
-				sx={{
-					maxWidth: '25%',
-					height: '50%',
-					display: 'flex',
-					minWidth: '20%',
-					flexDirection: 'column',
-					verticalAlign: 'top',
-					mt: 2,
-					ml: 4,
-					border: '1px solid black',
-					padding: 4,
-				}}>
-					
+
+				<Box
+					id='#filters'
+					sx={{
+						maxWidth: '25%',
+						height: '50%',
+						display: 'flex',
+						minWidth: '20%',
+						flexDirection: 'column',
+						verticalAlign: 'top',
+						mt: 2,
+						ml: 4,
+						border: '1px solid black',
+						padding: 4,
+					}}>
+
 					<h2>Filters</h2>
 
 					<FormControl size="small">
 						<div>
 							<label htmlFor='popularity-check-box'>Sort By Popularity</label>
-							<Checkbox id='popularity-check-box' 
+							<Checkbox id='popularity-check-box'
 								checked={popularityCheckbox}
-								onChange={handlePopularityChange}
+								onChange={(event) => setPopularityCheckbox(event.target.checked)}
 							></Checkbox>
 						</div>
-						<TextField 
-							// sx={{minWidth: '80%'}}
+						<TextField
 							variant='outlined'
 							size='small'
 							label='Question Keyword Search'
@@ -209,20 +186,20 @@ function BrowseQuestionsPage() {
 						<Select
 							id='subject-select'
 							value={subjectSelect}
-							onChange={handleSubjectChange}
+							onChange={(event) => setSubjectSelect(event.target.value)}
 						>
 							<MenuItem value='Any'>Any</MenuItem>
 							{
 								sampleSubjects.map((subject) => (
 									<MenuItem value={subject}>{subject}</MenuItem>
-									))
+								))
 							}
 						</Select>
 						<label htmlFor='type-select'>Type</label>
 						<Select
 							id='type-select'
 							value={typeSelect}
-							onChange={handleTypeChange}
+							onChange={(event) => setTypeSelect(event.target.value)}
 						>
 							<MenuItem value='Any'>Any</MenuItem>
 							<MenuItem value='Technical'>Technical</MenuItem>
@@ -232,19 +209,19 @@ function BrowseQuestionsPage() {
 						<Select
 							id='experience-level-select'
 							value={experienceLevelSelect}
-							onChange={handleExperienceLevelChange}
+							onChange={(event) => setExperienceLevelSelect(event.target.value)}
 						>
 							<MenuItem value='Any'>Any</MenuItem>
 							<MenuItem value='Entry'>Entry</MenuItem>
 							<MenuItem value='Mid'>Mid</MenuItem>
 							<MenuItem value='Senior'>Senior</MenuItem>
 						</Select>
-						<Button sx={{mt: 1}} variant='contained' onClick={handleFilterSubmit}>Apply Filters</Button>
+						<Button sx={{ mt: 1 }} variant='contained' onClick={handleFilterSubmit}>Apply Filters</Button>
 
 					</FormControl>
 				</Box>
 			</Box>
-			{ showAddQuestionModal && 
+			{showAddQuestionModal &&
 				userQuestionSets &&
 				questionsData &&
 				<AddQuestionToSetModal
@@ -262,9 +239,9 @@ function BrowseQuestionsPage() {
 }
 
 export default function BrowseQuestions() {
-	  return (
-	<AuthGuard>
-		<BrowseQuestionsPage />
-	</AuthGuard>
-  );
+	return (
+		<AuthGuard>
+			<BrowseQuestionsPage />
+		</AuthGuard>
+	);
 }
