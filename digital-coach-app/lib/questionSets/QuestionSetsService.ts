@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   CollectionReference,
+  DocumentReference,
   doc,
   Firestore,
   getDoc,
@@ -12,16 +13,17 @@ import {
   Timestamp,
   where,
   updateDoc,
-  arrayUnion
-} from "firebase/firestore";
-import FirebaseService from "../firebase/FirebaseService";
-import { IBaseQuestion } from "../question/models";
+  arrayUnion,
+} from 'firebase/firestore';
+import FirebaseService from '../firebase/FirebaseService';
+import { IBaseQuestion } from '../question/models';
 
 interface IQuestionSetAttributes {
   title: string;
   description: string;
   questions: string[];
   isFeatured: boolean;
+  createdBy: string | null;
 }
 
 interface IQuestionSet extends IQuestionSetAttributes {
@@ -40,8 +42,16 @@ class QuestionSetsService extends FirebaseService {
   private getCollectionRef() {
     return collection(
       this.firestore,
-      "questionSets"
+      'questionSets'
     ) as CollectionReference<IQuestionSet>;
+  }
+
+  private getDocRef(qsId: string) {
+    return doc(
+      this.firestore,
+      'questionSets',
+      qsId
+    ) as DocumentReference<IQuestionSetAttributes>;
   }
 
   /**
@@ -50,7 +60,7 @@ class QuestionSetsService extends FirebaseService {
    * @param {IQuestionSetAttributes} questionSetAttr - IQuestionSetAttributes
    * @returns A promise that resolves to a document reference.
    */
-  createQuestionSet(questionSetAttr: IQuestionSetAttributes) {
+  async createQuestionSet(questionSetAttr: IQuestionSetAttributes) {
     const collectionRef = this.getCollectionRef();
 
     const questionSet = {
@@ -58,7 +68,8 @@ class QuestionSetsService extends FirebaseService {
       createdAt: Timestamp.now(),
     };
 
-    return addDoc(collectionRef, questionSet);
+    const questionSetRef = await addDoc(collectionRef, questionSet);
+    return getDoc(questionSetRef);
   }
 
   getAllQuestionSets() {
@@ -73,65 +84,83 @@ class QuestionSetsService extends FirebaseService {
    */
   getFeaturedQuestionSets() {
     const collectionRef = this.getCollectionRef();
-    const isFeaturedFilter = where("isFeatured", "==", true);
+    const isFeaturedFilter = where('isFeatured', '==', true);
     const q = query(collectionRef, isFeaturedFilter);
 
     return getDocs(q);
   }
 
   async updateQuestionSet({
-	qsid,
-	title, 
-	description,
-	questions = []
-	}: {
-		qsid: string;
-		title?: string;
-		description?: string;
-		questions?: string[];
-	}) { 
-	const ref = this.getCollectionRef();
-	
-	const foundQuestionSet = (await getDoc(doc(ref, qsid))).data();
-	
-	if(!foundQuestionSet) throw new Error("Question set not found");
+    qsid,
+    title,
+    description,
+    questions = [],
+  }: {
+    qsid: string;
+    title?: string;
+    description?: string;
+    questions?: string[];
+  }) {
+    const ref = this.getCollectionRef();
 
+    const foundQuestionSet = (await getDoc(doc(ref, qsid))).data();
 
-	await setDoc(
-		doc(ref, qsid),
-		{
-			...foundQuestionSet,
-			title: title || foundQuestionSet.title,
-			description: description || foundQuestionSet.description,
-			questions: questions || foundQuestionSet.questions
-		},
-		{ merge: true }
-	);
-	return await getDoc(doc(ref, qsid));
+    if (!foundQuestionSet) throw new Error('Question set not found');
 
+    await setDoc(
+      doc(ref, qsid),
+      {
+        ...foundQuestionSet,
+        title: title || foundQuestionSet.title,
+        description: description || foundQuestionSet.description,
+        questions: questions || foundQuestionSet.questions,
+      },
+      { merge: true }
+    );
+    return await getDoc(doc(ref, qsid));
   }
 
-  async addQuestionToSet(qsid: string, qid: string) { 
-	const questionSetRef = this.getCollectionRef();
-	const questionsRef = collection(this.firestore, "questions") as CollectionReference<IBaseQuestion>;
+  async addQuestionToSet(qsid: string, qid: string) {
+    const questionSetRef = this.getCollectionRef();
+    const questionsRef = collection(
+      this.firestore,
+      'questions'
+    ) as CollectionReference<IBaseQuestion>;
 
-	const foundQuestionSet = (await getDoc(doc(questionSetRef, qsid)));
-	const foundQuestion = (await getDoc(doc(questionsRef, qid)));
+    const foundQuestionSet = await getDoc(doc(questionSetRef, qsid));
+    const foundQuestion = await getDoc(doc(questionsRef, qid));
 
-	if(!foundQuestionSet) throw new Error("Error adding question set: Question set not found!");
-	if(!foundQuestion) throw new Error("Error adding question set: Question not found!");
+    if (!foundQuestionSet)
+      throw new Error('Error adding question set: Question set not found!');
+    if (!foundQuestion)
+      throw new Error('Error adding question set: Question not found!');
 
-	if(foundQuestionSet.data()?.questions.includes(qid)) throw new Error("Error adding question set: Question already exists in set!");
+    if (foundQuestionSet.data()?.questions.includes(qid))
+      throw new Error(
+        'Error adding question set: Question already exists in set!'
+      );
 
-	await updateDoc(
-		doc(questionSetRef, qsid),
-		{
-			questions: arrayUnion(qid)
-		}
-	);
-
+    await updateDoc(doc(questionSetRef, qsid), {
+      questions: arrayUnion(qid),
+    });
   }
 
+  async getQuestionSetByUserId(userId: string) {
+    const collectionRef = this.getCollectionRef();
+    const createdByFilter = where('createdBy', '==', userId);
+    const q = query(collectionRef, createdByFilter);
+
+    return await getDocs(q);
+  }
+
+  async getQuestionSetById(qsId: string) {
+    const qsDocRef = this.getDocRef(qsId);
+    try {
+      return await getDoc(qsDocRef);
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 export default new QuestionSetsService();
