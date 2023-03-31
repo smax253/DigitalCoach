@@ -5,6 +5,20 @@ import SelectedQuestionsList from './SelectedQuestionsList';
 import styles from './AddQuestionsCard.module.scss';
 import { MenuItem, Button, FormControl, TextField } from '@mui/material';
 
+const sampleSubjects = [
+  'Business Accounting and Analytics',
+  'Business Management',
+  'Business Marketing',
+  'Business Operations',
+  'Business Strategy',
+  'Business Technology',
+  'Data Science',
+  'Finance',
+  'Human Resources',
+  'Information Technology',
+  'Law',
+];
+
 export default function AddQuestionsCard() {
   const handleSubmit = () => {
     console.log('Called handleSubmit');
@@ -31,29 +45,41 @@ export default function AddQuestionsCard() {
               placeholder='Enter the industry or field for the question'
               required
             />
-            <br />
+            <br />{' '}
+            <TextField
+              id='subject-select'
+              label='Subject'
+              required
+              select
+              // onChange={(event) => setSubjectSelect(event.target.value)}
+            >
+              {sampleSubjects.map((subject) => (
+                <MenuItem value={subject}>{subject}</MenuItem>
+              ))}
+            </TextField>
             <TextField
               id='jobPosition'
               label='Experience level'
-              select
-              defaultValue={'Any'}>
+              required
+              select>
+              <MenuItem value='Any'>Any Level</MenuItem>
               <MenuItem value='Entry'>Entry Level</MenuItem>
               <MenuItem value='Mid'>Mid Career</MenuItem>
               <MenuItem value='Senior'>Senior Level</MenuItem>
-              <MenuItem value='Any'>Any Level</MenuItem>
+            </TextField>
+            <br />
+            <br />
+            <TextField id='questionType' label='Question Type' required select>
+              <MenuItem value='behavioral'>Behavioral</MenuItem>
+              <MenuItem value='technical'>Technical</MenuItem>
             </TextField>
             <br />
             <TextField
               id='company'
               label='Company'
-              placeholder='Enter the company the question was administered by'
+              placeholder='Enter the company who asked the question'
+              helperText='Optional'
             />
-            <br />
-            <TextField id='questionType' label='Question Type' select>
-              <MenuItem value='behavioral'>Behavioral</MenuItem>
-              <MenuItem value='technical'>Technical</MenuItem>
-            </TextField>
-            <br />
             <Button variant='contained' sx={{ maxWidth: '50%' }} type='submit'>
               Add Question
             </Button>
