@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   CollectionReference,
+  DocumentReference,
   doc,
   Firestore,
   getDoc,
@@ -43,6 +44,14 @@ class QuestionSetsService extends FirebaseService {
       this.firestore,
       'questionSets'
     ) as CollectionReference<IQuestionSet>;
+  }
+
+  private getDocRef(qsId: string) {
+    return doc(
+      this.firestore,
+      'questionSets',
+      qsId
+    ) as DocumentReference<IQuestionSetAttributes>;
   }
 
   /**
@@ -142,6 +151,15 @@ class QuestionSetsService extends FirebaseService {
     const q = query(collectionRef, createdByFilter);
 
     return await getDocs(q);
+  }
+
+  async getQuestionSetById(qsId: string) {
+    const qsDocRef = this.getDocRef(qsId);
+    try {
+      return await getDoc(qsDocRef);
+    } catch (e) {
+      throw e;
+    }
   }
 }
 

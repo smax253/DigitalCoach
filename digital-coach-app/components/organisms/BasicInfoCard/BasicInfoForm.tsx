@@ -44,13 +44,13 @@ export default function BasicInfoForm({ userId }: userInfo) {
     const thisQuestionSet = await QuestionSetsService.createQuestionSet(
       questionSet
     );
-    // TODO: Figure out how to add a reference to question set in the interviewSets collection
-    console.log(thisQuestionSet);
+    // A reference to the questionSet is stored in the newly created interviewSet
     if (makeInterview) {
       const interviewSet = {
         name: questionSetName,
         minutesToAnswer: parseInt(timePerQ),
         numberOfRetries: parseInt(numRetries),
+        questionSetRef: thisQuestionSet.id,
       };
       console.log('Calling create function in BasicInfoForm');
       InterviewSetsService.create(userId, interviewSet);
