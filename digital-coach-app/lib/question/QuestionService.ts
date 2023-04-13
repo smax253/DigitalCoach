@@ -13,10 +13,13 @@ import {
 	orderBy, 
 	doc, 
 	getDoc, 
-	setDoc,
 	deleteDoc,
 	updateDoc,
-	arrayUnion
+	arrayUnion,
+	startAt,
+	startAfter,
+	limit,
+	endBefore
 } from "firebase/firestore";
 import { IBaseQuestion, IBaseQuestionAttributes, IQuestion, TQuestionType, TSubject, TExperienceLevel } from "@App/lib/question/models";
 
@@ -249,18 +252,23 @@ class QuestionService extends FirebaseService {
 		type: TQuestionType,
 		experience: TExperienceLevel,
 		popularitySort: boolean,
-		searchTerm: string
+		searchTerm: string,
+		resultLimit: number,
+		anchorDoc: any
 	) { 
-
 		const ref = this.getCollectionRef();
+		if(anchorDoc)
+			console.log(anchorDoc.data().popularity);
 		const filters = [
 			subject === "Any" ? null : where("subject", "==", subject),
 			type === "Any" ? null : where("type", "==", type),
 			experience === "Any" ? null : where("experienceLevel", "==", experience),
 			popularitySort ? orderBy("popularity", "desc") : null as any,
-			searchTerm ? where("keywords", "array-contains", searchTerm) : null
+			searchTerm ? where("keywords", "array-contains", searchTerm) : null,
+			anchorDoc ? startAfter(anchorDoc) : null
+			
 		].filter((f) => f !== null);
-
+		filters.push(limit(resultLimit));
 		return await getDocs(query(ref, ...filters));
 
   }

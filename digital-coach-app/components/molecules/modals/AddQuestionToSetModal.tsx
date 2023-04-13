@@ -41,13 +41,15 @@ function AddQuestionToSetModal(props: Props) {
                 </MenuItem>
               ))}
             </Select>
+			<Box sx={{ p:2 }}>
+				<Button variant="contained" onClick={handleAdd}>
+				Add
+				</Button>
+				<Button variant="contained" sx={{ backgroundColor: "red" }} onClick={handleClose}>
+				Cancel
+				</Button>
 
-            <Button variant="contained" onClick={handleAdd}>
-              Add
-            </Button>
-            <Button variant="contained" sx={{ backgroundColor: "red" }} onClick={handleClose}>
-              Cancel
-            </Button>
+			</Box>
           </Card>
         </Box>
       </Modal>
