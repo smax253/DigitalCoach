@@ -95,7 +95,6 @@ function BrowseQuestionsPage() {
       <h1>Browse Questions</h1>
       <Box
         sx={{
-          maxWidth: "80%",
           display: "flex",
           flexDirection: "row",
           verticalAlign: "top",

@@ -87,7 +87,10 @@ export default function BasicInfoForm({ userId }: userInfo) {
         />
         <br />
         <div>
-          <Button variant='contained' type='submit' sx={{ maxWidth: '30%' }}>
+          <Button
+            variant='contained'
+            type='submit'
+            sx={{ maxWidth: '30%', backgroundColor: '#023047' }}>
             Create Question Set
           </Button>
           <FormControlLabel
