@@ -51,14 +51,12 @@ export default function SelectedQuestionsList(props: propsInfo) {
     console.log('selectedSet useEffectFired');
     const fetchQuestions = async () => {
       const selectedQuestions: any[] = [];
-      console.log(props.selectedSet);
       for (let i = 0; i < props.selectedSet.questions.length; i++) {
         selectedQuestions.push(
           await QuestionService.getById(props.selectedSet.questions[i])
         );
       }
       setQuestions(selectedQuestions);
-      console.log(selectedQuestions);
     };
     setLoading(true);
     fetchQuestions();
@@ -75,7 +73,6 @@ export default function SelectedQuestionsList(props: propsInfo) {
         variant='standard'
         value={props.selectedSet}
         fullWidth
-        // ! Only shows set name when there are questions in the set
         onChange={(event) => {
           props.setSelectedSet(event.target.value as propsInfo['selectedSet']);
         }}>
