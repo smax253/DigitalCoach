@@ -29,10 +29,10 @@ export default function BasicInfoForm({ userId }: userInfo) {
    * the user inputted time per question and number of retries
    * @returns The created question set
    */
-  const createInterviewSet = async () => {
+  const createInterviewSet = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     console.log(`${questionSetName}, ${timePerQ}, ${numRetries}`);
     //Create interview set first
-    // !Does not work on safari for some reason
     //Now create question set
     const questionSet = {
       title: questionSetName,
@@ -55,6 +55,7 @@ export default function BasicInfoForm({ userId }: userInfo) {
       console.log('Calling create function in BasicInfoForm');
       InterviewSetsService.create(userId, interviewSet);
     }
+    location.reload();
   };
 
   return (

@@ -161,6 +161,14 @@ class QuestionSetsService extends FirebaseService {
       throw e;
     }
   }
+
+  async getQuestionSetByName(qsName: string) {
+    const qsCollection = this.getCollectionRef();
+    const thisQsFilter = where('title', '==', qsName);
+    const qs = query(qsCollection, thisQsFilter);
+
+    return await getDocs(qs);
+  }
 }
 
 export default new QuestionSetsService();

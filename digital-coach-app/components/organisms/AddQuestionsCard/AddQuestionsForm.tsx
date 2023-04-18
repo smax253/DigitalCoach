@@ -1,5 +1,16 @@
+import React from 'react';
 import styles from './AddQuestionsCard.module.scss';
 import { MenuItem, Button, FormControl, TextField } from '@mui/material';
+import QuestionSetsService from '@App/lib/questionSets/QuestionSetsService';
+
+interface propsInfo {
+  selectedSet: { questions: any[]; title: string; id: string };
+  setSelectedSet: (set: {
+    questions: any[];
+    title: string;
+    id: string;
+  }) => void;
+}
 
 const sampleSubjects = [
   'Business Accounting and Analytics',
@@ -15,9 +26,12 @@ const sampleSubjects = [
   'Law',
 ];
 
-export default function AddQuestionsForm() {
-  const handleSubmit = () => {
+export default function AddQuestionsForm(props: propsInfo) {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     console.log('Called handleSubmit');
+    console.log('Selected State: ' + props.selectedSet.title);
+    // Just need to call update function now
     return;
   };
 
