@@ -57,10 +57,14 @@ export default function AddQuestionsForm(props: propsInfo) {
         .split(' '),
     };
     const newQuestion = await QuestionService.addQuestion(baseQuestion);
-    await QuestionSetsService.addQuestionToSet(
-      props.selectedSet.id,
-      newQuestion.id
-    );
+    try {
+      await QuestionSetsService.addQuestionToSet(
+        props.selectedSet.id,
+        newQuestion.id
+      );
+    } catch (e) {
+      console.log(e);
+    }
     location.reload();
   };
 
