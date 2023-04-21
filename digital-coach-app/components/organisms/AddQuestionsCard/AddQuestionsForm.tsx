@@ -1,24 +1,71 @@
+import React, { useState } from 'react';
 import styles from './AddQuestionsCard.module.scss';
 import { MenuItem, Button, FormControl, TextField } from '@mui/material';
+import {
+  TSubject,
+  TQuestionType,
+  TExperienceLevel,
+  IBaseQuestionAttributes,
+} from '@App/lib/question/models';
+import QuestionService from '@App/lib/question/QuestionService';
+import QuestionSetsService from '@App/lib/questionSets/QuestionSetsService';
+
+interface propsInfo {
+  selectedSet: { questions: any[]; title: string; id: string };
+  setSelectedSet: (set: {
+    questions: any[];
+    title: string;
+    id: string;
+  }) => void;
+}
 
 const sampleSubjects = [
+  'math',
+  'science',
+  'english',
+  'history',
+  'geography',
+  'chemistry',
+  'physics',
   'Business Accounting and Analytics',
-  'Business Management',
-  'Business Marketing',
-  'Business Operations',
-  'Business Strategy',
-  'Business Technology',
-  'Data Science',
-  'Finance',
-  'Human Resources',
-  'Information Technology',
-  'Law',
+  'Any',
 ];
 
-export default function AddQuestionsForm() {
-  const handleSubmit = () => {
+export default function AddQuestionsForm(props: propsInfo) {
+  const [questionText, setQuestionText] = useState('');
+  const [subject, setSubject] = useState<TSubject>('Any');
+  const [experienceLevel, setExperienceLevel] =
+    useState<TExperienceLevel>('Any');
+  const [questionType, setQuestionType] = useState<TQuestionType>('Any');
+  const [company, setCompany] = useState('');
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     console.log('Called handleSubmit');
-    return;
+    console.log('Selected State: ' + props.selectedSet.title);
+    let thisCompany = [] as string[];
+    if (company !== '') thisCompany = [company];
+    const baseQuestion = {
+      subject: subject,
+      question: questionText,
+      type: questionType,
+      experienceLevel: experienceLevel,
+      companies: thisCompany,
+      keywords: questionText
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9 ]/g, '')
+        .split(' '),
+    };
+    const newQuestion = await QuestionService.addQuestion(baseQuestion);
+    try {
+      await QuestionSetsService.addQuestionToSet(
+        props.selectedSet.id,
+        newQuestion.id
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    location.reload();
   };
 
   return (
@@ -32,29 +79,32 @@ export default function AddQuestionsForm() {
             label='Question Text'
             placeholder='Enter Custom Question text'
             required
+            onChange={(event) => {
+              setQuestionText(event.target.value);
+            }}
           />
           <br />
-          <TextField
-            id='industry'
-            label='Industry/Field of Work'
-            placeholder='Enter the industry or field for the question'
-            required
-          />
           <br />{' '}
           <TextField
             id='subject-select'
             label='Subject'
             required
             select
-            // onChange={(event) => setSubjectSelect(event.target.value)}
-          >
+            onChange={(event) => setSubject(event.target.value as TSubject)}>
             {sampleSubjects.map((subject) => (
               <MenuItem key={subject} value={subject}>
                 {subject}
               </MenuItem>
             ))}
           </TextField>
-          <TextField id='jobPosition' label='Experience level' required select>
+          <TextField
+            id='jobPosition'
+            label='Experience level'
+            required
+            select
+            onChange={(event) => {
+              setExperienceLevel(event.target.value as TExperienceLevel);
+            }}>
             <MenuItem value='Any'>Any Level</MenuItem>
             <MenuItem value='Entry'>Entry Level</MenuItem>
             <MenuItem value='Mid'>Mid Career</MenuItem>
@@ -62,7 +112,14 @@ export default function AddQuestionsForm() {
           </TextField>
           <br />
           <br />
-          <TextField id='questionType' label='Question Type' required select>
+          <TextField
+            id='questionType'
+            label='Question Type'
+            required
+            select
+            onChange={(event) => {
+              setQuestionType(event.target.value as TQuestionType);
+            }}>
             <MenuItem value='behavioral'>Behavioral</MenuItem>
             <MenuItem value='technical'>Technical</MenuItem>
           </TextField>
@@ -72,6 +129,9 @@ export default function AddQuestionsForm() {
             label='Company'
             placeholder='Enter the company who asked the question'
             helperText='Optional'
+            onChange={(event) => {
+              setCompany(event.target.value);
+            }}
           />
           <div style={{ display: 'flex', gap: '2rem' }}>
             <Button

@@ -5,6 +5,15 @@ import QuestionService from '@App/lib/question/QuestionService';
 import styles from './AddQuestionsCard.module.scss';
 import QuestionSetsService from '@App/lib/questionSets/QuestionSetsService';
 
+interface propsInfo {
+  selectedSet: { questions: any[]; title: string; id: string };
+  setSelectedSet: (set: {
+    questions: any[];
+    title: string;
+    id: string;
+  }) => void;
+}
+
 const sampleSubjects = [
   'Business Accounting and Analytics',
   'Business Management',
@@ -19,21 +28,20 @@ const sampleSubjects = [
   'Law',
 ];
 
-export default function SelectedQuestionsList() {
+export default function SelectedQuestionsList(props: propsInfo) {
   const { currentUser } = useAuthContext();
   const [userQuestionSets, setUserQuestionSets] = useState<any[]>([]);
-  const [selectedSet, setSelectedSet] = useState<any>([]);
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchUserQuestionSets() {
-      const userQuestionSets: any[] = (
+      const userQuestionsSets: any[] = (
         await QuestionSetsService.getQuestionSetByUserId(currentUser!.id)
       ).docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
-      setUserQuestionSets(userQuestionSets);
+      setUserQuestionSets(userQuestionsSets);
     }
     fetchUserQuestionSets();
   }, []);
@@ -43,18 +51,17 @@ export default function SelectedQuestionsList() {
     console.log('selectedSet useEffectFired');
     const fetchQuestions = async () => {
       const selectedQuestions: any[] = [];
-      console.log(selectedSet);
-      for (let i = 0; i < selectedSet.length; i++) {
-        selectedQuestions.push(await QuestionService.getById(selectedSet[i]));
+      for (let i = 0; i < props.selectedSet.questions.length; i++) {
+        selectedQuestions.push(
+          await QuestionService.getById(props.selectedSet.questions[i])
+        );
       }
-      // Need this console.log for function to work?
-      console.log(selectedQuestions);
       setQuestions(selectedQuestions);
     };
     setLoading(true);
     fetchQuestions();
     setLoading(false);
-  }, [selectedSet]);
+  }, [props.selectedSet]);
 
   return (
     <div className={styles.AddQuestionsCard_questionList}>
@@ -64,17 +71,23 @@ export default function SelectedQuestionsList() {
         id='question-set-select'
         label='Question Set'
         variant='standard'
-        value={selectedSet}
+        value={props.selectedSet}
         fullWidth
-        onChange={(event) => setSelectedSet(event.target.value)}>
+        onChange={(event) => {
+          props.setSelectedSet(event.target.value as propsInfo['selectedSet']);
+        }}>
         {userQuestionSets.map((questionSet) => (
-          <MenuItem key={questionSet.id} value={questionSet.questions}>
+          <MenuItem key={questionSet.id} value={questionSet}>
             {questionSet.title}
           </MenuItem>
         ))}
       </Select>
-      {loading && questions.length === 0 ? (
+      {loading ? (
         <p>Loading...</p>
+      ) : questions.length === 0 ? (
+        <div>
+          <p>No questions in this question set</p>
+        </div>
       ) : (
         <div>
           <p>Currently Selected Questions:</p>
