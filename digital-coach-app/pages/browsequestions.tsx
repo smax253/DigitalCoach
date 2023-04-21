@@ -9,27 +9,29 @@ import AddQuestionToSetModal from "@App/components/molecules/modals/AddQuestionT
 
 import styles from "@App/styles/BrowseQuestionsPage.module.scss";
 
-import { List, ListItem, ListItemText, ListItemIcon, IconButton, Divider, TextField, Box, Checkbox, Select, MenuItem, FormControl, SelectChangeEvent, Button } from "@mui/material";
+import { List, ListItem, ListItemText, ListItemIcon, IconButton, Divider, TextField, Box, Checkbox, Select, MenuItem, FormControl, FormGroup, Button } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
 import { TExperienceLevel, TQuestionType, TSubject } from "@App/lib/question/models";
 
 const sampleSubjects = [
   "Business Accounting and Analytics",
-  "Business Management",
-  "Business Marketing",
-  "Business Operations",
-  "Business Strategy",
-  "Business Technology",
   "Data Science",
   "Finance",
   "Human Resources",
   "Information Technology",
   "Law",
+  "Marketing",
+  "Operations",
+  "Product Management",
+  "Computer Science",
+  "Any",
 ];
 
 function BrowseQuestionsPage() {
   const { currentUser } = useAuthContext();
+
+  const RESULT_LIMIT = 20;
 
   const [popularityCheckbox, setPopularityCheckbox] = useState(true);
   const [experienceLevelSelect, setExperienceLevelSelect] = useState("Any");
@@ -44,12 +46,24 @@ function BrowseQuestionsPage() {
   const [questionsData, setQuestionsData] = useState<any[]>([]);
   const [userQuestionSets, setUserQuestionSets] = useState<any[]>([]);
 
+  const [page, setPage] = useState(1);
+  const [totalNumberOfQuestions, setTotalNumberOfQuestions] = useState(0);
+
+  const [lastVisible, setLastVisible] = useState<any>(null);
+
   useEffect(() => {
     async function fetchQuestions() {
-      const questions: any[] = (await QuestionService.getByPopularityDesc()).docs.map((doc) => {
-        return { id: doc.id, ...doc.data() };
-      });
-      setQuestionsData(questions);
+      const questions = await QuestionService.getByFilters(
+        subjectSelect as TSubject,
+        typeSelect as TQuestionType,
+        experienceLevelSelect as TExperienceLevel,
+        popularityCheckbox,
+        searchText.toLowerCase().trim(),
+        RESULT_LIMIT,
+        lastVisible
+      );
+      setLastVisible(questions.docs[questions.docs.length - 1]);
+      setQuestionsData(questions.docs.map((doc) => doc.data()));
     }
     async function fetchUserQuestionSets() {
       const userQuestionSets: any[] = (await QuestionSetsService.getQuestionSetByUserId(currentUser!.id)).docs.map((doc) => {
@@ -57,19 +71,48 @@ function BrowseQuestionsPage() {
       });
       setUserQuestionSets(userQuestionSets);
     }
+
     fetchQuestions();
     fetchUserQuestionSets();
   }, []);
 
-  const handleFilterSubmit = async (event: React.FormEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  useEffect(() => {
+    async function getTotalNumberOfQuestions() {
+      const questions = await QuestionService.getAllQuestions();
+      setTotalNumberOfQuestions(questions.docs.length);
+      console.log(questions.docs.length);
+    }
+    getTotalNumberOfQuestions();
+  }, []);
+
+  const handleViewMore = async () => {
+    setPage(page + 1);
     const data = await QuestionService.getByFilters(
       subjectSelect as TSubject,
       typeSelect as TQuestionType,
       experienceLevelSelect as TExperienceLevel,
       popularityCheckbox,
-      searchText.toLowerCase().trim()
+      searchText.toLowerCase().trim(),
+      RESULT_LIMIT,
+      lastVisible
     );
+    setLastVisible(data.docs[data.docs.length - 1]);
+    setQuestionsData(questionsData.concat(data.docs.map((doc) => doc.data())));
+  };
+
+  const handleFilterSubmit = async (event: React.FormEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setPage(page + 1);
+    const data = await QuestionService.getByFilters(
+      subjectSelect as TSubject,
+      typeSelect as TQuestionType,
+      experienceLevelSelect as TExperienceLevel,
+      popularityCheckbox,
+      searchText.toLowerCase().trim(),
+      RESULT_LIMIT,
+      null
+    );
+    setLastVisible(data.docs[data.docs.length - 1]);
     setQuestionsData(data.docs.map((doc) => doc.data()));
   };
 
@@ -101,7 +144,7 @@ function BrowseQuestionsPage() {
           mt: 2,
         }}
       >
-        <List sx={{ bgcolor: "background.paper" }}>
+        <List sx={{ bgcolor: "background.paper", width: "90%" }}>
           {questionsData.map((question) => (
             <div>
               <ListItem>
@@ -118,12 +161,17 @@ function BrowseQuestionsPage() {
               <Divider />
             </div>
           ))}
+          {page * RESULT_LIMIT >= totalNumberOfQuestions ? (
+            <></>
+          ) : (
+            <Button variant="contained" onClick={() => handleViewMore()}>
+              View More
+            </Button>
+          )}
         </List>
-
         <Box
           id="#filters"
           sx={{
-            maxWidth: "25%",
             height: "50%",
             display: "flex",
             minWidth: "20%",
@@ -137,36 +185,50 @@ function BrowseQuestionsPage() {
         >
           <h2>Filters</h2>
 
-          <FormControl size="small">
-            <div>
-              <label htmlFor="popularity-check-box">Sort By Popularity</label>
-              <Checkbox id="popularity-check-box" checked={popularityCheckbox} onChange={(event) => setPopularityCheckbox(event.target.checked)}></Checkbox>
-            </div>
-            <TextField variant="outlined" size="small" label="Question Keyword Search" onChange={handleTextFieldChange}></TextField>
-            <label htmlFor="subject-select">Subject</label>
-            <Select id="subject-select" value={subjectSelect} onChange={(event) => setSubjectSelect(event.target.value)}>
-              <MenuItem value="Any">Any</MenuItem>
-              {sampleSubjects.map((subject) => (
-                <MenuItem value={subject}>{subject}</MenuItem>
-              ))}
-            </Select>
-            <label htmlFor="type-select">Type</label>
-            <Select id="type-select" value={typeSelect} onChange={(event) => setTypeSelect(event.target.value)}>
-              <MenuItem value="Any">Any</MenuItem>
-              <MenuItem value="Technical">Technical</MenuItem>
-              <MenuItem value="Behavioral">Behavioral</MenuItem>
-            </Select>
-            <label htmlFor="experience-level-select">Experience Level</label>
-            <Select id="experience-level-select" value={experienceLevelSelect} onChange={(event) => setExperienceLevelSelect(event.target.value)}>
-              <MenuItem value="Any">Any</MenuItem>
-              <MenuItem value="Entry">Entry</MenuItem>
-              <MenuItem value="Mid">Mid</MenuItem>
-              <MenuItem value="Senior">Senior</MenuItem>
-            </Select>
-            <Button sx={{ mt: 1 }} variant="contained" onClick={handleFilterSubmit}>
-              Apply Filters
-            </Button>
-          </FormControl>
+          {/* <FormControl size="small"> */}
+          <div>
+            <label htmlFor="popularity-check-box">Sort By Popularity</label>
+            <Checkbox id="popularity-check-box" checked={popularityCheckbox} onChange={(event) => setPopularityCheckbox(event.target.checked)}></Checkbox>
+          </div>
+          <TextField variant="outlined" size="small" label="Question Keyword Search" onChange={handleTextFieldChange}></TextField>
+          <label htmlFor="subject-select">Subject</label>
+          <Select id="subject-select" value={subjectSelect} size="small" onChange={(event) => setSubjectSelect(event.target.value)}>
+            <MenuItem value="Any">Any</MenuItem>
+            {sampleSubjects.map((subject) => (
+              <MenuItem value={subject}>{subject}</MenuItem>
+            ))}
+          </Select>
+          <label htmlFor="type-select">Type</label>
+          <Select id="type-select" value={typeSelect} size="small" onChange={(event) => setTypeSelect(event.target.value)}>
+            <MenuItem key={"type-any"} value="Any">
+              Any
+            </MenuItem>
+            <MenuItem key={"type-technical"} value="Technical">
+              Technical
+            </MenuItem>
+            <MenuItem key={"type-behavioral"} value="Behavioral">
+              Behavioral
+            </MenuItem>
+          </Select>
+          <label htmlFor="experience-level-select">Experience Level</label>
+          <Select id="experience-level-select" value={experienceLevelSelect} size="small" onChange={(event) => setExperienceLevelSelect(event.target.value)}>
+            <MenuItem key={"experience-any"} value="Any">
+              Any
+            </MenuItem>
+            <MenuItem key={"experience-entry"} value="Entry">
+              Entry
+            </MenuItem>
+            <MenuItem key={"experience-mid"} value="Mid">
+              Mid
+            </MenuItem>
+            <MenuItem key={"experience-senior"} value="Senior">
+              Senior
+            </MenuItem>
+          </Select>
+          <Button sx={{ mt: 1 }} variant="contained" onClick={handleFilterSubmit}>
+            Apply Filters
+          </Button>
+          {/* </FormControl> */}
         </Box>
       </Box>
       {showAddQuestionModal && userQuestionSets && questionsData && (

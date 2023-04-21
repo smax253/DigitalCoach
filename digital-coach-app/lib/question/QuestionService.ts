@@ -1,9 +1,8 @@
-import FirebaseService from '@App/lib/firebase/FirebaseService';
+import FirebaseService from "@App/lib/firebase/FirebaseService";
 import {
   addDoc,
   collection,
   CollectionReference,
-  DocumentReference,
   Firestore,
   getDocs,
   getFirestore,
@@ -14,19 +13,16 @@ import {
   orderBy,
   doc,
   getDoc,
-  setDoc,
   deleteDoc,
   updateDoc,
   arrayUnion,
-} from 'firebase/firestore';
-import {
-  IBaseQuestion,
-  IBaseQuestionAttributes,
-  IQuestion,
-  TQuestionType,
-  TSubject,
-  TExperienceLevel,
-} from '@App/lib/question/models';
+  startAt,
+  startAfter,
+  limit,
+  endBefore,
+  DocumentReference,
+} from "firebase/firestore";
+import { IBaseQuestion, IBaseQuestionAttributes, IQuestion, TQuestionType, TSubject, TExperienceLevel } from "@App/lib/question/models";
 
 class QuestionService extends FirebaseService {
   private firestore: Firestore;
@@ -37,18 +33,11 @@ class QuestionService extends FirebaseService {
   }
 
   private getCollectionRef() {
-    return collection(
-      this.firestore,
-      'questions'
-    ) as CollectionReference<IBaseQuestion>;
+    return collection(this.firestore, "questions") as CollectionReference<IBaseQuestion>;
   }
 
   private getDocRef(qId: string) {
-    return doc(
-      this.firestore,
-      'questions',
-      qId
-    ) as DocumentReference<IBaseQuestionAttributes>;
+    return doc(this.firestore, "questions", qId) as DocumentReference<IBaseQuestionAttributes>;
   }
 
   private docToModel(doc: QueryDocumentSnapshot<IBaseQuestion>): IQuestion {
@@ -67,8 +56,8 @@ class QuestionService extends FirebaseService {
   async addQuestion(baseQuestion: IBaseQuestionAttributes) {
     const question: IBaseQuestion = {
       ...baseQuestion,
-      type: baseQuestion.type || 'Any',
-      experienceLevel: baseQuestion.experienceLevel || 'Any',
+      type: baseQuestion.type || "Any",
+      experienceLevel: baseQuestion.experienceLevel || "Any",
       companies: baseQuestion.companies || [],
       popularity: baseQuestion.popularity || 0,
       createdBy: baseQuestion.createdBy || null,
@@ -109,7 +98,7 @@ class QuestionService extends FirebaseService {
   async getBySubject(subject: TSubject) {
     const ref = this.getCollectionRef();
 
-    const filter = where('subject', '==', subject);
+    const filter = where("subject", "==", subject);
 
     return await getDocs(query(ref, filter));
   }
@@ -122,7 +111,7 @@ class QuestionService extends FirebaseService {
   async getByPosition(position: string) {
     const ref = this.getCollectionRef();
 
-    const filter = where('position', '==', position);
+    const filter = where("position", "==", position);
 
     return await getDocs(query(ref, filter));
   }
@@ -135,7 +124,7 @@ class QuestionService extends FirebaseService {
   async getByCompany(companies: Array<string>) {
     const ref = this.getCollectionRef();
 
-    const filter = where('companies', 'array-contains-any', companies);
+    const filter = where("companies", "array-contains-any", companies);
 
     return await getDocs(query(ref, filter));
   }
@@ -148,7 +137,7 @@ class QuestionService extends FirebaseService {
   async getByType(type: string) {
     const ref = this.getCollectionRef();
 
-    const filter = where('type', '==', type);
+    const filter = where("type", "==", type);
 
     return await getDocs(query(ref, filter));
   }
@@ -161,7 +150,7 @@ class QuestionService extends FirebaseService {
   async getByPopularityDesc() {
     const ref = this.getCollectionRef();
 
-    const filter = orderBy('popularity', 'desc');
+    const filter = orderBy("popularity", "desc");
 
     return await getDocs(query(ref, filter));
   }
@@ -199,7 +188,7 @@ class QuestionService extends FirebaseService {
 
     const foundQuestion = (await getDoc(doc(ref, qid))).data();
 
-    if (!foundQuestion) throw new Error('Question not found!');
+    if (!foundQuestion) throw new Error("Question not found!");
 
     // Note: This returns undefined; it does not return the updated document.
     await updateDoc(doc(ref, qid), {
@@ -226,8 +215,7 @@ class QuestionService extends FirebaseService {
 
     const foundQuestion = await getDoc(doc(ref, qid));
 
-    if (!foundQuestion)
-      throw new Error('Error deleting question: Question not found!');
+    if (!foundQuestion) throw new Error("Error deleting question: Question not found!");
 
     await deleteDoc(doc(ref, qid));
 
@@ -246,13 +234,9 @@ class QuestionService extends FirebaseService {
 
     const foundQuestion = (await getDoc(doc(ref, qid))).data();
 
-    if (!foundQuestion)
-      throw new Error('Error adding company to question: Question not found!');
+    if (!foundQuestion) throw new Error("Error adding company to question: Question not found!");
 
-    if (foundQuestion.companies.some((company) => companies.includes(company)))
-      throw new Error(
-        'Error adding company to question: Company already exists!'
-      );
+    if (foundQuestion.companies.some((company) => companies.includes(company))) throw new Error("Error adding company to question: Company already exists!");
 
     await updateDoc(doc(ref, qid), {
       ...foundQuestion,
@@ -272,22 +256,22 @@ class QuestionService extends FirebaseService {
    * @param {string} searchTerm - The search term to filter by
    * @returns A promise that resolves to an array of documents that match the given filters.
    */
-  async getByFilters(
-    subject: TSubject,
-    type: TQuestionType,
-    experience: TExperienceLevel,
-    popularitySort: boolean,
-    searchTerm: string
-  ) {
+  async getByFilters(subject: TSubject, type: TQuestionType, experience: TExperienceLevel, popularitySort: boolean, searchTerm: string, resultLimit: number, anchorDoc: any) {
     const ref = this.getCollectionRef();
+    searchTerm = searchTerm
+      .toLowerCase()
+      .replace(/\!|\.|\,|\'|\"|\?|\;|\:|\`|\~/g, "")
+      .split(" ")
+      .join(" ");
     const filters = [
-      subject === 'Any' ? null : where('subject', '==', subject),
-      type === 'Any' ? null : where('type', '==', type),
-      experience === 'Any' ? null : where('experienceLevel', '==', experience),
-      popularitySort ? orderBy('popularity', 'desc') : (null as any),
-      searchTerm ? where('keywords', 'array-contains', searchTerm) : null,
+      subject === "Any" ? null : where("subject", "==", subject),
+      type === "Any" ? null : where("type", "==", type),
+      experience === "Any" ? null : where("experienceLevel", "==", experience),
+      popularitySort ? orderBy("popularity", "desc") : (null as any),
+      searchTerm ? where("keywords", "array-contains", searchTerm) : null,
+      anchorDoc ? startAfter(anchorDoc) : null,
     ].filter((f) => f !== null);
-
+    filters.push(limit(resultLimit));
     return await getDocs(query(ref, ...filters));
   }
 }
