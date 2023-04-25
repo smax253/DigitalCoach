@@ -33,13 +33,14 @@ def index():
     return "Welcome to the ML API for Digital Coach"
 # 58f909b0-f7a5-4ffb-be09-ab64bd32a787
 
+
 @app.route("/predict", methods=["POST"])
 def predict():
     """
     POST route that returns total text, audio and video predictions.
     """
     req = request.get_json()
-    print(req);
+    print(req)
     # req = request.get_json()
     # video_url, user_id, question_id, answer_id = (
     #     req["videoUrl"],
