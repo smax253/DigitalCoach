@@ -6,12 +6,14 @@ import redis
 from threading import Thread
 from rq import Queue
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from helpers.download_url import download_video_link
 from helpers.score import create_answer
 from db_monitor import poll_connection
 
 # initalize the Flask object
 app = Flask(__name__)
+CORS(app)
 r = redis.Redis()
 q = Queue(connection=r)
 
@@ -26,8 +28,9 @@ def predict():
     """
     POST route that returns total text, audio and video predictions.
     """
-    # req = request.get_json()
-    # video_url, user_id, interview_id, question_id, answer_id = (
+    req = request.get_json()
+    print(req);
+	# video_url, user_id, interview_id, question_id, answer_id = (
     #     req["videoUrl"],
     #     req["userId"],
     #     req["interviewId"],

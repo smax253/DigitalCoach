@@ -7,10 +7,12 @@ import redis
 from threading import Thread
 from rq import Queue
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from helpers.download_url import download_video_link
 from helpers.score import create_answer
 from .db_monitor import poll_connection
 
+CORS(app)
 r = redis.Redis()
 q = Queue(connection=r)
 
@@ -27,13 +29,15 @@ def index():
     Home route.
     """
     return "Welcome to the ML API for Digital Coach"
-
+# 58f909b0-f7a5-4ffb-be09-ab64bd32a787
 
 @app.route("/predict", methods=["POST"])
 def predict():
     """
     POST route that returns total text, audio and video predictions.
     """
+    req = request.get_json()
+    print(req);
     # req = request.get_json()
     # video_url, user_id, question_id, answer_id = (
     #     req["videoUrl"],
@@ -49,7 +53,8 @@ def predict():
     # ):
     #     return jsonify(errors="Required fields not in request body.")
     # print(video_url)
-    # download = download_video_link(video_url)
+    download = download_video_link(req['videoUrl'] + ".mp4")
+    
     # print('download successful!')
     # if "errors" in download:
     #     return jsonify(message="Download failed.", errors=str(download["errors"]))
@@ -61,6 +66,7 @@ def predict():
         # "answer_id": answer_id,
     }
     job = q.enqueue(create_answer, content)
+    print(job)
     print("Task " + job.id + " has been added to queue")
     message = "Task " + str(job.id) + \
         " added to queue at " + str(job.enqueued_at) + "."
