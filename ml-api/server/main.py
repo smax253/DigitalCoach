@@ -57,8 +57,6 @@ def predict():
     # print(video_url)
     download = download_video_link(req['videoUrl'])
     
-  f = open("data/video.mp4", "wb")
-
     # input_path = 'data/video.mp4'
     # output_path = 'data/video2.mp4'
     # input_stream = ffmpeg.input(input_path)
