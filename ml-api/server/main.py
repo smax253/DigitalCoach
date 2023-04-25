@@ -12,6 +12,8 @@ from helpers.download_url import download_video_link
 from helpers.score import create_answer
 from .db_monitor import poll_connection
 
+import ffmpeg
+
 CORS(app)
 r = redis.Redis()
 q = Queue(connection=r)
@@ -53,13 +55,19 @@ def predict():
     # ):
     #     return jsonify(errors="Required fields not in request body.")
     # print(video_url)
-    download = download_video_link(req['videoUrl'] + ".mp4")
+    download = download_video_link(req['videoUrl'])
     
+    input_path = 'data/video.mp4'
+    output_path = 'data/video2.mp4'
+    input_stream = ffmpeg.input(input_path)
+    output_stream = ffmpeg.output(input_stream, output_path)
+    ffmpeg.run(output_stream)
+
     # print('download successful!')
     # if "errors" in download:
     #     return jsonify(message="Download failed.", errors=str(download["errors"]))
     content = {
-        "fname": "test.mp4",
+        "fname": "video2.mp4",
         "rename": str(uuid.uuid4()) + ".mp3",
         # "user_id": user_id,
         # "question_id": question_id,

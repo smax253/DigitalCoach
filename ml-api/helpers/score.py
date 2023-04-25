@@ -19,6 +19,7 @@ def _score_text_structure(audio_answer):
     """
     score how structured the user's answers are.
     """
+    print("audio_answer", audio_answer)
     sentiments = audio_answer["sentiment_analysis"]
     text = ""
     for i in sentiments:

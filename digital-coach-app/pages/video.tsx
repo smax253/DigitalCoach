@@ -6,16 +6,22 @@ import { v4 as uuidv4 } from "uuid";
 import styles from "@App/styles/VideoPage.module.scss";
 import axios from 'axios';
 
+import getBlobDuration from "get-blob-duration";
+
 export default function VideoPage() {
 //   const { currentUser, fetchUser } = useAuthContext();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { status, startRecording, stopRecording, mediaBlobUrl, previewStream } =
     useReactMediaRecorder({ video: true });
 
+	let videoDuration = 0;
+
+
   const saveRecording = async () => {
     const getFile = async () => {
       const url = mediaBlobUrl ? mediaBlobUrl : "";
       let blob = await fetch(url).then((res) => res.blob());
+	  videoDuration = await getBlobDuration(blob);
       // const blob = new Blob([data as BlobPart], {
       // type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       // });
@@ -23,12 +29,16 @@ export default function VideoPage() {
       return new File([blob], "video.mp4");
     };
     const file = await getFile();
-    const url = await StorageService.uploadAnswerVideo(file, uuidv4()) as any;
+	console.log("videoRef", videoRef);
+	console.log("mediaBlobUrl", mediaBlobUrl);
+	console.log("file", file);
+
+	const url = await StorageService.uploadAnswerVideo(file, uuidv4()) as any;
     console.log(url);
 	const dlURL = await StorageService.getDownloadUrlFromVideoUrlRef("gs://" + url.ref._location.bucket + "/" + url.ref._location.path);
 	console.log("dlUrl: ", dlURL);
 	try { 
-		const response = await axios.post('http://localhost:8000/predict', {videoUrl: dlURL});
+		const response = await axios.post('http://localhost:8000/predict', { videoUrl: dlURL, duration: videoDuration });
 		console.log(response);
 
 	} catch (e) { 
@@ -38,6 +48,7 @@ export default function VideoPage() {
 	// send request to localhost:8000/predict with url link in body
 	// 
   };
+
 
   useEffect(() => {
     if (videoRef.current && previewStream) {
