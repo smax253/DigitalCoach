@@ -151,7 +151,7 @@ def create_answer(content):
     }
     result["aggregateScore"] = compute_aggregate_score(result)
     response = {}
-    response['evaluation'] = result
+    response["evaluation"] = result
     # response["userId"] = content["user_id"]
     # response["interviewId"] = content["interview_id"]
     # response["questionId"] = content["question_id"]

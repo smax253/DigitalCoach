@@ -12,6 +12,9 @@ from helpers.download_url import download_video_link
 from helpers.score import create_answer
 from .db_monitor import poll_connection
 
+import json
+import re
+
 import ffmpeg
 import os
 
@@ -45,7 +48,9 @@ def get_results(job_id):
         return jsonify(message="Job not found.")
     if job.is_finished:
         result = job.result
-        return jsonify(result=result)
+        e_result = eval(result)
+        json_string = json.dumps(e_result)
+        return jsonify(result=json.loads(json_string))
     else:
         return jsonify(message="Job has not finished yet.")
 

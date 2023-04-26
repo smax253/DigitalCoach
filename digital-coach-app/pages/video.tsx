@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import styles from '@App/styles/VideoPage.module.scss';
 import axios from 'axios';
 import SelectQuestionSetCard from '@App/components/organisms/SelectQuestionSetCard';
+import CircularProgressWithLabel from '@App/components/organisms/CircularProgressWithLabel';
 
 export default function VideoPage() {
   //   const { currentUser } = useAuthContext();
@@ -18,9 +19,9 @@ export default function VideoPage() {
   const { status, startRecording, stopRecording, mediaBlobUrl, previewStream } =
     useReactMediaRecorder({ video: true });
 
-  const [results, setResults] = useState([]) as any[];
+  const [aggregateScore, setAggregateScore] = useState(0);
+  const [jobId, setJobId] = useState('');
 
-  let jobId = '';
 
   const saveRecording = async () => {
     const getFile = async () => {
@@ -48,7 +49,7 @@ export default function VideoPage() {
         videoUrl: dlURL,
       });
       console.log(response);
-      jobId = response.data.message.split(' ')[1];
+	  setJobId(response.data.message.split(' ')[1]);
     } catch (e) {
       console.log(e);
     }
@@ -58,12 +59,14 @@ export default function VideoPage() {
   };
 
   const getResults = async () => {
+	console.log(jobId);
     try {
       const response = await axios.get(
         'http://localhost:8000/results/' + jobId
       );
       console.log(response);
-      setResults(response.data.results);
+	  if(response.data.result)
+	  	setAggregateScore(response.data.result.evaluation.aggregateScore);
     } catch (e) {
       console.log(e);
     }
@@ -108,6 +111,11 @@ export default function VideoPage() {
             <button onClick={saveRecording}>Save Recording</button>
           )}
           <button onClick={getResults}>Get Results</button>
+		  <p>Most Recent Score: </p>
+		  {
+			aggregateScore !== 0 &&
+				<CircularProgressWithLabel value={aggregateScore} />
+		  }
         </div>
       </div>
       <SelectQuestionSetCard
