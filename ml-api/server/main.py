@@ -34,11 +34,12 @@ def index():
     return "Welcome to the ML API for Digital Coach"
 # 58f909b0-f7a5-4ffb-be09-ab64bd32a787
 
+
 @app.route("/results/<job_id>", methods=["GET"])
 def get_results(job_id):
     """
-	GET route that returns results of a job.
-	"""
+        GET route that returns results of a job.
+        """
     job = q.fetch_job(job_id)
     if job is None:
         return jsonify(message="Job not found.")
@@ -47,6 +48,7 @@ def get_results(job_id):
         return jsonify(result=result)
     else:
         return jsonify(message="Job has not finished yet.")
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -71,19 +73,16 @@ def predict():
     #     return jsonify(errors="Required fields not in request body.")
     # print(video_url)
     download = download_video_link(req['videoUrl'])
-    
-	
+
     input_path = 'data/video.mp4'
     output_path = 'data/video2.mp4'
-    
+
     input_stream = ffmpeg.input(input_path)
     audio_stream = input_stream.audio
     video_stream = input_stream.video.filter('fps', fps=30, round='up')
     output_stream = ffmpeg.output(video_stream, audio_stream, output_path)
     ffmpeg.run(output_stream, overwrite_output=True)
-    
 
-    
     # print('download successful!')
     # if "errors" in download:
     #     return jsonify(message="Download failed.", errors=str(download["errors"]))
@@ -102,8 +101,6 @@ def predict():
     return jsonify(message=message)
 
 
-
-    
 '''
 
 waitress-serve --listen=*:8000 server.wsgi:app
@@ -111,4 +108,3 @@ waitress-serve --listen=*:8000 server.wsgi:app
 rqworker -w rq_win.WindowsWorker
 
 '''
-
