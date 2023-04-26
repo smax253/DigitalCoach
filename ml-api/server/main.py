@@ -34,7 +34,19 @@ def index():
     return "Welcome to the ML API for Digital Coach"
 # 58f909b0-f7a5-4ffb-be09-ab64bd32a787
 
-prev_result = None
+@app.route("/results/<job_id>", methods=["GET"])
+def get_results(job_id):
+    """
+	GET route that returns results of a job.
+	"""
+    job = q.fetch_job(job_id)
+    if job is None:
+        return jsonify(message="Job not found.")
+    if job.is_finished:
+        result = job.result
+        return jsonify(result=result)
+    else:
+        return jsonify(message="Job has not finished yet.")
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -64,9 +76,10 @@ def predict():
     input_path = 'data/video.mp4'
     output_path = 'data/video2.mp4'
     
-
     input_stream = ffmpeg.input(input_path)
-    output_stream = ffmpeg.output(input_stream, output_path)
+    audio_stream = input_stream.audio
+    video_stream = input_stream.video.filter('fps', fps=30, round='up')
+    output_stream = ffmpeg.output(video_stream, audio_stream, output_path)
     ffmpeg.run(output_stream, overwrite_output=True)
     
 
@@ -89,19 +102,7 @@ def predict():
     return jsonify(message=message)
 
 
-@app.route("/predict/<job_id>", methods=["GET"])
-def get_results(job_id):
-    """
-	GET route that returns results of a job.
-	"""
-    job = q.fetch_job(job_id)
-    if job is None:
-        return jsonify(message="Job not found.")
-    if job.is_finished:
-        result = job.result
-        return jsonify(result=result)
-    else:
-        return jsonify(message="Job has not finished yet.")
+
     
 '''
 

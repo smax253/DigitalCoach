@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import useAuthContext from "@App/lib/auth/AuthContext";
 import { useReactMediaRecorder } from "react-media-recorder";
 import StorageService from "@App/lib/storage/StorageService";
@@ -12,7 +12,9 @@ export default function VideoPage() {
   const { status, startRecording, stopRecording, mediaBlobUrl, previewStream } =
     useReactMediaRecorder({ video: true });
 
+  const [results, setResults] = useState([]) as any[];
 
+  let jobId = "";
 
   const saveRecording = async () => {
     const getFile = async () => {
@@ -36,7 +38,7 @@ export default function VideoPage() {
 	try { 
 		const response = await axios.post('http://localhost:8000/predict', { videoUrl: dlURL });
 		console.log(response);
-		let jobId = response.data.message.split(" ")[1];
+		jobId = response.data.message.split(" ")[1];
 
 	} catch (e) { 
 		console.log(e);
@@ -45,6 +47,16 @@ export default function VideoPage() {
 	// send request to localhost:8000/predict with url link in body
 	// 
   };
+
+  const getResults = async () => {
+	try { 
+		const response = await axios.get('http://localhost:8000/results/' + jobId);
+		console.log(response);
+		setResults(response.data.results);
+	} catch (e) { 
+		console.log(e);
+	}
+  }
 
 
   useEffect(() => {
@@ -66,6 +78,7 @@ export default function VideoPage() {
         {mediaBlobUrl && (
           <button onClick={saveRecording}>Save Recording</button>
         )}
+		<button onClick={getResults}>Get Results</button>
       </div>
     </div>
   );

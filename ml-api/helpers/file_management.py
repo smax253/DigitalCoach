@@ -29,9 +29,9 @@ def cleanup_data_folder():
         path = os.path.join(data_path, files)
         try:
             shutil.rmtree(path)
-        except OSError:
             os.remove(path)
-
+        except OSError:
+            print("Error while deleting file: ", path)
 
 def cleanup_data_persist_video():
     """
