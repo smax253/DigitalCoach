@@ -34,6 +34,7 @@ def index():
     return "Welcome to the ML API for Digital Coach"
 # 58f909b0-f7a5-4ffb-be09-ab64bd32a787
 
+prev_result = None
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -86,3 +87,27 @@ def predict():
     message = "Task " + str(job.id) + \
         " added to queue at " + str(job.enqueued_at) + "."
     return jsonify(message=message)
+
+
+@app.route("/predict/<job_id>", methods=["GET"])
+def get_results(job_id):
+    """
+	GET route that returns results of a job.
+	"""
+    job = q.fetch_job(job_id)
+    if job is None:
+        return jsonify(message="Job not found.")
+    if job.is_finished:
+        result = job.result
+        return jsonify(result=result)
+    else:
+        return jsonify(message="Job has not finished yet.")
+    
+'''
+
+waitress-serve --listen=*:8000 server.wsgi:app
+
+rqworker -w rq_win.WindowsWorker
+
+'''
+
