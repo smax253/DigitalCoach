@@ -12,6 +12,8 @@ export default function VideoPage() {
   //   const { currentUser } = useAuthContext();
   const [isLocked, setIsLocked] = useState<any>(false);
   const [questions, setQuestions] = useState<any[]>([]);
+  const [showQuestions, setShowQuestions] = useState<any>(true);
+  const [wasRecording, setWasRecording] = useState<any>(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { status, startRecording, stopRecording, mediaBlobUrl, previewStream } =
     useReactMediaRecorder({ video: true });
@@ -85,6 +87,7 @@ export default function VideoPage() {
           <button
             onClick={() => {
               setIsLocked(true);
+              setWasRecording(true);
               startRecording();
             }}>
             Start Recording
@@ -92,7 +95,11 @@ export default function VideoPage() {
           <button
             onClick={() => {
               setIsLocked(false);
-              setQuestions([]);
+              if (wasRecording) {
+                setQuestions([]);
+                setShowQuestions(false);
+                setWasRecording(false);
+              }
               stopRecording();
             }}>
             Stop Recording
@@ -108,6 +115,8 @@ export default function VideoPage() {
         setIsLocked={setIsLocked}
         questions={questions}
         setQuestions={setQuestions}
+        showQuestions={showQuestions}
+        setShowQuestions={setShowQuestions}
       />
     </AuthGuard>
   );

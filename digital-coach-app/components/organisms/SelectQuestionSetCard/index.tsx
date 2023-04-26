@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import Card from '@App/components/atoms/Card';
 import AuthGuard from '@App/lib/auth/AuthGuard';
 import SelectedQuestionsList from './SelectedQuestionsList';
+import QuestionCarousel from './QuestionCarousel';
 
 interface propInfo {
   isLocked: boolean;
   setIsLocked: (arg0: boolean) => void;
   questions: any[];
   setQuestions: (arg0: any[]) => void;
+  showQuestions: boolean;
+  setShowQuestions: (arg0: boolean) => void;
 }
 
 export default function SelectQuestionSetCard(props: propInfo) {
@@ -28,7 +31,7 @@ export default function SelectQuestionSetCard(props: propInfo) {
               </p>
             ) : (
               // Here, need to render a carousel of the questions
-              <div />
+              <QuestionCarousel questions={props.questions} />
             )
           ) : (
             <div>
@@ -38,6 +41,8 @@ export default function SelectQuestionSetCard(props: propInfo) {
                 setSelectedSet={setSelectedSet}
                 questions={props.questions}
                 setQuestions={props.setQuestions}
+                showQuestions={props.showQuestions}
+                setShowQuestions={props.setShowQuestions}
               />
             </div>
           )}

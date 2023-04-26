@@ -13,6 +13,8 @@ interface propsInfo {
   }) => void;
   questions: any[];
   setQuestions: (arg0: any[]) => void;
+  showQuestions: boolean;
+  setShowQuestions: (arg0: boolean) => void;
 }
 
 const sampleSubjects = [
@@ -73,6 +75,7 @@ export default function SelectedQuestionsList(props: propsInfo) {
         value={props.selectedSet}
         fullWidth
         onChange={(event) => {
+          props.setShowQuestions(true);
           props.setSelectedSet(event.target.value as propsInfo['selectedSet']);
         }}>
         {userQuestionSets.map((questionSet) => (
@@ -83,7 +86,7 @@ export default function SelectedQuestionsList(props: propsInfo) {
       </Select>
       {loading ? (
         <p>Loading...</p>
-      ) : props.questions.length === 0 ? (
+      ) : props.questions.length === 0 || !props.showQuestions ? (
         <div>
           <p>No questions in this question set</p>
         </div>
