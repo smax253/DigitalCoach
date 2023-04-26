@@ -1,63 +1,71 @@
-import { useState, useEffect, useRef } from "react";
-import useAuthContext from "@App/lib/auth/AuthContext";
-import { useReactMediaRecorder } from "react-media-recorder";
-import StorageService from "@App/lib/storage/StorageService";
-import { v4 as uuidv4 } from "uuid";
-import styles from "@App/styles/VideoPage.module.scss";
+import { useState, useEffect, useRef } from 'react';
+import useAuthContext from '@App/lib/auth/AuthContext';
+import AuthGuard from '@App/lib/auth/AuthGuard';
+import { useReactMediaRecorder } from 'react-media-recorder';
+import StorageService from '@App/lib/storage/StorageService';
+import { v4 as uuidv4 } from 'uuid';
+import styles from '@App/styles/VideoPage.module.scss';
 import axios from 'axios';
+import SelectQuestionSetCard from '@App/components/organisms/SelectQuestionSetCard';
 
 export default function VideoPage() {
-//   const { currentUser, fetchUser } = useAuthContext();
+  //   const { currentUser } = useAuthContext();
+  const [isLocked, setIsLocked] = useState<any>(false);
+  const [questions, setQuestions] = useState<any[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { status, startRecording, stopRecording, mediaBlobUrl, previewStream } =
     useReactMediaRecorder({ video: true });
 
   const [results, setResults] = useState([]) as any[];
 
-  let jobId = "";
+  let jobId = '';
 
   const saveRecording = async () => {
     const getFile = async () => {
-      const url = mediaBlobUrl ? mediaBlobUrl : "";
+      const url = mediaBlobUrl ? mediaBlobUrl : '';
       let blob = await fetch(url).then((res) => res.blob());
       // const blob = new Blob([data as BlobPart], {
       // type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       // });
       // const blobPart = new Blob([blob as BlobPart]);
-      return new File([blob], "video.mp4");
+      return new File([blob], 'video.mp4');
     };
     const file = await getFile();
-	// console.log("videoRef", videoRef);
-	// console.log("mediaBlobUrl", mediaBlobUrl);
-	// console.log("file", file);
+    // console.log("videoRef", videoRef);
+    // console.log("mediaBlobUrl", mediaBlobUrl);
+    // console.log("file", file);
 
-	const url = await StorageService.uploadAnswerVideo(file, uuidv4()) as any;
+    const url = (await StorageService.uploadAnswerVideo(file, uuidv4())) as any;
     // console.log(url);
-	const dlURL = await StorageService.getDownloadUrlFromVideoUrlRef("gs://" + url.ref._location.bucket + "/" + url.ref._location.path);
-	// console.log("dlUrl: ", dlURL);
-	try { 
-		const response = await axios.post('http://localhost:8000/predict', { videoUrl: dlURL });
-		console.log(response);
-		jobId = response.data.message.split(" ")[1];
-
-	} catch (e) { 
-		console.log(e);
-	}
-	// form url link 
-	// send request to localhost:8000/predict with url link in body
-	// 
+    const dlURL = await StorageService.getDownloadUrlFromVideoUrlRef(
+      'gs://' + url.ref._location.bucket + '/' + url.ref._location.path
+    );
+    // console.log("dlUrl: ", dlURL);
+    try {
+      const response = await axios.post('http://localhost:8000/predict', {
+        videoUrl: dlURL,
+      });
+      console.log(response);
+      jobId = response.data.message.split(' ')[1];
+    } catch (e) {
+      console.log(e);
+    }
+    // form url link
+    // send request to localhost:8000/predict with url link in body
+    //
   };
 
   const getResults = async () => {
-	try { 
-		const response = await axios.get('http://localhost:8000/results/' + jobId);
-		console.log(response);
-		setResults(response.data.results);
-	} catch (e) { 
-		console.log(e);
-	}
-  }
-
+    try {
+      const response = await axios.get(
+        'http://localhost:8000/results/' + jobId
+      );
+      console.log(response);
+      setResults(response.data.results);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
     if (videoRef.current && previewStream) {
@@ -66,20 +74,41 @@ export default function VideoPage() {
   }, [previewStream]);
 
   return (
-    <div>
-      <p className={styles.thing}>{status}</p>
-      <div className={styles.videoBox}>
-        <video src={mediaBlobUrl!} controls autoPlay loop />
-        <video ref={videoRef} controls autoPlay />
+    <AuthGuard>
+      <div>
+        <p className={styles.thing}>{status}</p>
+        <div className={styles.videoBox}>
+          <video src={mediaBlobUrl!} controls autoPlay loop />
+          <video ref={videoRef} controls autoPlay />
+        </div>
+        <div className={styles.buttonBox}>
+          <button
+            onClick={() => {
+              setIsLocked(true);
+              startRecording();
+            }}>
+            Start Recording
+          </button>
+          <button
+            onClick={() => {
+              setIsLocked(false);
+              setQuestions([]);
+              stopRecording();
+            }}>
+            Stop Recording
+          </button>
+          {mediaBlobUrl && (
+            <button onClick={saveRecording}>Save Recording</button>
+          )}
+          <button onClick={getResults}>Get Results</button>
+        </div>
       </div>
-      <div className={styles.buttonBox}>
-        <button onClick={startRecording}>Start Recording</button>
-        <button onClick={stopRecording}>Stop Recording</button>
-        {mediaBlobUrl && (
-          <button onClick={saveRecording}>Save Recording</button>
-        )}
-		<button onClick={getResults}>Get Results</button>
-      </div>
-    </div>
+      <SelectQuestionSetCard
+        isLocked={isLocked}
+        setIsLocked={setIsLocked}
+        questions={questions}
+        setQuestions={setQuestions}
+      />
+    </AuthGuard>
   );
 }
