@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 
 export type TSubject =
-  | "Business Accounting and Analytics"
+  | "Business and Accounting"
   | "Data Science"
   | "Finance"
   | "Human Resources"
@@ -11,6 +11,7 @@ export type TSubject =
   | "Operations"
   | "Product Management"
   | "Computer Science"
+  | "Engineering"
   | "Any";
 
 export type TQuestionType = "behaviorial" | "technical" | "Any";

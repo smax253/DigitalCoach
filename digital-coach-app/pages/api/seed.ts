@@ -68,22 +68,142 @@ export default async function seed(req: NextApiRequest, res: NextApiResponse<{}>
 
     const questions = await QuestionService.getAllQuestions();
 
-    const addFeaturedQuestionSets = new Array(5).fill(0).map((_, idx) => {
-      const questionSet = {
-        title: "Featured Question Set " + idx,
-        description: "Description " + idx,
-        questions: [
-          questions.docs[getRandomInt(questions.docs.length)].id,
-          questions.docs[getRandomInt(questions.docs.length)].id,
-          questions.docs[getRandomInt(questions.docs.length)].id,
-          questions.docs[getRandomInt(questions.docs.length)].id,
-          questions.docs[getRandomInt(questions.docs.length)].id,
-        ],
-        isFeatured: true,
-        createdBy: null,
-      };
-      return QuestionSetsService.createQuestionSet(questionSet);
-    });
+    // const addFeaturedQuestionSets = new Array(5).fill(0).map((_, idx) => {
+    //   const questionSet = {
+    //     title: "Featured Question Set " + idx,
+    //     description: "Description " + idx,
+    //     questions: [
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //       questions.docs[getRandomInt(questions.docs.length)].id,
+    //     ],
+    //     isFeatured: true,
+    //     createdBy: null,
+    //   };
+    //   return QuestionSetsService.createQuestionSet(questionSet);
+    // });
+
+	const accountingQuestions = [
+		"Do you plan to pursue an accounting designation after graduation? If not, why not? If so, which one and why?",
+		"Why are you interested in pursuing a career in accounting?",
+		"What accounting skills do you have and how can you apply them to this position?"
+	]
+
+	const engineeringQuestions = [
+		"Tell me about the most challenging engineering project you've worked on",
+		"What strengths do you have that make you a good engineer?",
+		"Explain a time you had to use logic to solve an engineering problem"
+	]
+
+		const computerScienceQuestions = [
+		"What are your preferred programming languages and why?",
+		"Describe a computer science project you have worked on that you are proud of.",
+		"Describe what inheritance in Object Oriented Programming is."
+	]
+
+	const financeQuestions = [
+		"Why have you chosen to work in finance?",
+		"What is the greatest financial challenge facing our industry today?",
+		"Briefly explain the concept of liquidity."
+	]
+
+	const accountingQuestionSet = { 
+		title: "Business and Accounting",
+		description: "The Business and Accounting featured question set",
+		questions: await Promise.all(accountingQuestions.map(async (question) => {
+			const q = await QuestionService.addQuestion({
+				subject: "Business and Accounting",
+				question,
+				companies: [],
+				popularity: Math.floor(Math.random() * 100),
+				experienceLevel: ["Entry", "Mid", "Senior", "Any"][Math.floor(Math.random() * 4)] as TExperienceLevel,
+				type: ["Behavioral", "Technical", "Any"][Math.floor(Math.random() * 3)] as TQuestionType,
+				keywords: question
+					.toLowerCase()
+					.replace(/\!|\.|\,|\'|\"|\?|\;|\:|\`|\~/g, "")
+					.split(" "),
+			});
+			return q.id;
+		})),
+		isFeatured: true,
+		createdBy: null
+	}
+
+	const engineeringQuestionSet = { 
+		title: "Engineering",
+		description: "The Engineering featured question set",
+		questions: await Promise.all(engineeringQuestions.map(async (question) => {
+			const q = await QuestionService.addQuestion({
+				subject: "Engineering",
+				question,
+				companies: [],
+				popularity: Math.floor(Math.random() * 100),
+				experienceLevel: ["Entry", "Mid", "Senior", "Any"][Math.floor(Math.random() * 4)] as TExperienceLevel,
+				type: ["Behavioral", "Technical", "Any"][Math.floor(Math.random() * 3)] as TQuestionType,
+				keywords: question
+					.toLowerCase()
+					.replace(/\!|\.|\,|\'|\"|\?|\;|\:|\`|\~/g, "")
+					.split(" "),
+			});
+			return q.id;
+		})),
+		isFeatured: true,
+		createdBy: null
+	}
+
+	const computerScienceQuestionSet = { 
+		title: "Computer Science",
+		description: "The Computer Science featured question set",
+		questions: await Promise.all(computerScienceQuestions.map(async (question) => {
+			const q = await QuestionService.addQuestion({
+				subject: "Computer Science",
+				question,
+				companies: [],
+				popularity: Math.floor(Math.random() * 100),
+				experienceLevel: ["Entry", "Mid", "Senior", "Any"][Math.floor(Math.random() * 4)] as TExperienceLevel,
+				type: ["Behavioral", "Technical", "Any"][Math.floor(Math.random() * 3)] as TQuestionType,
+				keywords: question
+					.toLowerCase()
+					.replace(/\!|\.|\,|\'|\"|\?|\;|\:|\`|\~/g, "")
+					.split(" "),
+			});
+			return q.id;
+		})),
+		isFeatured: true,
+		createdBy: null
+	}
+
+		const financeQuestionSet = { 
+			title: "Finance",
+			description: "The Finance featured question set",
+			questions: await Promise.all(financeQuestions.map(async (question) => {
+				const q = await QuestionService.addQuestion({
+					subject: "Finance",
+					question,
+					companies: [],
+					popularity: Math.floor(Math.random() * 100),
+					experienceLevel: ["Entry", "Mid", "Senior", "Any"][Math.floor(Math.random() * 4)] as TExperienceLevel,
+					type: ["Behavioral", "Technical", "Any"][Math.floor(Math.random() * 3)] as TQuestionType,
+					keywords: question
+						.toLowerCase()
+						.replace(/\!|\.|\,|\'|\"|\?|\;|\:|\`|\~/g, "")
+						.split(" "),
+				})
+
+				return q.id;
+				})),
+			isFeatured: true,
+			createdBy: null
+		}
+
+
+	const featuredQuestionSets = [accountingQuestionSet, engineeringQuestionSet, computerScienceQuestionSet, financeQuestionSet];
+
+	const addFeaturedQuestionSets = featuredQuestionSets.map((questionSet) => {
+		return QuestionSetsService.createQuestionSet(questionSet);
+	});
 
     const addQuestionSets = userData.map((user, idx) => {
       const questionSet = {
