@@ -17,12 +17,15 @@ export default function NavBar() {
           <Link href='/'>
             <a className={style.linksText}>Dashboard</a>
           </Link>
-          <Link href='/start'>
+          <Link href='/video'>
+            <a className={style.linksText}>Record a Mock Interview</a>
+          </Link>
+          {/* <Link href='/start'>
             <a className={style.linksText}>Start an Interview</a>
-          </Link>
-          <Link href='/past'>
+          </Link> */}
+          {/* <Link href='/past'>
             <a className={style.linksText}>Review Past Interviews</a>
-          </Link>
+          </Link> */}
           <Link href='/start/custom'>
             <a className={style.linksText}>Create Custom Question Set</a>
           </Link>
