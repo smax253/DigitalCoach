@@ -8,9 +8,10 @@ import styles from '@App/styles/VideoPage.module.scss';
 import axios from 'axios';
 import SelectQuestionSetCard from '@App/components/organisms/SelectQuestionSetCard';
 import CircularProgressWithLabel from '@App/components/organisms/CircularProgressWithLabel';
+import InterviewService from '@App/lib/interview/InterviewService';
 
 export default function VideoPage() {
-  //   const { currentUser } = useAuthContext();
+  const { currentUser } = useAuthContext();
   const [isLocked, setIsLocked] = useState<any>(false);
   const [questions, setQuestions] = useState<any[]>([]);
   const [showQuestions, setShowQuestions] = useState<any>(true);
@@ -34,28 +35,21 @@ export default function VideoPage() {
       return new File([blob], 'video.mp4');
     };
     const file = await getFile();
-    // console.log("videoRef", videoRef);
-    // console.log("mediaBlobUrl", mediaBlobUrl);
-    // console.log("file", file);
+
 
     const url = (await StorageService.uploadAnswerVideo(file, uuidv4())) as any;
-    // console.log(url);
     const dlURL = await StorageService.getDownloadUrlFromVideoUrlRef(
       'gs://' + url.ref._location.bucket + '/' + url.ref._location.path
     );
-    // console.log("dlUrl: ", dlURL);
     try {
       const response = await axios.post('http://localhost:8000/predict', {
         videoUrl: dlURL,
       });
-      console.log(response);
 	  setJobId(response.data.message.split(' ')[1]);
     } catch (e) {
       console.log(e);
     }
-    // form url link
-    // send request to localhost:8000/predict with url link in body
-    //
+
   };
 
   const getResults = async () => {
@@ -64,11 +58,13 @@ export default function VideoPage() {
       const response = await axios.get(
         'http://localhost:8000/results/' + jobId
       );
-      console.log(response);
-	  if(response.data.result)
+	  if(response.data.result) {
 	  	setAggregateScore(response.data.result.evaluation.aggregateScore);
+		InterviewService.create({
+
+		})
+	  }
     } catch (e) {
-      console.log(e);
     }
   };
 
