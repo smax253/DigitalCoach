@@ -20,13 +20,13 @@ interface propsInfo {
 }
 
 const sampleSubjects = [
-  'math',
-  'science',
-  'english',
-  'history',
-  'geography',
-  'chemistry',
-  'physics',
+  'Math',
+  'Science',
+  'English',
+  'History',
+  'Geography',
+  'Chemistry',
+  'Physics',
   'Business Accounting and Analytics',
   'Any',
 ];
