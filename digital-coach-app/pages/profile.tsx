@@ -16,8 +16,8 @@ function ProfilePage() {
       const result = await InterviewService.fetchUserInterviews(
         currentUser!.id
       );
-      console.log(result);
-      // setInterviews(result);
+      console.log(result.docs);
+      setInterviews(result.docs);
     };
     getInterviews();
   }, []);
@@ -47,9 +47,39 @@ function ProfilePage() {
             Display user interviews here
             {interviews.length !== 0 ? (
               <ul>
-                <p>Interviews exist</p>
                 {interviews.map((interview: any) => {
-                  return <p>{interview.result}</p>;
+                  if (
+                    Object.keys(
+                      interview._document.data.value.mapValue.fields.result
+                        .mapValue
+                    ).length !== 0
+                  ) {
+                    return (
+                      <div key={interview.id}>
+                        <h4>
+                          Interview Name:{' '}
+                          {
+                            interview._document.data.value.mapValue.fields.title
+                              .stringValue
+                          }
+                        </h4>
+                        <p>
+                          Time:{' '}
+                          {
+                            interview._document.data.value.mapValue.fields
+                              .createdAt.timestampValue
+                          }
+                        </p>
+                        <p>
+                          Score:{' '}
+                          {
+                            interview._document.data.value.mapValue.fields
+                              .result.mapValue.fields.aggregateScore.doubleValue
+                          }
+                        </p>
+                      </div>
+                    );
+                  }
                 })}
               </ul>
             ) : (
