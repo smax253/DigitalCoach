@@ -78,7 +78,7 @@ class InterviewService extends FirebaseService {
    * @param {IBaseInterview} baseInterview - IBaseInterview
    * @returns a promise.
    */
-  async create(userId: string, baseInterview: IBaseInterview) {
+  async create(userId: string, baseInterview: IBaseInterview, result = {}) {
     const collectionRef = this.getCollectionRef(userId);
     const userDocRef = await UserService.getUser(userId);
     const avatarUrl = userDocRef.get("avatarUrl");
@@ -90,6 +90,7 @@ class InterviewService extends FirebaseService {
       completedAt: null,
       reviewedAt: null,
       createdAt: Timestamp.now(),
+	  result: result,
     };
     await UserService.updateUser(userId, {
       name, 

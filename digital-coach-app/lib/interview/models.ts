@@ -17,6 +17,7 @@ export interface IInterviewAttributes extends IBaseInterview {
   completedAt: Timestamp | null;
   reviewedAt: Timestamp | null;
   createdAt: Timestamp;
+  result: object | null;
 }
 
 export interface IInterview extends IInterviewAttributes {
