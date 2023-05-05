@@ -17,7 +17,6 @@ function ProfilePage() {
         currentUser!.id
       );
       setInterviews(result.docs.map((doc) => doc.data()));
-	  console.log(result.docs.map((doc) => doc.data()));
     };
     getInterviews();
   }, []);
@@ -52,7 +51,8 @@ function ProfilePage() {
 								return(
 									<Card>
 										<p>Interview: {interview.title}</p>
-										<p>Aggregate Score (0 - 100): {interview.result.aggregateScore}</p>
+										<p>Time: {new Date(interview.createdAt.seconds * 1000).toString()}</p>
+										<p>Aggregate Score (0 to 100): {interview.result.aggregateScore}</p>
 										<p>Big Five Scores (-10 to 10): </p>
 										<ul>
 											<li>Openness: {interview.result.bigFive.o}</li>
