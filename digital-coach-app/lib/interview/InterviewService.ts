@@ -107,10 +107,10 @@ class InterviewService extends FirebaseService {
    * @param {string} userId - string - the user id of the user whose interviews we want to fetch
    * @returns An array of documents.
    */
-  fetchUserInterviews(userId: string) {
+  async fetchUserInterviews(userId: string) {
     const collectionRef = this.getCollectionRef(userId);
 
-    return getDocs(collectionRef);
+    return await getDocs(collectionRef);
   }
 
   /**

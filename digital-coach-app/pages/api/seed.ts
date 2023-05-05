@@ -51,8 +51,8 @@ export default async function seed(req: NextApiRequest, res: NextApiResponse<{}>
         .map(({ user }, idx) =>
           new Array(getRandomInt(10)).fill(0).map((_, i) =>
             InterviewService.create(user.uid, {
-              title: `Interview ${idx}-${i}`,
-            })
+              title: `Interview ${idx}-${i}`            
+			})
           )
         )
         .flat();

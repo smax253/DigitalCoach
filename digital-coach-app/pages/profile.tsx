@@ -16,8 +16,8 @@ function ProfilePage() {
       const result = await InterviewService.fetchUserInterviews(
         currentUser!.id
       );
-      console.log(result.docs);
-      setInterviews(result.docs);
+      setInterviews(result.docs.map((doc) => doc.data()));
+	  console.log(result.docs.map((doc) => doc.data()));
     };
     getInterviews();
   }, []);
@@ -44,47 +44,32 @@ function ProfilePage() {
             {currentUser?.data()?.proficiency}
           </Card>
           <Card title='Previous Interview Scores'>
-            Display user interviews here
-            {interviews.length !== 0 ? (
-              <ul>
-                {interviews.map((interview: any) => {
-                  if (
-                    Object.keys(
-                      interview._document.data.value.mapValue.fields.result
-                        .mapValue
-                    ).length !== 0
-                  ) {
-                    return (
-                      <div key={interview.id}>
-                        <h4>
-                          Interview Name:{' '}
-                          {
-                            interview._document.data.value.mapValue.fields.title
-                              .stringValue
-                          }
-                        </h4>
-                        <p>
-                          Time:{' '}
-                          {
-                            interview._document.data.value.mapValue.fields
-                              .createdAt.timestampValue
-                          }
-                        </p>
-                        <p>
-                          Score:{' '}
-                          {
-                            interview._document.data.value.mapValue.fields
-                              .result.mapValue.fields.aggregateScore.doubleValue
-                          }
-                        </p>
-                      </div>
-                    );
-                  }
-                })}
-              </ul>
-            ) : (
-              <p>Loading...</p>
-            )}
+			{
+				Object.keys(interviews).length !== 0 ? (
+					<div>
+						{
+							interviews.filter((interview) => Object.keys(interview.result).length > 0).map((interview) => { 
+								return(
+									<Card>
+										<p>Interview: {interview.title}</p>
+										<p>Aggregate Score (0 - 100): {interview.result.aggregateScore}</p>
+										<p>Big Five Scores (-10 to 10): </p>
+										<ul>
+											<li>Openness: {interview.result.bigFive.o}</li>
+											<li>Conscientiousness: {interview.result.bigFive.n}</li>
+											<li>Extraversion: {interview.result.bigFive.e}</li>
+											<li>Agreeableness: {interview.result.bigFive.a}</li>
+											<li>Neuroticism: {interview.result.bigFive.n}</li>
+										</ul>
+									</Card>
+								)
+							})
+						}
+					</div>
+				) : (
+					<p>No previous interviews found.</p>
+				)
+			}
           </Card>
         </div>
       </div>
