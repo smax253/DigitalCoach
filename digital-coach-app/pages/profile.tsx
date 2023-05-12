@@ -7,9 +7,98 @@ import InterviewService from '@App/lib/interview/InterviewService';
 
 import styles from '@App/styles/ProfilePage.module.scss';
 
+import { Tooltip, IconButton } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+
 function ProfilePage() {
   const { currentUser } = useAuthContext();
   const [interviews, setInterviews] = useState<any[]>([]);
+
+  const opennessText = `
+	High is a sign of:
+	-Curiosity
+	-Imagination
+	-Creativity
+	-Openness to trying new things
+	-Unconventionality\n
+	Low is a sign of:
+	-Predictability
+	-Lack of imagination
+	-Dislike of change
+	-Preferring a routine
+	-Preferring what's traditional
+	`;
+
+	const conscientiousnessText = `
+	High is a sign of:
+	-Competence
+	-Organization
+	-Dutifulness
+	-Achievement Striving
+	-Self-Discipline
+	-Deliberation\n
+	Low is a sign of:
+	-Incompetence
+	-Disorganization
+	-Carelessness
+	-Procrastination
+	-Indiscipline
+	-Impulsive
+	`
+
+	const extraversionText = `
+	High is a sign of:
+	-Sociableness
+	-Being energized by social situations
+	-Seeking excitement
+	-Enjoying being the center of attention
+	-Being outgoing\n
+	Low is a sign of:
+	-Preferring solitude
+	-Being exhausted by social situations
+	-Being reflective
+	-Disliking being the center of attention
+	-Being reserved
+	`
+
+	const agreeablenessText = `
+	High is a sign of:
+	-Trustingness
+	-Straightforwardness
+	-Altruism
+	-Compliance
+	-Modesty
+	-Sympathy
+	-Empathy\n
+	Low is a sign of: 
+	-Skepticism
+	-Being demanding
+	-Likeliness to insult or belittle others
+	-Stubbornness
+	-Being a show off
+	-Unsympathetic
+	-Not caring how others feel
+	`
+
+	const neuroticismText = `
+	-High is a sign of:
+	-Anxiousness
+	-Irritability
+	-Stress
+	-Self consciousness
+	-Vulnerability
+	-Dramatic mood shifts\n
+	Low is a sign of:
+	-Less worrying
+	-Calmness
+	-Emotional stability
+	-Confidence
+	-Resilience
+	-Resistance to feeling sadness
+	`;
+
+
+
 
   useEffect(() => {
     const getInterviews = async () => {
@@ -55,11 +144,55 @@ function ProfilePage() {
 										<p>Aggregate Score (0 to 100): {interview.result.aggregateScore}</p>
 										<p>Big Five Scores (-10 to 10): </p>
 										<ul>
-											<li>Openness: {interview.result.bigFive.o}</li>
-											<li>Conscientiousness: {interview.result.bigFive.n}</li>
-											<li>Extraversion: {interview.result.bigFive.e}</li>
-											<li>Agreeableness: {interview.result.bigFive.a}</li>
-											<li>Neuroticism: {interview.result.bigFive.n}</li>
+											<li>
+												Openness: {interview.result.bigFive.o} 
+												<Tooltip title={
+													<span style={{whiteSpace: 'pre-line' }}>{opennessText}</span>
+													}>
+													<IconButton>
+														<HelpOutlineIcon>
+														</HelpOutlineIcon>
+													</IconButton>
+												</Tooltip>
+											</li>
+											<li>
+												Conscientiousness: {interview.result.bigFive.c}
+												<Tooltip title={
+													<span style={{whiteSpace: 'pre-line' }}>{conscientiousnessText}</span>
+													}>
+													<IconButton>
+														<HelpOutlineIcon>
+														</HelpOutlineIcon>
+													</IconButton>
+												</Tooltip>
+											</li>
+											<li>Extraversion: {interview.result.bigFive.e}
+											<Tooltip title={
+													<span style={{whiteSpace: 'pre-line' }}>{extraversionText}</span>
+													}>
+													<IconButton>
+														<HelpOutlineIcon>
+														</HelpOutlineIcon>
+													</IconButton>
+												</Tooltip></li>
+											<li>Agreeableness: {interview.result.bigFive.a}
+											<Tooltip title={
+													<span style={{whiteSpace: 'pre-line' }}>{agreeablenessText}</span>
+													}>
+													<IconButton>
+														<HelpOutlineIcon>
+														</HelpOutlineIcon>
+													</IconButton>
+												</Tooltip></li>
+											<li>Neuroticism: {interview.result.bigFive.n}
+											<Tooltip title={
+													<span style={{whiteSpace: 'pre-line' }}>{neuroticismText}</span>
+													}>
+													<IconButton>
+														<HelpOutlineIcon>
+														</HelpOutlineIcon>
+													</IconButton>
+												</Tooltip></li>
 										</ul>
 									</Card>
 								)
