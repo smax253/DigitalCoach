@@ -11,6 +11,7 @@ import FirebaseService from "@App/lib/firebase/FirebaseService";
 
 export enum EStorageFolders {
   profilePic = "profilePic",
+  videos = "videos",
 }
 
 class StorageService extends FirebaseService {
@@ -44,26 +45,32 @@ class StorageService extends FirebaseService {
    * @returns A promise that resolves to the metadata of the uploaded file.
   
    */
-  async uploadAnswerVideo(file: File|Blob|ArrayBuffer, interviewId: string){
+  async uploadAnswerVideo(
+    file: File | Blob | ArrayBuffer,
+    interviewId: string
+  ) {
     const storage = getStorage();
-    const interviewAnswersRef = ref(storage, `interview-responses/${interviewId}.mp4`);
-    return uploadBytes(interviewAnswersRef, file, {contentType:"video/mp4"});
+    const interviewAnswersRef = ref(
+      storage,
+      `interview-responses/${interviewId}.mp4`
+    );
+    return uploadBytes(interviewAnswersRef, file, { contentType: "video/mp4" });
   }
   /**
    * If the videoUrl is a string, then create a reference to the videoUrl string and return the
-   * download url of that reference. 
-   * 
+   * download url of that reference.
+   *
    * If the videoUrl is a reference, then return the download url of that reference.
    * @param {string | StorageReference} videoUrl - string | StorageReference
    * @returns A promise that resolves to a string.
    */
-  async getDownloadUrlFromVideoUrlRef(videoUrl: string | StorageReference){
+  async getDownloadUrlFromVideoUrlRef(videoUrl: string | StorageReference) {
     const storage = getStorage();
-    if(typeof videoUrl === 'string' || videoUrl instanceof String){ 
+    if (typeof videoUrl === "string" || videoUrl instanceof String) {
       const videoUrlString = videoUrl as string;
       const interviewAnswersRef = ref(storage, videoUrlString);
       return getDownloadURL(interviewAnswersRef);
-    }else {
+    } else {
       const videoUrlRef = videoUrl as StorageReference;
       return getDownloadURL(videoUrlRef);
     }

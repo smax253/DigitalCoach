@@ -97,7 +97,7 @@ tensorboard-plugin-wit = "==1.8.1"
 tensorflow = "*"
 redis = "*"
 rq = "*"
-resources = "*"
+ffmpeg-python = "*"
 
 [dev-packages]
 

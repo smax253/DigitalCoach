@@ -1,18 +1,32 @@
 import { Timestamp } from "firebase/firestore";
 
 export type TSubject =
-  | "math"
-  | "science"
-  | "english"
-  | "history"
-  | "geography"
-  | "chemistry"
-  | "physics"
-  | "Business Accounting and Analytics";
+  | "Business and Accounting"
+  | "Data Science"
+  | "Finance"
+  | "Human Resources"
+  | "Information Technology"
+  | "Law"
+  | "Marketing"
+  | "Operations"
+  | "Product Management"
+  | "Computer Science"
+  | "Engineering"
+  | "Any";
+
+export type TQuestionType = "behaviorial" | "technical" | "Any";
+
+export type TExperienceLevel = "Entry" | "Mid" | "Senior" | "Any";
 
 export interface IBaseQuestionAttributes {
   subject: TSubject;
   question: string;
+  type: TQuestionType;
+  experienceLevel: TExperienceLevel;
+  companies: string[];
+  popularity?: number;
+  createdBy?: string | null; // nullable
+  keywords: string[];
 }
 
 export interface IBaseQuestion extends IBaseQuestionAttributes {

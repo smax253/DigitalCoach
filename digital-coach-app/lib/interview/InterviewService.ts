@@ -12,13 +12,14 @@ import {
   Query,
   query,
   Timestamp,
-} from "firebase/firestore";
-import FirebaseService from "@App/lib/firebase/FirebaseService";
+} from 'firebase/firestore';
+import FirebaseService from '@App/lib/firebase/FirebaseService';
+import UserService from '@App/lib/user/UserService';
 import {
   IBaseInterview,
   IInterviewAttributes,
   TInterviewDocumentReference,
-} from "@App/lib/interview/models";
+} from '@App/lib/interview/models';
 
 class InterviewService extends FirebaseService {
   private firestore: Firestore;
@@ -36,7 +37,7 @@ class InterviewService extends FirebaseService {
   private getCollectionGroupRef() {
     return collectionGroup(
       this.firestore,
-      "interviews"
+      'interviews'
     ) as Query<IInterviewAttributes>;
   }
 
@@ -50,9 +51,9 @@ class InterviewService extends FirebaseService {
 
     return doc(
       this.firestore,
-      "users",
+      'users',
       ref.userId,
-      "interviews",
+      'interviews',
       ref.interviewId
     ) as DocumentReference<IInterviewAttributes>;
   }
@@ -65,27 +66,38 @@ class InterviewService extends FirebaseService {
   private getCollectionRef(userId: string) {
     return collection(
       this.firestore,
-      "users",
+      'users',
       userId,
-      "interviews"
+      'interviews'
     ) as CollectionReference<IInterviewAttributes>;
   }
 
   /**
-   * It creates a new interview in the database
+   * It creates a new interview in the database. The user data is retrieved to update the hasCompletedInterview field of the user
    * @param {string} userId - string
    * @param {IBaseInterview} baseInterview - IBaseInterview
    * @returns a promise.
    */
-  async create(userId: string, baseInterview: IBaseInterview) {
+  async create(userId: string, baseInterview: IBaseInterview, result = {}) {
     const collectionRef = this.getCollectionRef(userId);
-
+    const userDocRef = await UserService.getUser(userId);
+    const avatarUrl = userDocRef.get('avatarUrl');
+    const name = userDocRef.get('name');
+    const concentration = userDocRef.get('concentration');
+    const proficiency = userDocRef.get('proficiency');
     const interview: IInterviewAttributes = {
       ...baseInterview,
       completedAt: null,
       reviewedAt: null,
       createdAt: Timestamp.now(),
+      result: result,
     };
+    await UserService.updateUser(userId, {
+      name,
+      concentration,
+      proficiency,
+      avatarUrl,
+    });
 
     return addDoc(collectionRef, interview);
   }
@@ -98,7 +110,7 @@ class InterviewService extends FirebaseService {
   async fetchUserInterviews(userId: string) {
     const collectionRef = this.getCollectionRef(userId);
 
-    return getDocs(collectionRef);
+    return await getDocs(collectionRef);
   }
 
   /**

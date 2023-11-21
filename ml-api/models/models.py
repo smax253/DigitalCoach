@@ -94,7 +94,8 @@ def detect_audio_sentiment(fname):
             time.sleep(10)
 
     if status == "completed":
-        sentiment_results = response_result.json()["sentiment_analysis_results"]
+        sentiment_results = response_result.json()[
+            "sentiment_analysis_results"]
         highlights_results = response_result.json()["auto_highlights_result"]
         iab_results = response_result.json()["iab_categories_result"]
         response = {

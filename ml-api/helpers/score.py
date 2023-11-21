@@ -19,6 +19,7 @@ def _score_text_structure(audio_answer):
     """
     score how structured the user's answers are.
     """
+    print("audio_answer", audio_answer)
     sentiments = audio_answer["sentiment_analysis"]
     text = ""
     for i in sentiments:
@@ -62,6 +63,59 @@ def _score_facial(content):
     return total_emotion_score
 
 
+def _score_bigFive(audio_answer, facial_stats, text_answer):
+    oScore, cScore, eScore, aScore, nScore = 0, 0, 0, 0, 0
+    temp_avg = 0
+    for keyword in grab_top_five_keywords(audio_answer):
+        if len(keyword["text"]) > 10:
+            temp_avg += 10
+        else:
+            temp_avg += len(keyword["text"])
+    overallSentiment = calculate_overall_audio_sentiment(audio_answer)
+    isStructuredPercent = text_answer["percent_prediction"]
+    topThreeFacial = facial_stats
+    oScore += (temp_avg/5) - 7
+    cScore += isStructuredPercent*10 - 5
+    aScore += (temp_avg/25) - 1
+    nScore += isStructuredPercent*10 - 6
+    if topThreeFacial[0] == 'happy':
+        aScore += 2
+        nScore += 1
+    for emotion in topThreeFacial:
+        if (emotion == 'sad' or emotion == 'fear' or emotion == 'disgust' or emotion == 'angry'):
+            oScore -= 2
+            eScore -= 1
+            aScore -= 2
+            nScore -= 1
+        elif emotion == 'neutral':
+            eScore += .5
+            aScore -= .5
+        else:
+            oScore += .5
+            eScore += 1
+            aScore += 1
+            nScore += 1
+    if overallSentiment == "NEGATIVE":
+        eScore -= 2
+        aScore -= 2
+        nScore -= 1
+    elif overallSentiment == "NEUTRAL":
+        eScore += .5
+        aScore -= .5
+        nScore -= .5
+    else:
+        eScore += 2
+        aScore += 1
+    bigFive = {
+        "o": round(oScore),
+        "c": round(cScore),
+        "e": round(eScore),
+        "a": round(aScore),
+        "n": round(nScore),
+    }
+    return bigFive
+
+
 def create_answer(content):
     print("creating answer...")
     facial_answer = _score_facial(content)
@@ -79,6 +133,7 @@ def create_answer(content):
         second_stat,
         third_stat,
     ) = calculate_top_three_facial_with_count(facial_answer)
+    bigFive = _score_bigFive(audio_answer, facial_stats, text_answer)
     result = {
         "timeline": timeline,
         "isStructured": text_answer["binary_prediction"],
@@ -92,10 +147,11 @@ def create_answer(content):
         "overallFacialEmotion": facial_stats[0],
         "overallSentiment": calculate_overall_audio_sentiment(audio_answer),
         "topFiveKeywords": grab_top_five_keywords(audio_answer),
+        "bigFive": bigFive,
     }
     result["aggregateScore"] = compute_aggregate_score(result)
-    response = {} 
-    response['evaluation'] = result
+    response = {}
+    response["evaluation"] = result
     # response["userId"] = content["user_id"]
     # response["interviewId"] = content["interview_id"]
     # response["questionId"] = content["question_id"]

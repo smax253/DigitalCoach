@@ -1,7 +1,8 @@
 import os
 import shutil
 from configs.definitions import ROOT_DIR
-
+import psutil
+import subprocess
 
 def move_cv_files():
     """
@@ -29,8 +30,12 @@ def cleanup_data_folder():
         try:
             shutil.rmtree(path)
         except OSError:
+            print("Error while deleting file: ", path)
+            
+        try:
             os.remove(path)
-
+        except OSError:
+            print("Error while deleting file: ", path)
 
 def cleanup_data_persist_video():
     """

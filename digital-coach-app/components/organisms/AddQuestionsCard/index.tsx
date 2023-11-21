@@ -1,22 +1,29 @@
-import Card from "@App/components/atoms/Card";
-import { TextField } from "@App/components/molecules/TextField";
-import BrowseQuestionsList from "./BrowseQuestionsList";
-import SelectedQuestionsList from "./SelectedQuestionsList";
-import styles from "./AddQuestionsCard.module.scss";
+import React, { useState } from 'react';
+import Card from '@App/components/atoms/Card';
+import AuthGuard from '@App/lib/auth/AuthGuard';
+import SelectedQuestionsList from './SelectedQuestionsList';
+import AddQuestionsForm from './AddQuestionsForm';
 
 export default function AddQuestionsCard() {
+  const [selectedSet, setSelectedSet] = useState<any>({
+    questions: [],
+    id: '',
+    title: '',
+  });
   return (
-    <Card title="Add Questions">
-      <div className={styles.AddQuestionsCard}>
-        <div className={styles.AddQuestionsCard_browseList}>
-          <TextField title="Enter Custom Question" />
-          <BrowseQuestionsList />
+    <AuthGuard>
+      <Card title='Add Questions'>
+        <div style={{ display: 'flex', gap: '3rem' }}>
+          <AddQuestionsForm
+            selectedSet={selectedSet}
+            setSelectedSet={setSelectedSet}
+          />
+          <SelectedQuestionsList
+            selectedSet={selectedSet}
+            setSelectedSet={setSelectedSet}
+          />
         </div>
-
-        <div className={styles.AddQuestionsCard_questionList}>
-          <SelectedQuestionsList />
-        </div>
-      </div>
-    </Card>
+      </Card>
+    </AuthGuard>
   );
 }

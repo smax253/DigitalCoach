@@ -1,4 +1,4 @@
-import { User as FirebaseUser } from "firebase/auth";
+import { User as FirebaseUser} from "firebase/auth";
 import {
   doc,
   DocumentReference,
@@ -8,6 +8,9 @@ import {
   setDoc,
   Timestamp,
   updateDoc,
+  collection,
+  CollectionReference,
+  getDocs,
 } from "firebase/firestore";
 import FirebaseService from "@App/lib/firebase/FirebaseService";
 import { IUser, IBaseUserAttributes } from "@App/lib/user/models";
@@ -19,6 +22,10 @@ class UserService extends FirebaseService {
     super();
 
     this.firestore = getFirestore(this.app);
+  }
+
+  private getCollectionRef() {
+    return collection(this.firestore, "users") as CollectionReference<IUser>;
   }
 
   private getDocRef(userId: string) {
@@ -49,6 +56,7 @@ class UserService extends FirebaseService {
       proficiency: null,
       registrationCompletedAt: null,
       createdAt: Timestamp.now(),
+      hasCompletedInterview: false
     };
 
     return setDoc(userDocRef, userDoc);
@@ -67,6 +75,7 @@ class UserService extends FirebaseService {
     return updateDoc(userDocRef, {
       ...userDetails,
       registrationCompletedAt: Timestamp.now(),
+      hasCompletedInterview: false
     });
   }
 
@@ -83,6 +92,24 @@ class UserService extends FirebaseService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async getAllUsers() {
+	return await getDocs(this.getCollectionRef());
+  }
+
+  /**
+   * This function takes in the userId and updates their hasCompletedInterview to true
+   * @param {string} userId The user's id 
+   * @param {IBaseUserAttributes} userDetails Base User Attributes
+   * @returns A promise that resolves to the result of the update
+   */
+  async updateUser(userId: string, userDetails: IBaseUserAttributes) {
+    const userDocRef = this.getDocRef(userId);
+    return updateDoc(userDocRef, {
+      ...userDetails, 
+      hasCompletedInterview: true
+    }); 
   }
 }
 
